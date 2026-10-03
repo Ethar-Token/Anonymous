@@ -841,7 +841,7 @@ footer a {
 const SUPABASE_URL = "https://oumvqmbvphtazktjmuje.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91bXZxbWJ2cGh0YXprdGptdWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNTEyNjYsImV4cCI6MjEwNjYyNzI2Nn0.9mY55BadeNorwFwjJy3MWHiUY6h7ebyALdaE3-Xbn9A";
 
-const supabase = window.supabase.createClient(
+const client = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
