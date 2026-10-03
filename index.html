@@ -910,7 +910,7 @@ async function submitConfession() {
     button.textContent = "Posting...";
 
 
-    const { data, error } = await supabase
+    const { data, error } = await client
         .rpc("create_post", {
             p_message: text,
             p_country: null
