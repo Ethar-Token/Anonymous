@@ -448,7 +448,7 @@ footer a {
 
 <header>
     <div class="header-inner">
-        <div class="logo">anonymous<span>.</span></div>
+        <div class="logo">Anonymous<span>.</span></div>
         <div class="header-tagline">Say it here.</div>
     </div>
 </header>
@@ -834,7 +834,40 @@ footer a {
 </footer>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+const SUPABASE_URL = "https://oumvqmbvphtazktjmuje.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91bXZxbWJ2cGh0YXprdGptdWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNTEyNjYsImV4cCI6MjEwNjYyNzI2Nn0.9mY55BadeNorwFwjJy3MWHiUY6h7ebyALdaE3-Xbn9A";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+
+// ==========================================
+// VISITOR ID
+// ==========================================
+
+let visitorId = localStorage.getItem("anonymous_visitor_id");
+
+if (!visitorId) {
+
+    visitorId = crypto.randomUUID();
+
+    localStorage.setItem(
+        "anonymous_visitor_id",
+        visitorId
+    );
+
+}
+
+
+// ==========================================
+// CHARACTER COUNTER
+// ==========================================
 
 function updateCounter() {
 
@@ -846,7 +879,11 @@ function updateCounter() {
 }
 
 
-function submitConfession() {
+// ==========================================
+// CREATE POST
+// ==========================================
+
+async function submitConfession() {
 
     const box = document.getElementById("confession");
 
@@ -857,7 +894,6 @@ function submitConfession() {
         alert("Write something first.");
 
         return;
-
     }
 
     if (text.length > 500) {
@@ -865,28 +901,488 @@ function submitConfession() {
         alert("Keep your confession short.");
 
         return;
+    }
+
+
+    const button = document.querySelector(".post-btn");
+
+    button.disabled = true;
+    button.textContent = "Posting...";
+
+
+    const { data, error } = await supabase
+        .rpc("create_post", {
+            p_message: text,
+            p_country: null
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Something went wrong. Please try again.");
+
+        button.disabled = false;
+        button.textContent = "Post anonymously";
+
+        return;
+    }
+
+
+    box.value = "";
+
+    updateCounter();
+
+    button.disabled = false;
+    button.textContent = "Post anonymously";
+
+
+    await loadPosts("new");
+}
+
+
+// ==========================================
+// LOAD POSTS
+// ==========================================
+
+async function loadPosts(sort = "new") {
+
+    const postsContainer =
+        document.getElementById("posts");
+
+
+    let query = supabase
+        .from("posts")
+        .select("*");
+
+
+    if (sort === "new") {
+
+        query = query
+            .order("created_at", { ascending: false });
 
     }
 
-    alert("Your anonymous confession will appear here once connected to the database.");
+    else if (sort === "liked") {
+
+        query = query
+            .order("likes", { ascending: false })
+            .order("created_at", { ascending: false });
+
+    }
+
+    else if (sort === "funny") {
+
+        query = query
+            .order("funny", { ascending: false })
+            .order("created_at", { ascending: false });
+
+    }
+
+    else if (sort === "shocking") {
+
+        query = query
+            .order("wtf", { ascending: false })
+            .order("created_at", { ascending: false });
+
+    }
+
+
+    const { data, error } = await query;
+
+
+    if (error) {
+
+        console.error(error);
+
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:30px;color:#999;">
+                Unable to load posts.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                No confessions yet. Be the first.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    postsContainer.innerHTML = "";
+
+    data.forEach(post => {
+
+        postsContainer.innerHTML += createPostHTML(post);
+
+    });
 
 }
 
 
-function toggleComments(button) {
+// ==========================================
+// CREATE POST HTML
+// ==========================================
 
-    const comments = button
-        .closest(".post")
-        .querySelector(".comments");
+function createPostHTML(post) {
+
+    return `
+
+        <article class="post" data-post-id="${post.id}">
+
+            <div class="post-top">
+
+                <div class="anonymous">
+
+                    <div class="anon-icon">?</div>
+
+                    Anonymous
+
+                </div>
+
+                <div class="date">
+                    ${formatDate(post.created_at)}
+                </div>
+
+            </div>
+
+
+            <button
+                class="report"
+                onclick="reportPost('${post.id}')"
+            >
+                Report
+            </button>
+
+
+            <div class="post-text">
+                ${escapeHTML(post.message)}
+            </div>
+
+
+            <div class="reactions">
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'funny', this)"
+                >
+                    😂 Funny <span>${post.funny}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'wtf', this)"
+                >
+                    😳 WTF <span>${post.wtf}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'wth', this)"
+                >
+                    🤦 WTH <span>${post.wth}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'relatable', this)"
+                >
+                    😭 Relatable <span>${post.relatable}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'sad', this)"
+                >
+                    💔 Sad <span>${post.sad}</span>
+                </button>
+
+
+                <div class="like-dislike">
+
+                    <button
+                        class="vote"
+                        onclick="react('${post.id}', 'like', this)"
+                    >
+                        👍 ${post.likes}
+                    </button>
+
+
+                    <button
+                        class="vote"
+                        onclick="react('${post.id}', 'dislike', this)"
+                    >
+                        👎 ${post.dislikes}
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="comment-toggle">
+
+                <button onclick="toggleComments(this, '${post.id}')">
+                    💬 ${post.comments_count} comments
+                </button>
+
+            </div>
+
+
+            <div class="comments">
+
+                <div class="comments-list">
+                    Loading comments...
+                </div>
+
+
+                <div class="comment-input">
+
+                    <input
+                        type="text"
+                        maxlength="300"
+                        placeholder="Write an anonymous comment..."
+                    >
+
+                    <button
+                        onclick="submitComment(this, '${post.id}')"
+                    >
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+}
+
+
+// ==========================================
+// REACTION
+// ==========================================
+
+async function react(postId, reactionType, button) {
+
+    button.disabled = true;
+
+
+    const { data, error } = await supabase
+        .rpc("react_to_post", {
+            p_post_id: postId,
+            p_visitor_id: visitorId,
+            p_reaction_type: reactionType
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Unable to react.");
+
+        button.disabled = false;
+
+        return;
+    }
+
+
+    if (data === false) {
+
+        alert("You've already used this reaction on this post.");
+
+        button.disabled = false;
+
+        return;
+    }
+
+
+    button.classList.add("selected");
+
+    await loadPosts(currentSort);
+
+}
+
+
+// ==========================================
+// COMMENTS
+// ==========================================
+
+async function toggleComments(button, postId) {
+
+    const post =
+        button.closest(".post");
+
+    const comments =
+        post.querySelector(".comments");
+
 
     comments.classList.toggle("open");
 
+
+    if (comments.classList.contains("open")) {
+
+        await loadComments(postId, post);
+
+    }
+
 }
+
+
+// ==========================================
+// LOAD COMMENTS
+// ==========================================
+
+async function loadComments(postId, postElement) {
+
+    const list =
+        postElement.querySelector(".comments-list");
+
+
+    list.innerHTML = "Loading comments...";
+
+
+    const { data, error } = await supabase
+        .from("comments")
+        .select("*")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: true });
+
+
+    if (error) {
+
+        console.error(error);
+
+        list.innerHTML =
+            "Unable to load comments.";
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML = `
+            <div style="font-size:11px;color:#aaa;padding:8px 0;">
+                No comments yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML = data.map(comment => `
+
+        <div class="comment">
+
+            <div class="comment-meta">
+                Anonymous · ${formatDate(comment.created_at)}
+            </div>
+
+            <div class="comment-text">
+                ${escapeHTML(comment.message)}
+            </div>
+
+        </div>
+
+    `).join("");
+
+}
+
+
+// ==========================================
+// ADD COMMENT
+// ==========================================
+
+async function submitComment(button, postId) {
+
+    const input =
+        button.parentElement.querySelector("input");
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+    button.textContent = "...";
+
+
+    const { data, error } = await supabase
+        .rpc("add_comment", {
+            p_post_id: postId,
+            p_message: text,
+            p_country: null
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Unable to post comment.");
+
+        button.disabled = false;
+        button.textContent = "Send";
+
+        return;
+    }
+
+
+    input.value = "";
+
+    button.disabled = false;
+    button.textContent = "Send";
+
+
+    const post =
+        button.closest(".post");
+
+
+    await loadComments(
+        postId,
+        post
+    );
+
+
+    await loadPosts(currentSort);
+
+}
+
+
+// ==========================================
+// SORTING
+// ==========================================
+
+let currentSort = "new";
 
 
 document.querySelectorAll(".filter").forEach(function(button) {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", async function() {
 
         document
             .querySelectorAll(".filter")
@@ -896,22 +1392,170 @@ document.querySelectorAll(".filter").forEach(function(button) {
 
             });
 
+
         this.classList.add("active");
 
+
+        const text =
+            this.textContent.trim();
+
+
+        if (text.includes("Most liked")) {
+
+            currentSort = "liked";
+
+        }
+
+        else if (text.includes("Funny")) {
+
+            currentSort = "funny";
+
+        }
+
+        else if (text.includes("Most shocking")) {
+
+            currentSort = "shocking";
+
+        }
+
+        else {
+
+            currentSort = "new";
+
+        }
+
+
+        await loadPosts(currentSort);
+
     });
 
 });
 
 
-document.querySelectorAll(".react-btn").forEach(function(button) {
+// ==========================================
+// DATE FORMAT
+// ==========================================
 
-    button.addEventListener("click", function() {
+function formatDate(dateString) {
 
-        this.classList.toggle("selected");
+    const date =
+        new Date(dateString);
 
-    });
+    const now =
+        new Date();
 
-});
+
+    const diff =
+        now.getTime() - date.getTime();
+
+
+    const minutes =
+        Math.floor(diff / 60000);
+
+    const hours =
+        Math.floor(diff / 3600000);
+
+    const days =
+        Math.floor(diff / 86400000);
+
+
+    if (minutes < 60) {
+
+        return "Today";
+
+    }
+
+
+    if (hours < 24) {
+
+        return "Today";
+
+    }
+
+
+    if (days === 1) {
+
+        return "Yesterday";
+
+    }
+
+
+    if (days < 7) {
+
+        return "This week";
+
+    }
+
+
+    if (days < 14) {
+
+        return "1 week ago";
+
+    }
+
+
+    const currentYear =
+        now.getFullYear();
+
+    const postYear =
+        date.getFullYear();
+
+
+    if (currentYear === postYear) {
+
+        return "This year";
+
+    }
+
+
+    const years =
+        currentYear - postYear;
+
+
+    if (years === 1) {
+
+        return "1 year ago";
+
+    }
+
+
+    return years + " years ago";
+
+}
+
+
+// ==========================================
+// ESCAPE USER CONTENT
+// ==========================================
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+// ==========================================
+// REPORT
+// ==========================================
+
+async function reportPost(postId) {
+
+    alert("Report system will be connected next.");
+
+}
+
+
+// ==========================================
+// INITIAL LOAD
+// ==========================================
+
+loadPosts("new");
 
 </script>
 
