@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Anonymous — Say It Here</title>
+<meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --purple: #9b7bea;
+    --purple-dark: #7655c7;
+    --purple-light: #f3efff;
+    --purple-soft: #e9ddff;
+    --text: #29243a;
+    --muted: #8c8798;
+    --border: #eeeaf5;
+    --white: #ffffff;
+    --bg: #faf9fd;
+    --danger: #e96d87;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+
+header {
+    height: 72px;
+    background: rgba(255,255,255,.96);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    width: min(1050px, calc(100% - 32px));
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    letter-spacing: -.7px;
+}
+
+.logo span {
+    font-weight: 400;
+    color: var(--text);
+}
+
+.header-tagline {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ================= MAIN ================= */
+
+.container {
+    width: min(760px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 30px 0 70px;
+}
+
+/* ================= COMPOSER ================= */
+
+.confess-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(80, 55, 130, .05);
+    margin-bottom: 25px;
+}
+
+.confess-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.confess-subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: none;
+    border: 1px solid var(--border);
+    background: #fcfbff;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    outline: none;
+}
+
+textarea:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(155,123,234,.10);
+}
+
+.composer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.counter {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.post-btn {
+    border: none;
+    background: var(--purple);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.post-btn:hover {
+    background: var(--purple-dark);
+    transform: translateY(-1px);
+}
+
+/* ================= FILTERS ================= */
+
+.filters {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    margin-bottom: 18px;
+    scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter {
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    background: white;
+    color: #777181;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.filter.active {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+    font-weight: 600;
+}
+
+/* ================= POSTS ================= */
+
+.post {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 19px;
+    margin-bottom: 15px;
+}
+
+.post-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.anonymous {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.anon-icon {
+    width: 25px;
+    height: 25px;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.date {
+    font-size: 10px;
+    color: #aaa5b2;
+}
+
+.post-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #383243;
+    margin-bottom: 17px;
+}
+
+/* ================= REACTIONS ================= */
+
+.reactions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.react-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 20px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 11px;
+    color: #777181;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.react-btn:hover {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+}
+
+.react-btn.selected {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+}
+
+.like-dislike {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.vote {
+    border: none;
+    background: transparent;
+    color: #9993a3;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.vote:hover {
+    color: var(--purple-dark);
+}
+
+/* ================= COMMENTS ================= */
+
+.comment-toggle {
+    margin-top: 15px;
+    padding-top: 13px;
+    border-top: 1px solid #f3f0f7;
+}
+
+.comment-toggle button {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    color: var(--purple-dark);
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.comments {
+    display: none;
+    margin-top: 13px;
+}
+
+.comments.open {
+    display: block;
+}
+
+.comment {
+    background: #faf9fd;
+    border-radius: 11px;
+    padding: 10px 12px;
+    margin-bottom: 7px;
+}
+
+.comment-meta {
+    font-size: 9px;
+    color: #aaa5b2;
+    margin-bottom: 4px;
+}
+
+.comment-text {
+    font-size: 11px;
+    line-height: 1.55;
+    color: #504b5b;
+}
+
+.comment-input {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 9px;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 11px;
+    outline: none;
+}
+
+.comment-input button {
+    border: none;
+    background: var(--purple);
+    color: white;
+    border-radius: 9px;
+    padding: 0 13px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* ================= REPORT ================= */
+
+.report {
+    float: right;
+    border: none;
+    background: none;
+    color: #b5afbd;
+    font-family: inherit;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+.report:hover {
+    color: var(--danger);
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    color: #aaa5b2;
+    font-size: 10px;
+    padding: 20px;
+}
+
+footer a {
+    color: var(--purple-dark);
+    text-decoration: none;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+    header {
+        height: 62px;
+    }
+
+    .header-inner {
+        width: calc(100% - 22px);
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .header-tagline {
+        display: none;
+    }
+
+    .container {
+        width: calc(100% - 18px);
+        padding-top: 18px;
+    }
+
+    .confess-box {
+        border-radius: 16px;
+        padding: 17px;
+    }
+
+    .post {
+        border-radius: 15px;
+        padding: 16px;
+    }
+
+    .post-text {
+        font-size: 13px;
+    }
+
+    .reactions {
+        gap: 5px;
+    }
+
+    .react-btn {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo">anonymous<span>.</span></div>
+        <div class="header-tagline">Say it here.</div>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- CONFESSION BOX -->
+
+    <section class="confess-box">
+
+        <div class="confess-title">
+            What's on your mind?
+        </div>
+
+        <div class="confess-subtitle">
+            Say it anonymously. Keep it short.
+        </div>
+
+        <textarea
+            id="confession"
+            maxlength="500"
+            placeholder="Nobody knows this about me..."
+            oninput="updateCounter()"
+        ></textarea>
+
+        <div class="composer-bottom">
+            <div class="counter">
+                <span id="charCount">0</span>/500
+            </div>
+
+            <button class="post-btn" onclick="submitConfession()">
+                Post anonymously
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <button class="filter active">
+            New posts
+        </button>
+
+        <button class="filter">
+            Most liked
+        </button>
+
+        <button class="filter">
+            Funny 😂
+        </button>
+
+        <button class="filter">
+            Most shocking 😳
+        </button>
+
+    </div>
+
+
+    <!-- POSTS -->
+
+    <div id="posts">
+
+
+        <!-- POST 1 -->
+
+        <article class="post">
+
+            <div class="post-top">
+
+                <div class="anonymous">
+                    <div class="anon-icon">?</div>
+                    Anonymous
+                </div>
+
+                <div class="date">
+                    Today
+                </div>
+
+            </div>
+
+            <button class="report">
+                Report
+            </button>
+
+            <div class="post-text">
+                I still check my ex's profile even though I tell everyone
+                I've completely moved on.
+            </div>
+
+            <div class="reactions">
+
+                <button class="react-btn">
+                    😂 Funny <span>24</span>
+                </button>
+
+                <button class="react-btn">
+                    😳 WTF <span>7</span>
+                </button>
+
+                <button class="react-btn">
+                    🤦 WTH <span>11</span>
+                </button>
+
+                <button class="react-btn">
+                    😭 Relatable <span>82</span>
+                </button>
+
+                <button class="react-btn">
+                    💔 Sad <span>18</span>
+                </button>
+
+                <div class="like-dislike">
+
+                    <button class="vote">
+                        👍 126
+                    </button>
+
+                    <button class="vote">
+                        👎 8
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="comment-toggle">
+
+                <button onclick="toggleComments(this)">
+                    💬 12 comments
+                </button>
+
+            </div>
+
+            <div class="comments">
+
+                <div class="comment">
+
+                    <div class="comment-meta">
+                        Anonymous · Today
+                    </div>
+
+                    <div class="comment-text">
+                        You're definitely not the only one 😂
+                    </div>
+
+                </div>
+
+                <div class="comment">
+
+                    <div class="comment-meta">
+                        Anonymous · Today
+                    </div>
+
+                    <div class="comment-text">
+                        Delete the search history. That's step one.
+                    </div>
+
+                </div>
+
+                <div class="comment-input">
+
+                    <input
+                        type="text"
+                        placeholder="Write an anonymous comment..."
+                    >
+
+                    <button>
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- POST 2 -->
+
+        <article class="post">
+
+            <div class="post-top">
+
+                <div class="anonymous">
+                    <div class="anon-icon">?</div>
+                    Anonymous
+                </div>
+
+                <div class="date">
+                    Yesterday
+                </div>
+
+            </div>
+
+            <button class="report">
+                Report
+            </button>
+
+            <div class="post-text">
+                I have a whole conversation with myself in my head before
+                answering a simple question out loud.
+            </div>
+
+            <div class="reactions">
+
+                <button class="react-btn">
+                    😂 Funny <span>91</span>
+                </button>
+
+                <button class="react-btn">
+                    😳 WTF <span>2</span>
+                </button>
+
+                <button class="react-btn">
+                    🤦 WTH <span>3</span>
+                </button>
+
+                <button class="react-btn">
+                    😭 Relatable <span>146</span>
+                </button>
+
+                <button class="react-btn">
+                    💔 Sad <span>4</span>
+                </button>
+
+                <div class="like-dislike">
+
+                    <button class="vote">
+                        👍 208
+                    </button>
+
+                    <button class="vote">
+                        👎 5
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="comment-toggle">
+
+                <button onclick="toggleComments(this)">
+                    💬 27 comments
+                </button>
+
+            </div>
+
+            <div class="comments">
+
+                <div class="comment">
+
+                    <div class="comment-meta">
+                        Anonymous · Yesterday
+                    </div>
+
+                    <div class="comment-text">
+                        I literally rehearse phone calls before making them.
+                    </div>
+
+                </div>
+
+                <div class="comment-input">
+
+                    <input
+                        type="text"
+                        placeholder="Write an anonymous comment..."
+                    >
+
+                    <button>
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- POST 3 -->
+
+        <article class="post">
+
+            <div class="post-top">
+
+                <div class="anonymous">
+                    <div class="anon-icon">?</div>
+                    Anonymous
+                </div>
+
+                <div class="date">
+                    This week
+                </div>
+
+            </div>
+
+            <button class="report">
+                Report
+            </button>
+
+            <div class="post-text">
+                Sometimes I read old messages from people I haven't spoken
+                to in years and wonder where they are now.
+            </div>
+
+            <div class="reactions">
+
+                <button class="react-btn">
+                    😂 Funny <span>4</span>
+                </button>
+
+                <button class="react-btn">
+                    😳 WTF <span>1</span>
+                </button>
+
+                <button class="react-btn">
+                    🤦 WTH <span>0</span>
+                </button>
+
+                <button class="react-btn">
+                    😭 Relatable <span>73</span>
+                </button>
+
+                <button class="react-btn">
+                    💔 Sad <span>31</span>
+                </button>
+
+                <div class="like-dislike">
+
+                    <button class="vote">
+                        👍 94
+                    </button>
+
+                    <button class="vote">
+                        👎 3
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="comment-toggle">
+
+                <button onclick="toggleComments(this)">
+                    💬 9 comments
+                </button>
+
+            </div>
+
+            <div class="comments">
+
+                <div class="comment-input">
+
+                    <input
+                        type="text"
+                        placeholder="Write an anonymous comment..."
+                    >
+
+                    <button>
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</main>
+
+
+<footer>
+    Anonymous · Say what you can't say anywhere else.
+    <br><br>
+    <a href="#">Community Rules</a>
+    &nbsp; · &nbsp;
+    <a href="#">Privacy</a>
+</footer>
+
+
+<script>
+
+function updateCounter() {
+
+    const box = document.getElementById("confession");
+
+    document.getElementById("charCount").textContent =
+        box.value.length;
+
+}
+
+
+function submitConfession() {
+
+    const box = document.getElementById("confession");
+
+    const text = box.value.trim();
+
+    if (!text) {
+
+        alert("Write something first.");
+
+        return;
+
+    }
+
+    if (text.length > 500) {
+
+        alert("Keep your confession short.");
+
+        return;
+
+    }
+
+    alert("Your anonymous confession will appear here once connected to the database.");
+
+}
+
+
+function toggleComments(button) {
+
+    const comments = button
+        .closest(".post")
+        .querySelector(".comments");
+
+    comments.classList.toggle("open");
+
+}
+
+
+document.querySelectorAll(".filter").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        document
+            .querySelectorAll(".filter")
+            .forEach(function(item) {
+
+                item.classList.remove("active");
+
+            });
+
+        this.classList.add("active");
+
+    });
+
+});
+
+
+document.querySelectorAll(".react-btn").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        this.classList.toggle("selected");
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
