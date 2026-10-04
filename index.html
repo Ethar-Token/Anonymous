@@ -973,14 +973,14 @@ async function submitConfession() {
 
     if (!text) {
 
-        alert("Write something first.");
+        showModal("Write something first.");
 
         return;
     }
 
     if (text.length > 500) {
 
-        alert("Keep your confession short.");
+        showModal("Keep your confession short.");
 
         return;
     }
@@ -1003,7 +1003,7 @@ async function submitConfession() {
 
         console.error(error);
 
-        alert("Something went wrong. Please try again.");
+        showModal("Something went wrong. Please try again.");
 
         button.disabled = false;
         button.textContent = "Post anonymously";
@@ -1276,7 +1276,7 @@ async function react(postId, reactionType, button) {
 
         console.error(error);
 
-        alert("Unable to react.");
+        showModal("Unable to react.");
 
         button.disabled = false;
 
@@ -1286,7 +1286,7 @@ async function react(postId, reactionType, button) {
 
     if (data === false) {
 
-        alert("You've already used this reaction on this post.");
+        showModal("You've already used this reaction on this post.");
 
         button.disabled = false;
 
@@ -1425,7 +1425,7 @@ async function submitComment(button, postId) {
 
         console.error(error);
 
-        alert("Unable to post comment.");
+        showModal("Unable to post comment.");
 
         button.disabled = false;
         button.textContent = "Send";
