@@ -753,100 +753,192 @@ async function submitConfession() {
 // LOAD POSTS
 // ==========================================
 
-async function loadPosts(sort = "new") {
+async function loadPosts(sort = "new", reset = false) {
 
-    const postsContainer =
-        document.getElementById("posts");
+    if (loadingPosts || allPostsLoaded) return;
+
+    loadingPosts = true;
+
+    const postsContainer = document.getElementById("posts");
+
+    if (reset) {
+        localOffset = 0;
+        globalOffset = 0;
+        localFinished = false;
+        allPostsLoaded = false;
+
+        postsContainer.innerHTML = `
+            <div class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading confessions...</div>
+            </div>
+        `;
+    }
 
     if (!visitorCountry) {
         visitorCountry = await getCountry();
     }
 
+    let posts = [];
 
-    let query = client
-        .from("posts")
-        .select("*");
+    /*
+     * FIRST: posts from visitor's country
+     */
+    if (!localFinished && visitorCountry) {
 
+        let localQuery = supabase
+            .from("posts")
+            .select("*")
+            .eq("country", visitorCountry);
 
-    if (sort === "new") {
+        if (sort === "new") {
+            localQuery = localQuery
+                .order("created_at", { ascending: false });
+        } else if (sort === "liked") {
+            localQuery = localQuery
+                .order("likes", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "funny") {
+            localQuery = localQuery
+                .order("funny", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "shocking") {
+            localQuery = localQuery
+                .order("wtf", { ascending: false })
+                .order("created_at", { ascending: false });
+        }
 
-        query = query
-            .order("created_at", { ascending: false });
+        const { data, error } = await localQuery
+            .range(localOffset, localOffset + POSTS_PER_PAGE - 1);
 
+        if (error) {
+            console.error(error);
+            loadingPosts = false;
+
+            if (reset) {
+                postsContainer.innerHTML = `
+                    <div style="text-align:center;padding:30px;color:#999;">
+                        Unable to load posts.
+                    </div>
+                `;
+            }
+
+            return;
+        }
+
+        posts = data || [];
+        localOffset += posts.length;
+
+        if (posts.length < POSTS_PER_PAGE) {
+            localFinished = true;
+        }
+    } else {
+        localFinished = true;
     }
 
-    else if (sort === "liked") {
+    /*
+     * If there aren't enough local posts,
+     * fill the remaining spots with worldwide posts.
+     */
+    if (posts.length < POSTS_PER_PAGE) {
 
-        query = query
-            .order("likes", { ascending: false })
-            .order("created_at", { ascending: false });
+        const remaining = POSTS_PER_PAGE - posts.length;
 
+        let globalQuery = supabase
+            .from("posts")
+            .select("*");
+
+        if (visitorCountry) {
+            globalQuery = globalQuery
+                .neq("country", visitorCountry);
+        }
+
+        if (sort === "new") {
+            globalQuery = globalQuery
+                .order("created_at", { ascending: false });
+        } else if (sort === "liked") {
+            globalQuery = globalQuery
+                .order("likes", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "funny") {
+            globalQuery = globalQuery
+                .order("funny", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "shocking") {
+            globalQuery = globalQuery
+                .order("wtf", { ascending: false })
+                .order("created_at", { ascending: false });
+        }
+
+        const { data, error } = await globalQuery
+            .range(globalOffset, globalOffset + remaining - 1);
+
+        if (error) {
+            console.error(error);
+            loadingPosts = false;
+            return;
+        }
+
+        const globalPosts = data || [];
+
+        posts.push(...globalPosts);
+        globalOffset += globalPosts.length;
+
+        if (globalPosts.length < remaining) {
+            allPostsLoaded = true;
+        }
     }
 
-    else if (sort === "funny") {
-
-        query = query
-            .order("funny", { ascending: false })
-            .order("created_at", { ascending: false });
-
-    }
-
-    else if (sort === "shocking") {
-
-        query = query
-            .order("wtf", { ascending: false })
-            .order("created_at", { ascending: false });
-
-    }
-
-
-    const { data, error } = await query;
-
-
-    if (error) {
-
-        console.error(error);
-
-        postsContainer.innerHTML = `
-            <div style="text-align:center;padding:30px;color:#999;">
-                Unable to load posts.
-            </div>
-        `;
-
-        return;
-    }
-
-    // Put posts from the visitor's country first
-    if (visitorCountry && data) {
-        data.sort((a, b) => {
-            const aLocal = a.country === visitorCountry ? 1 : 0;
-            const bLocal = b.country === visitorCountry ? 1 : 0;
-
-            return bLocal - aLocal;
-        });
-    }
-
-
-    if (!data || data.length === 0) {
-
+    /*
+     * No posts at all
+     */
+    if (reset && posts.length === 0) {
         postsContainer.innerHTML = `
             <div style="text-align:center;padding:40px;color:#999;">
                 No confessions yet. Be the first.
             </div>
         `;
 
+        loadingPosts = false;
         return;
     }
 
+    /*
+     * Add posts to the existing feed.
+     */
+    if (reset) {
+        postsContainer.innerHTML = "";
+    }
 
-    postsContainer.innerHTML = "";
-
-    data.forEach(post => {
-
-        postsContainer.innerHTML += createPostHTML(post);
-
+    posts.forEach(post => {
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            createPostHTML(post)
+        );
     });
 
+    /*
+     * Loading indicator while more posts exist.
+     */
+    if (!allPostsLoaded) {
+        const oldLoader = document.getElementById("feedLoader");
+
+        if (oldLoader) {
+            oldLoader.remove();
+        }
+
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="feedLoader" class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading more...</div>
+            </div>
+            `
+        );
+    }
+
+    loadingPosts = false;
 }
 
 
@@ -1035,7 +1127,7 @@ async function react(postId, reactionType, button) {
 
     button.classList.add("selected");
 
-    await loadPosts(currentSort);
+    await loadPosts(currentSort, true);
 
 }
 
@@ -1189,7 +1281,7 @@ async function submitComment(button, postId) {
     );
 
 
-    await loadPosts(currentSort);
+    await loadPosts(currentSort, true);
 
 }
 
@@ -1200,6 +1292,13 @@ async function submitComment(button, postId) {
 
 let currentSort = "new";
 let visitorCountry = null;
+const POSTS_PER_PAGE = 10;
+
+let localOffset = 0;
+let globalOffset = 0;
+let localFinished = false;
+let allPostsLoaded = false;
+let loadingPosts = false;
 
 
 document.querySelectorAll(".filter").forEach(function(button) {
@@ -1247,9 +1346,20 @@ document.querySelectorAll(".filter").forEach(function(button) {
         }
 
 
-        await loadPosts(currentSort);
+        await loadPosts(currentSort, true);
 
     });
+
+});
+
+window.addEventListener("scroll", function() {
+
+    if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 700
+    ) {
+        loadPosts(currentSort);
+    }
 
 });
 
@@ -1411,7 +1521,7 @@ async function reportPost(postId) {
 // INITIAL LOAD
 // ==========================================
 
-loadPosts("new");
+loadPosts("new, true");
 
 function showModal(title, message) {
     document.getElementById("modalTitle").textContent = title;
