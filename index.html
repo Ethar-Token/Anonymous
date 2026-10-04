@@ -523,6 +523,32 @@ footer a {
         transform: scale(1);
     }
 }
+
+.posts-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 50px 20px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--purple-soft);
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 </style>
 </head>
 
@@ -592,317 +618,16 @@ footer a {
     </div>
 
 
-    <!-- POSTS -->
+<!-- POSTS -->
 
-    <div id="posts">
+<div id="posts">
 
-
-        <!-- POST 1 -->
-
-        <article class="post">
-
-            <div class="post-top">
-
-                <div class="anonymous">
-                    <div class="anon-icon">?</div>
-                    Anonymous
-                </div>
-
-                <div class="date">
-                    Today
-                </div>
-
-            </div>
-
-            <button class="report">
-                Report
-            </button>
-
-            <div class="post-text">
-                I still check my ex's profile even though I tell everyone
-                I've completely moved on.
-            </div>
-
-            <div class="reactions">
-
-                <button class="react-btn">
-                    😂 Funny <span>24</span>
-                </button>
-
-                <button class="react-btn">
-                    😳 WTF <span>7</span>
-                </button>
-
-                <button class="react-btn">
-                    🤦 WTH <span>11</span>
-                </button>
-
-                <button class="react-btn">
-                    😭 Relatable <span>82</span>
-                </button>
-
-                <button class="react-btn">
-                    💔 Sad <span>18</span>
-                </button>
-
-                <div class="like-dislike">
-
-                    <button class="vote">
-                        👍 126
-                    </button>
-
-                    <button class="vote">
-                        👎 8
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="comment-toggle">
-
-                <button onclick="toggleComments(this)">
-                    💬 12 comments
-                </button>
-
-            </div>
-
-            <div class="comments">
-
-                <div class="comment">
-
-                    <div class="comment-meta">
-                        Anonymous · Today
-                    </div>
-
-                    <div class="comment-text">
-                        You're definitely not the only one 😂
-                    </div>
-
-                </div>
-
-                <div class="comment">
-
-                    <div class="comment-meta">
-                        Anonymous · Today
-                    </div>
-
-                    <div class="comment-text">
-                        Delete the search history. That's step one.
-                    </div>
-
-                </div>
-
-                <div class="comment-input">
-
-                    <input
-                        type="text"
-                        placeholder="Write an anonymous comment..."
-                    >
-
-                    <button>
-                        Send
-                    </button>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- POST 2 -->
-
-        <article class="post">
-
-            <div class="post-top">
-
-                <div class="anonymous">
-                    <div class="anon-icon">?</div>
-                    Anonymous
-                </div>
-
-                <div class="date">
-                    Yesterday
-                </div>
-
-            </div>
-
-            <button class="report">
-                Report
-            </button>
-
-            <div class="post-text">
-                I have a whole conversation with myself in my head before
-                answering a simple question out loud.
-            </div>
-
-            <div class="reactions">
-
-                <button class="react-btn">
-                    😂 Funny <span>91</span>
-                </button>
-
-                <button class="react-btn">
-                    😳 WTF <span>2</span>
-                </button>
-
-                <button class="react-btn">
-                    🤦 WTH <span>3</span>
-                </button>
-
-                <button class="react-btn">
-                    😭 Relatable <span>146</span>
-                </button>
-
-                <button class="react-btn">
-                    💔 Sad <span>4</span>
-                </button>
-
-                <div class="like-dislike">
-
-                    <button class="vote">
-                        👍 208
-                    </button>
-
-                    <button class="vote">
-                        👎 5
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="comment-toggle">
-
-                <button onclick="toggleComments(this)">
-                    💬 27 comments
-                </button>
-
-            </div>
-
-            <div class="comments">
-
-                <div class="comment">
-
-                    <div class="comment-meta">
-                        Anonymous · Yesterday
-                    </div>
-
-                    <div class="comment-text">
-                        I literally rehearse phone calls before making them.
-                    </div>
-
-                </div>
-
-                <div class="comment-input">
-
-                    <input
-                        type="text"
-                        placeholder="Write an anonymous comment..."
-                    >
-
-                    <button>
-                        Send
-                    </button>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- POST 3 -->
-
-        <article class="post">
-
-            <div class="post-top">
-
-                <div class="anonymous">
-                    <div class="anon-icon">?</div>
-                    Anonymous
-                </div>
-
-                <div class="date">
-                    This week
-                </div>
-
-            </div>
-
-            <button class="report">
-                Report
-            </button>
-
-            <div class="post-text">
-                Sometimes I read old messages from people I haven't spoken
-                to in years and wonder where they are now.
-            </div>
-
-            <div class="reactions">
-
-                <button class="react-btn">
-                    😂 Funny <span>4</span>
-                </button>
-
-                <button class="react-btn">
-                    😳 WTF <span>1</span>
-                </button>
-
-                <button class="react-btn">
-                    🤦 WTH <span>0</span>
-                </button>
-
-                <button class="react-btn">
-                    😭 Relatable <span>73</span>
-                </button>
-
-                <button class="react-btn">
-                    💔 Sad <span>31</span>
-                </button>
-
-                <div class="like-dislike">
-
-                    <button class="vote">
-                        👍 94
-                    </button>
-
-                    <button class="vote">
-                        👎 3
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="comment-toggle">
-
-                <button onclick="toggleComments(this)">
-                    💬 9 comments
-                </button>
-
-            </div>
-
-            <div class="comments">
-
-                <div class="comment-input">
-
-                    <input
-                        type="text"
-                        placeholder="Write an anonymous comment..."
-                    >
-
-                    <button>
-                        Send
-                    </button>
-
-                </div>
-
-            </div>
-
-        </article>
-
+    <div class="posts-loading">
+        <div class="loading-spinner"></div>
+        <div>Loading...</div>
     </div>
+
+</div>
 
 </main>
 
