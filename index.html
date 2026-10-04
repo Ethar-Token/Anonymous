@@ -441,6 +441,88 @@ footer a {
         padding: 6px 8px;
     }
 }
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(41, 36, 58, 0.45);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.custom-modal-box {
+    width: 100%;
+    max-width: 360px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 25px 25px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(60, 40, 100, 0.2);
+    animation: modalPop 0.2s ease;
+}
+
+.custom-modal-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: var(--purple-soft);
+    color: var(--purple-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.custom-modal-box h3 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 20px;
+}
+
+.custom-modal-box p {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.custom-modal-box button {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    background: var(--purple);
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.custom-modal-box button:hover {
+    background: var(--purple-dark);
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 </style>
 </head>
 
@@ -1573,18 +1655,17 @@ async function reportPost(postId) {
 
     if (error) {
         console.error(error);
-        alert("Unable to submit your report. Please try again.");
+        showModal("Unable to submit your report. Please try again.");
         return;
     }
 
     if (data === false) {
-        alert("You've already reported this post. Thank you for helping keep our community safe.");
+        showModal("You've already reported this post. Thank you for helping keep our community safe.");
         return;
     }
 
-    alert("Thank you for helping keep our community safe.");
+    showModal("Thank you for helping keep our community safe.");
 }
-
 
 // ==========================================
 // INITIAL LOAD
@@ -1592,7 +1673,26 @@ async function reportPost(postId) {
 
 loadPosts("new");
 
+function showModal(title, message) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalMessage").textContent = message;
+    document.getElementById("customModal").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("customModal").classList.remove("show");
+}
+
 </script>
+
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-icon">✓</div>
+        <h3 id="modalTitle">Thank you!</h3>
+        <p id="modalMessage"></p>
+        <button onclick="closeModal()">OK</button>
+    </div>
+</div>
 
 </body>
 </html>
