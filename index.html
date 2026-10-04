@@ -1565,9 +1565,24 @@ function escapeHTML(text) {
 // ==========================================
 
 async function reportPost(postId) {
+    const { data, error } = await supabase
+        .rpc("report_post", {
+            p_post_id: postId,
+            p_visitor_id: visitorId
+        });
 
-    alert("Report system will be connected next.");
+    if (error) {
+        console.error(error);
+        alert("Unable to submit your report. Please try again.");
+        return;
+    }
 
+    if (data === false) {
+        alert("You've already reported this post. Thank you for helping keep our community safe.");
+        return;
+    }
+
+    alert("Thank you for helping keep our community safe.");
 }
 
 
