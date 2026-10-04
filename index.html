@@ -1075,7 +1075,7 @@ function createPostHTML(post) {
                     class="react-btn"
                     onclick="react('${post.id}', 'funny', this)"
                 >
-                    😂 Funny <span>${post.funny}</span>
+                    😂 Funny <span>${formatCount(post.funny}</span>
                 </button>
 
 
@@ -1083,7 +1083,7 @@ function createPostHTML(post) {
                     class="react-btn"
                     onclick="react('${post.id}', 'wtf', this)"
                 >
-                    😳 WTF <span>${post.wtf}</span>
+                    😳 WTF <span>${formatCount(post.wtf}</span>
                 </button>
 
 
@@ -1091,7 +1091,7 @@ function createPostHTML(post) {
                     class="react-btn"
                     onclick="react('${post.id}', 'wth', this)"
                 >
-                    🤦 WTH <span>${post.wth}</span>
+                    🤦 WTH <span>${formatCount(post.wth}</span>
                 </button>
 
 
@@ -1099,7 +1099,7 @@ function createPostHTML(post) {
                     class="react-btn"
                     onclick="react('${post.id}', 'relatable', this)"
                 >
-                    😭 Relatable <span>${post.relatable}</span>
+                    😭 Relatable <span>${formatCount(post.relatable}</span>
                 </button>
 
 
@@ -1107,7 +1107,7 @@ function createPostHTML(post) {
                     class="react-btn"
                     onclick="react('${post.id}', 'sad', this)"
                 >
-                    💔 Sad <span>${post.sad}</span>
+                    💔 Sad <span>${formatCount(post.sad}</span>
                 </button>
 
 
@@ -1117,7 +1117,7 @@ function createPostHTML(post) {
                         class="vote"
                         onclick="react('${post.id}', 'like', this)"
                     >
-                        👍 ${post.likes}
+                        👍 ${formatCount(post.likes}
                     </button>
 
 
@@ -1125,7 +1125,7 @@ function createPostHTML(post) {
                         class="vote"
                         onclick="react('${post.id}', 'dislike', this)"
                     >
-                        👎 ${post.dislikes}
+                        👎 ${formatCount(post.dislikes}
                     </button>
 
                 </div>
@@ -1430,6 +1430,26 @@ document.querySelectorAll(".filter").forEach(function(button) {
     });
 
 });
+
+function formatCount(number) {
+    number = Number(number) || 0;
+
+    if (number < 1000) {
+        return number.toString();
+    }
+
+    if (number < 1000000) {
+        const value = number / 1000;
+        return value % 1 === 0
+            ? value + "k"
+            : value.toFixed(1) + "k";
+    }
+
+    const value = number / 1000000;
+    return value % 1 === 0
+        ? value + "M"
+        : value.toFixed(1) + "M";
+}
 
 
 // ==========================================
