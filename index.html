@@ -1033,6 +1033,10 @@ async function loadPosts(sort = "new") {
     const postsContainer =
         document.getElementById("posts");
 
+    if (!visitorCountry) {
+        visitorCountry = await getCountry();
+    }
+
 
     let query = client
         .from("posts")
@@ -1085,6 +1089,16 @@ async function loadPosts(sort = "new") {
         `;
 
         return;
+    }
+
+    // Put posts from the visitor's country first
+    if (visitorCountry && data) {
+        data.sort((a, b) => {
+            const aLocal = a.country === visitorCountry ? 1 : 0;
+            const bLocal = b.country === visitorCountry ? 1 : 0;
+
+            return bLocal - aLocal;
+        });
     }
 
 
@@ -1460,6 +1474,7 @@ async function submitComment(button, postId) {
 // ==========================================
 
 let currentSort = "new";
+let visitorCountry = null;
 
 
 document.querySelectorAll(".filter").forEach(function(button) {
