@@ -850,7 +850,7 @@ async function loadPosts(sort = "new", reset = false) {
 
         if (visitorCountry) {
             globalQuery = globalQuery
-                .neq("country", visitorCountry);
+                .or(`country.is.null,country.neq.${visitorCountry}`);
         }
 
         if (sort === "new") {
