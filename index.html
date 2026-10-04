@@ -786,7 +786,7 @@ async function loadPosts(sort = "new", reset = false) {
      */
     if (!localFinished && visitorCountry) {
 
-        let localQuery = supabase
+        let localQuery = client
             .from("posts")
             .select("*")
             .eq("country", visitorCountry);
@@ -844,7 +844,7 @@ async function loadPosts(sort = "new", reset = false) {
 
         const remaining = POSTS_PER_PAGE - posts.length;
 
-        let globalQuery = supabase
+        let globalQuery = client
             .from("posts")
             .select("*");
 
