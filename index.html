@@ -755,7 +755,7 @@ async function submitConfession() {
 
 async function loadPosts(sort = "new", reset = false) {
 
-    if (loadingPosts || allPostsLoaded) return;
+    if (!reset && (loadingPosts || allPostsLoaded)) return;
 
     loadingPosts = true;
 
@@ -1127,10 +1127,35 @@ async function react(postId, reactionType, button) {
 
     button.classList.add("selected");
 
-    await loadPosts(currentSort, true);
+    const countElement = button.querySelector("span");
+
+    if (countElement) {
+
+        const currentCount = Number(
+            countElement.textContent.replace(/[kM]/g, "")
+        );
+
+        countElement.textContent = formatCount(currentCount + 1);
+
+    } else {
+
+        const match = button.textContent.match(/[\d.]+/);
+
+        if (match) {
+
+            const currentCount = Number(match[0]);
+
+            button.textContent =
+                button.textContent.replace(
+                    match[0],
+                    formatCount(currentCount + 1)
+                );
+
+        }
+
+    }
 
 }
-
 
 // ==========================================
 // COMMENTS
