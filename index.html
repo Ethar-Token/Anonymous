@@ -578,7 +578,7 @@ footer a {
         <textarea
             id="confession"
             maxlength="500"
-            placeholder="Nobody knows this about me..."
+            placeholder="Your secret is safe here. Say it..."
             oninput="updateCounter()"
         ></textarea>
 
@@ -744,7 +744,7 @@ async function submitConfession() {
     button.disabled = false;
     button.textContent = "Post anonymously";
 
-
+    loadingPosts = false;
     await loadPosts("new", true);
 }
 
