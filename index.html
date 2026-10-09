@@ -950,8 +950,9 @@ async function loadPosts(sort = "new", reset = false) {
 
             adContainer.className = "post-ad-banner";
 
-            adContainer.innerHTML = `
-                <script>
+            const adOptions = document.createElement("script");
+
+            adOptions.textContent = `
                     atOptions = {
                         'key' : '08b3e0f70a2aa368598746b3c7a998cc',
                         'format' : 'iframe',
@@ -959,10 +960,9 @@ async function loadPosts(sort = "new", reset = false) {
                         'width' : 728,
                         'params' : {}
                     };
-                <\/script>
             `;
 
-            postsContainer.appendChild(adContainer);
+            adContainer.appendChild(adOptions);
 
             const adScript = document.createElement("script");
 
