@@ -447,6 +447,7 @@ footer a {
         height: 90px;
         margin: 20px auto;
         overflow: hidden;
+        transform: scale(0.4395);
     }
 
     .post-ad-banner iframe {
@@ -455,7 +456,6 @@ footer a {
         height: 90px !important;
         max-width: none !important;
         transform-origin: top left;
-        transform: scale(0.4395);
     }
 }
 
@@ -593,6 +593,45 @@ footer a {
         <div class="header-tagline">Say it here.</div>
     </div>
 </header>
+
+<style>
+.ad-container {
+    width: 728px;
+    height: 90px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .ad-container {
+        width: 384px;
+        height: 60px;
+    }
+
+    .ad-container iframe {
+        transform: scale(0.4395);
+        transform-origin: top left;
+        width: 728px !important;
+        height: 90px !important;
+    }
+}
+</style>
+
+<div class="ad-container">
+
+    <script>
+      atOptions = {
+        'key' : '625294dd484f1cdd77889f996cd84a76',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+
+    <script src="https://www.highrevenueformat.com/625294dd484f1cdd77889f996cd84a76/invoke.js"></script>
+
+</div>
 
 <main class="container">
 
