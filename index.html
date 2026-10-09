@@ -938,7 +938,7 @@ async function loadPosts(sort = "new", reset = false) {
         postsContainer.innerHTML = "";
     }
 
-    posts.forEach(post, index) => {
+    posts.forEach((post, index) => {
         postsContainer.insertAdjacentHTML(
             "beforeend",
             createPostHTML(post)
@@ -949,6 +949,8 @@ async function loadPosts(sort = "new", reset = false) {
             const adContainer = document.createElement("div");
 
             adContainer.className = "post-ad-banner";
+
+            postsContainer.appendChild(adContainer);
 
             const adOptions = document.createElement("script");
 
