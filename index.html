@@ -443,14 +443,20 @@ footer a {
 
     .post-ad-banner {
         width: 100%;
-        max-width: 100%;
-        min-height: 90px;
+        max-width: 728px;
+        height: auto;
+        min-height: 0;
+        margin: 20px auto;
         overflow: hidden;
     }
 
     .post-ad-banner iframe {
-        width: 100% !important;
-        max-width: 100% !important;
+        display: block;
+        width: 728px !important;
+        height: 90px !important;
+        max-width: none !important;
+        transform: scale(calc((100vw - 18px) / 728));
+        transform-origin: top left;
     }
 }
 
