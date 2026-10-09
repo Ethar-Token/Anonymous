@@ -444,12 +444,9 @@ footer a {
     .post-ad-banner {
         width: 100%;
         max-width: 728px;
-        height: auto;
-        min-height: 0;
-        aspect-ratio: 728 / 90;
+        height: 90px;
         margin: 20px auto;
         overflow: hidden;
-        position: relative;
     }
 
     .post-ad-banner iframe {
@@ -457,7 +454,6 @@ footer a {
         width: 728px !important;
         height: 90px !important;
         max-width: none !important;
-        transform: scale(min(1, calc((100vw - 18px) / 728)));
         transform-origin: top left;
     }
 }
@@ -980,6 +976,17 @@ async function loadPosts(sort = "new", reset = false) {
                 "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
 
             adContainer.appendChild(adScript);
+
+            adScript.onload = function () {
+                const iframe = adContainer.querySelector("iframe");
+
+                if (iframe) {
+                    const scale = Math.min(1, adContainer.clientWidth / 728);
+
+                    iframe.style.transform = `scale(${scale})`;
+                    adContainer.style.height = `${90 * scale}px`;
+                }
+            };
         }
     });
 
