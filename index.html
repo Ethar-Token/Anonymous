@@ -449,6 +449,7 @@ footer a {
         aspect-ratio: 728 / 90;
         margin: 20px auto;
         overflow: hidden;
+        position: relative;
     }
 
     .post-ad-banner iframe {
@@ -456,7 +457,7 @@ footer a {
         width: 728px !important;
         height: 90px !important;
         max-width: none !important;
-        transform: scale(calc((100vw - 18px) / 728));
+        transform: scale(min(1, calc((100vw - 18px) / 728)));
         transform-origin: top left;
     }
 }
