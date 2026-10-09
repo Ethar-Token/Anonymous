@@ -920,13 +920,14 @@ async function loadPosts(sort = "new", reset = false) {
     /*
      * Loading indicator while more posts exist.
      */
+    
+    const oldLoader = document.getElementById("feedLoader");
+
+    if (oldLoader) {
+        oldLoader.remove();
+    }
+    
     if (!allPostsLoaded) {
-        const oldLoader = document.getElementById("feedLoader");
-
-        if (oldLoader) {
-            oldLoader.remove();
-        }
-
         postsContainer.insertAdjacentHTML(
             "beforeend",
             `
@@ -1304,9 +1305,6 @@ async function submitComment(button, postId) {
         postId,
         post
     );
-
-
-    await loadPosts(currentSort, true);
 
 }
 
