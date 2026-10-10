@@ -440,6 +440,13 @@ footer a {
         font-size: 10px;
         padding: 6px 8px;
     }
+
+    .post-ad-banner {
+        margin: 20px auto;
+        width: 320px;
+        height: 50px;
+        overflow: hidden;
+    }
 }
 
 .custom-modal {
@@ -836,12 +843,7 @@ async function loadPosts(sort = "new", reset = false) {
         localFinished = false;
         allPostsLoaded = false;
 
-        postsContainer.innerHTML = `
-            <div class="posts-loading">
-                <div class="loading-spinner"></div>
-                <div>Loading confessions...</div>
-            </div>
-        `;
+        postsContainer.innerHTML = "";
     }
 
     if (!visitorCountry) {
