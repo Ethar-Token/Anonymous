@@ -395,7 +395,7 @@ footer a {
 
 /* ================= MOBILE ================= */
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 
     header {
         height: 62px;
@@ -442,17 +442,14 @@ footer a {
     }
 
     .post-ad-banner {
-        width: 320px;
-        height: 50px;
         margin: 20px auto;
         overflow: hidden;
     }
 
     .post-ad-banner iframe {
-        transform: scale(0.4395);
         transform-origin: top left;
-        width: 728px !important;
-        height: 90px !important;
+        width: 320px !important;
+        height: 50px !important;
     }
 }
 
@@ -1007,18 +1004,26 @@ async function loadPosts(sort = "new", reset = false) {
 
             postsContainer.appendChild(adContainer);
 
+            const isMobile = window.innerWidth <= 767;
+            const adKey = isMobile
+                ? "714a73a824a07db10187e2ad1f24755"
+                : "08b3e0f70a2aa368598746b3c7a998cc";
+
+            const adWidth = isMobile ? 320 : 728;
+            const adHeight = isMobile ? 50 : 90;
+
             window.atOptions = {
-                        'key' : '08b3e0f70a2aa368598746b3c7a998cc',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
+                        'key' : adKey,
+                        'format' : "iframe",
+                        'height' : adHeight,
+                        'width' : adWidth,
                         'params' : {}
                     };
 
             const adScript = document.createElement("script");
 
             adScript.src =
-                "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+                "https://www.highrevenueformat.com/" + adKey + "/invoke.js";
 
             adContainer.appendChild(adScript);
 
