@@ -442,9 +442,8 @@ footer a {
     }
 
     .post-ad-banner {
-        width: 100%;
-        max-width: 728px;
-        height: 90px;
+        width: 320px;
+        height: 50px;
         margin: 20px auto;
         overflow: hidden;
     }
@@ -453,7 +452,7 @@ footer a {
         display: block;
         width: 728px !important;
         height: 90px !important;
-        max-width: none !important;
+        transform: scale(0.4395);
         transform-origin: top left;
     }
 }
@@ -579,6 +578,20 @@ footer a {
 
 .post-ad-banner iframe {
     max-width: 100%;
+}
+
+.right-native-ad {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    width: 300px;
+    z-index: 10;
+}
+
+@media (max-width: 1100px) {
+    .right-native-ad {
+        display: none;
+    }
 }
     
 </style>
@@ -1016,16 +1029,6 @@ async function loadPosts(sort = "new", reset = false) {
 
             adContainer.appendChild(adScript);
 
-            adScript.onload = function () {
-                const iframe = adContainer.querySelector("iframe");
-
-                if (iframe) {
-                    const scale = Math.min(1, adContainer.clientWidth / 728);
-
-                    iframe.style.transform = `scale(${scale})`;
-                    adContainer.style.height = `${90 * scale}px`;
-                }
-            };
         }
     });
 
@@ -1689,6 +1692,29 @@ async function getCountry() {
         <button onclick="closeModal()">OK</button>
     </div>
 </div>
+
+<div id="rightNativeAd"></div>
+
+<script>
+if (window.innerWidth > 1100) {
+    const nativeAd = document.getElementById("rightNativeAd");
+
+    nativeAd.className = "right-native-ad";
+
+    const adContainer = document.createElement("div");
+    adContainer.id = "container-b54e1cfcffa3da2de32de9d1c2fec2e1";
+
+    nativeAd.appendChild(adContainer);
+
+    const adScript = document.createElement("script");
+    adScript.async = true;
+    adScript.setAttribute("data-cfasync", "false");
+    adScript.src =
+        "https://pl31749074.profitableratecpmnetwork.com/b54e1cfcffa3da2de32de9d1c2fec2e1/invoke.js";
+
+    nativeAd.appendChild(adScript);
+}
+</script>
 
 </body>
 </html>
