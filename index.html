@@ -1002,19 +1002,15 @@ async function loadPosts(sort = "new", reset = false) {
 
             adContainer.className = "post-ad-banner";
 
-            adContainer.innerHTML = `
-                <script>
-                    atOptions = {
+            postsContainer.appendChild(adContainer);
+
+            window.atOptions = {
                         'key' : '08b3e0f70a2aa368598746b3c7a998cc',
                         'format' : 'iframe',
                         'height' : 90,
                         'width' : 728,
                         'params' : {}
                     };
-                <\/script>
-            `;
-
-            postsContainer.appendChild(adContainer);
 
             const adScript = document.createElement("script");
 
