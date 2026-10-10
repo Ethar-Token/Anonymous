@@ -444,7 +444,6 @@ footer a {
     .post-ad-banner {
         width: 320px;
         height: 50px;
-        
     }
 
     .post-ad-banner iframe {
@@ -1003,11 +1002,8 @@ async function loadPosts(sort = "new", reset = false) {
 
             adContainer.className = "post-ad-banner";
 
-            postsContainer.appendChild(adContainer);
-
-            const adOptions = document.createElement("script");
-
-            adOptions.textContent = `
+            adContainer.innerHTML = `
+                <script>
                     atOptions = {
                         'key' : '08b3e0f70a2aa368598746b3c7a998cc',
                         'format' : 'iframe',
@@ -1015,9 +1011,10 @@ async function loadPosts(sort = "new", reset = false) {
                         'width' : 728,
                         'params' : {}
                     };
+                </script>
             `;
 
-            adContainer.appendChild(adOptions);
+            postsContainer.appendChild(adContainer);
 
             const adScript = document.createElement("script");
 
