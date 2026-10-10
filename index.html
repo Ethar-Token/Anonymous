@@ -975,54 +975,54 @@ async function loadPosts(sort = "new", reset = false) {
     /*
      * Add posts to the existing feed.
      */
-posts.forEach((post, index) => {
+     posts.forEach((post, index) => {
 
-    postsContainer.insertAdjacentHTML(
-         "beforeend",
-        createPostHTML(post)
-    );
-    if (index === 4) {
+         postsContainer.insertAdjacentHTML(
+              "beforeend",
+             createPostHTML(post)
+         );
+         if (index === 4) {
 
-        const adContainer = document.createElement("div");
-        adContainer.className = "post-ad-banner";
+             const adContainer = document.createElement("div");
+             adContainer.className = "post-ad-banner";
 
-        postsContainer.appendChild(adContainer);
+             postsContainer.appendChild(adContainer);
 
-        const isMobile = window.innerWidth <= 767;
+             const isMobile = window.innerWidth <= 767;
 
-        const adOptions = document.createElement("script");
+             const adOptions = document.createElement("script");
 
-        if (isMobile) {
-            adOptions.textContent =
-                "atOptions = {" +
-                "'key' : '714a73a824a07db10187e2ad1f24755'," +
-                "'format' : 'iframe'," +
-                "'height' : 50," +
-                "'width' : 320," +
-                "'params' : {}" +
-                "};";
-        } else {
-            adOptions.textContent =
-                "atOptions = {" +
-                "'key' : '08b3e0f70a2aa368598746b3c7a998cc'," +
-                "'format' : 'iframe'," +
-                "'height' : 90," +
-                "'width' : 728," +
-                "'params' : {}" +
-                "};";
-        }
+             if (isMobile) {
+                 adOptions.textContent =
+                     "atOptions = {" +
+                     "'key' : '714a73a824a07db10187e2ad1f24755'," +
+                     "'format' : 'iframe'," +
+                     "'height' : 50," +
+                     "'width' : 320," +
+                     "'params' : {}" +
+                     "};";
+             } else {
+                 adOptions.textContent =
+                     "atOptions = {" +
+                     "'key' : '08b3e0f70a2aa368598746b3c7a998cc'," +
+                     "'format' : 'iframe'," +
+                     "'height' : 90," +
+                     "'width' : 728," +
+                     "'params' : {}" +
+                     "};";
+             }
 
-        adContainer.appendChild(adOptions);
+             adContainer.appendChild(adOptions);
 
-        const adScript = document.createElement("script");
+             const adScript = document.createElement("script");
 
-        adScript.src = isMobile
-            ? "https://www.highrevenueformat.com/714a73a824a07db10187e2ad1f24755/invoke.js"
-            : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+             adScript.src = isMobile
+                 ? "https://www.highrevenueformat.com/714a73a824a07db10187e2ad1f24755/invoke.js"
+                 : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
 
-        adContainer.appendChild(adScript);
-    }
-});
+             adContainer.appendChild(adScript);
+         }
+     });
     /*
      * Loading indicator while more posts exist.
      */
