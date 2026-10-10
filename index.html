@@ -975,48 +975,47 @@ async function loadPosts(sort = "new", reset = false) {
     /*
      * Add posts to the existing feed.
      */
-    if (reset) {
-        postsContainer.innerHTML = "";
-    }
+    if (index === 4) {
 
-    posts.forEach((post, index) => {
-        postsContainer.insertAdjacentHTML(
-            "beforeend",
-            createPostHTML(post)
-        );
-        // Add ad after the 5th post in every batch of 10
-        if (index === 4) {
+        const adContainer = document.createElement("div");
+        adContainer.className = "post-ad-banner";
 
-            const adContainer = document.createElement("div");
+        postsContainer.appendChild(adContainer);
 
-            adContainer.className = "post-ad-banner";
+        const isMobile = window.innerWidth <= 767;
 
-            postsContainer.appendChild(adContainer);
+        const adOptions = document.createElement("script");
 
-            const isMobile = window.innerWidth <= 767;
-            const adKey = isMobile
-                ? "714a73a824a07db10187e2ad1f24755"
-                : "08b3e0f70a2aa368598746b3c7a998cc";
-
-            const adWidth = isMobile ? 320 : 728;
-            const adHeight = isMobile ? 50 : 90;
-
-            window.atOptions = {
-                        'key' : adKey,
-                        'format' : "iframe",
-                        'height' : adHeight,
-                        'width' : adWidth,
-                        'params' : {}
-                    };
-
-            const adScript = document.createElement("script");
-
-            adScript.src =
-                "https://www.highrevenueformat.com/" + adKey + "/invoke.js";
-
-            adContainer.appendChild(adScript);
-
+        if (isMobile) {
+            adOptions.textContent =
+                "atOptions = {" +
+                "'key' : '714a73a824a07db10187e2ad1f24755'," +
+                "'format' : 'iframe'," +
+                "'height' : 50," +
+                "'width' : 320," +
+                "'params' : {}" +
+                "};";
+        } else {
+            adOptions.textContent =
+                "atOptions = {" +
+                "'key' : '08b3e0f70a2aa368598746b3c7a998cc'," +
+                "'format' : 'iframe'," +
+                "'height' : 90," +
+                "'width' : 728," +
+                "'params' : {}" +
+                "};";
         }
+
+        adContainer.appendChild(adOptions);
+
+        const adScript = document.createElement("script");
+
+        adScript.src = isMobile
+            ? "https://www.highrevenueformat.com/714a73a824a07db10187e2ad1f24755/invoke.js"
+            : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+
+        adContainer.appendChild(adScript);
+    }
     });
 
     /*
