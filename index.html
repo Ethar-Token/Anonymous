@@ -975,6 +975,12 @@ async function loadPosts(sort = "new", reset = false) {
     /*
      * Add posts to the existing feed.
      */
+posts.forEach((post, index) => {
+
+    postsContainer.insertAdjacentHTML(
+         "beforeend",
+        createPostHTML(post)
+    );
     if (index === 4) {
 
         const adContainer = document.createElement("div");
@@ -1016,7 +1022,7 @@ async function loadPosts(sort = "new", reset = false) {
 
         adContainer.appendChild(adScript);
     }
-
+});
     /*
      * Loading indicator while more posts exist.
      */
