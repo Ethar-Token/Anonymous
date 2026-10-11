@@ -440,14 +440,6 @@ footer a {
         font-size: 10px;
         padding: 6px 8px;
     }
-
-    .post-ad-banner {
-        display: flex;
-        margin: 20px auto;
-        width: 320px;
-        height: 50px;
-        overflow: hidden;
-    }
 }
 
 .custom-modal {
@@ -541,6 +533,20 @@ footer a {
     padding: 50px 20px;
     color: var(--muted);
     font-size: 13px;
+}
+
+@media (min-width: 768px) {
+    .post-ad-banner {
+        width: 728px;
+        height: 90px;
+    }
+}
+
+@media (max-width: 767px) {
+    .post-ad-banner {
+        width: 320px;
+        height: 50px;
+    }
 }
 
 .loading-spinner {
