@@ -1001,29 +1001,22 @@ async function loadPosts(sort = "new", reset = false) {
 
              const isMobile = window.innerWidth <= 767;
 
-             const adOptions = document.createElement("script");
-
-             if (isMobile) {
-                 adOptions.textContent =
-                     "atOptions = {" +
-                     "'key' : '714a73a824a07db10187e2ad1f24755'," +
-                     "'format' : 'iframe'," +
-                     "'height' : 50," +
-                     "'width' : 320," +
-                     "'params' : {}" +
-                     "};";
-             } else {
-                 adOptions.textContent =
-                     "atOptions = {" +
-                     "'key' : '08b3e0f70a2aa368598746b3c7a998cc'," +
-                     "'format' : 'iframe'," +
-                     "'height' : 90," +
-                     "'width' : 728," +
-                     "'params' : {}" +
-                     "};";
-             }
-
-             adContainer.appendChild(adOptions);
+             window.atOptions = isMobile
+                 ? {
+                     key: "714a73a824a07db10187e2ad1f24755",
+                     format: "iframe",
+                     height: 50,
+                     width: 320,
+                     params: {}
+                  }
+                  : {
+                     key: "08b3e0f70a2aa368598746b3c7a998cc",
+                     format: "iframe",
+                     height: 90,
+                     width: 728,
+                     params: {}
+                  };
+             
 
              const adScript = document.createElement("script");
 
@@ -1031,6 +1024,7 @@ async function loadPosts(sort = "new", reset = false) {
                  ? "https://www.highrevenueformat.com/714a73a824a07db10187e2ad1f24755/invoke.js"
                  : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
 
+             adScript.async = false
              adContainer.appendChild(adScript);
          }
      });
