@@ -1397,7 +1397,8 @@ async function loadComments(postId, postElement, reset = true) {
 
     const { data: reactionCounts, error: reactionError } = await client
         .rpc("get_comment_reaction_counts", {
-            p_comment_ids: commentIds
+            p_comment_ids: commentIds,
+            p_visitor_id: visitorId
         });
 
     if (reactionError) {
@@ -1409,12 +1410,21 @@ async function loadComments(postId, postElement, reset = true) {
     (reactionCounts || []).forEach(row => {
         reactionMap[row.comment_id] = {
             likes: Number(row.likes || 0),
-            dislikes: Number(row.dislikes || 0)
+            dislikes: Number(row.dislikes || 0),
+            my_reaction: row.my_reaction || null
         };
     });
 
 
-    const commentsHTML = data.map(comment => `
+    const commentsHTML = data.map(comment => {
+
+        const reactions = reactionMap[comment.id] || {
+            likes: 0,
+            dislikes: 0,
+            my_reaction: null
+        };
+
+        return `
 
         <div class="comment" data-comment-id="${comment.id}">
 
@@ -1428,19 +1438,26 @@ async function loadComments(postId, postElement, reset = true) {
 
             <div class="comment-actions">
 
-                <button onclick="reactToComment('${comment.id}', 'like', this)">
-                    👍 <span>${reactionMap[comment.id]?.likes || 0}</span>
+                <button 
+                class="${reactions.my_reaction === 'like' ? 'active' : ''}"
+                onclick="reactToComment('${comment.id}', 'like', this)"
+                >
+                    👍 <span>${reactions.likes}</span>
                 </button>
 
-                <button onclick="reactToComment('${comment.id}', 'dislike', this)">
-                    👎 <span>${reactionMap[comment.id]?.dislikes || 0}</span>
+                <button 
+                class="${reactions.my_reaction === 'dislike' ? 'active' : ''}"
+                onclick="reactToComment('${comment.id}', 'dislike', this)"
+                >
+                    👎 <span>${reactions.dislikes}</span>
                 </button>
 
             </div>
 
         </div>
 
-    `).join("");
+    `;
+    }).join("");
 
 
     if (reset) {
