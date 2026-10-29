@@ -363,6 +363,38 @@ textarea:focus {
     cursor: pointer;
 }
 
+.comment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.comment-actions button {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 3px 5px;
+}
+
+.comment-actions button:hover {
+    color: var(--purple-dark);
+}
+
+.load-more-comments {
+    display: block;
+    margin: 10px auto 4px;
+    border: 0;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
 /* ================= REPORT ================= */
 
 .report {
@@ -1275,11 +1307,9 @@ async function react(postId, reactionType, button) {
 
 async function toggleComments(button, postId) {
 
-    const post =
-        button.closest(".post");
+    const post = button.closest(".post");
 
-    const comments =
-        post.querySelector(".comments");
+    const comments = post.querySelector(".comments");
 
 
     comments.classList.toggle("open");
@@ -1287,7 +1317,7 @@ async function toggleComments(button, postId) {
 
     if (comments.classList.contains("open")) {
 
-        await loadComments(postId, post);
+        await loadComments(postId, post, true);
 
     }
 
@@ -1298,34 +1328,55 @@ async function toggleComments(button, postId) {
 // LOAD COMMENTS
 // ==========================================
 
-async function loadComments(postId, postElement) {
+async function loadComments(postId, postElement, reset = true) {
 
     const list =
         postElement.querySelector(".comments-list");
 
 
-    list.innerHTML = "Loading comments...";
+    if (reset) {
+
+        list.innerHTML = "Loading comments...";
+
+        postElement.dataset.commentOffset = "0";
+
+    }
+
+
+    const offset =
+        parseInt(
+            postElement.dataset.commentOffset || "0",
+            10
+        );
+
+
+    const limit = 5;
 
 
     const { data, error } = await client
         .from("comments")
         .select("*")
         .eq("post_id", postId)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
 
 
     if (error) {
 
         console.error(error);
 
-        list.innerHTML =
-            "Unable to load comments.";
+        if (reset) {
+
+            list.innerHTML =
+                "Unable to load comments.";
+
+        }
 
         return;
     }
 
 
-    if (!data || data.length === 0) {
+    if (reset && (!data || data.length === 0)) {
 
         list.innerHTML = `
             <div style="font-size:11px;color:#aaa;padding:8px 0;">
@@ -1337,9 +1388,9 @@ async function loadComments(postId, postElement) {
     }
 
 
-    list.innerHTML = data.map(comment => `
+    const commentsHTML = data.map(comment => `
 
-        <div class="comment">
+        <div class="comment" data-comment-id="${comment.id}">
 
             <div class="comment-meta">
                 Anonymous · ${formatDate(comment.created_at)}
@@ -1349,12 +1400,78 @@ async function loadComments(postId, postElement) {
                 ${escapeHTML(comment.message)}
             </div>
 
+            <div class="comment-actions">
+
+                <button onclick="reactToComment('${comment.id}', 'like', this)">
+                    👍 <span>0</span>
+                </button>
+
+                <button onclick="reactToComment('${comment.id}', 'dislike', this)">
+                    👎 <span>0</span>
+                </button>
+
+            </div>
+
         </div>
 
     `).join("");
 
-}
 
+    if (reset) {
+
+        list.innerHTML = commentsHTML;
+
+    } else {
+
+        list.insertAdjacentHTML(
+            "beforeend",
+            commentsHTML
+        );
+
+    }
+
+
+    postElement.dataset.commentOffset =
+        String(offset + data.length);
+
+
+    let loadMore =
+        postElement.querySelector(".load-more-comments");
+
+
+    if (data.length === limit) {
+
+        if (!loadMore) {
+
+            loadMore =
+                document.createElement("button");
+
+            loadMore.className =
+                "load-more-comments";
+
+            loadMore.textContent =
+                "Load more";
+
+            loadMore.onclick = () =>
+                loadComments(
+                    postId,
+                    postElement,
+                    false
+                );
+
+            list.parentElement.insertBefore(
+                loadMore,
+                list.nextSibling
+            );
+        }
+
+    } else if (loadMore) {
+
+        loadMore.remove();
+
+    }
+
+}
 
 // ==========================================
 // ADD COMMENT
