@@ -395,6 +395,11 @@ textarea:focus {
     font-family: inherit;
 }
 
+.comment-actions button.active {
+    color: var(--purple-dark);
+    font-weight: 600;
+}
+
 /* ================= REPORT ================= */
 
 .report {
@@ -1496,6 +1501,23 @@ async function loadComments(postId, postElement, reset = true) {
 
 async function reactToComment(commentId, reactionType, button) {
 
+    const comment = button.closest(".comment");
+
+    const buttons =
+        comment.querySelectorAll(".comment-actions button");
+
+    const likeButton = buttons[0];
+    const dislikeButton = buttons[1];
+
+    const likeCount =
+        likeButton.querySelector("span");
+
+    const dislikeCount =
+        dislikeButton.querySelector("span");
+
+    const currentReaction =
+        comment.dataset.reaction || "";
+
     const { error } = await client
         .rpc("react_to_comment", {
             p_comment_id: commentId,
@@ -1508,6 +1530,66 @@ async function reactToComment(commentId, reactionType, button) {
         return;
     }
 
+
+    /* Clicking the same reaction again = remove it */
+
+    if (currentReaction === reactionType) {
+
+        if (reactionType === "like") {
+            likeCount.textContent =
+                Math.max(0, Number(likeCount.textContent) - 1);
+        } else {
+            dislikeCount.textContent =
+                Math.max(0, Number(dislikeCount.textContent) - 1);
+        }
+
+        button.classList.remove("active");
+
+        comment.dataset.reaction = "";
+
+        return;
+    }
+
+
+    /* Switching from the other reaction */
+
+    if (currentReaction === "like") {
+
+        likeCount.textContent =
+            Math.max(0, Number(likeCount.textContent) - 1);
+
+        likeButton.classList.remove("active");
+
+    }
+
+    if (currentReaction === "dislike") {
+
+        dislikeCount.textContent =
+            Math.max(0, Number(dislikeCount.textContent) - 1);
+
+        dislikeButton.classList.remove("active");
+
+    }
+
+
+    /* Add the new reaction */
+
+    if (reactionType === "like") {
+
+        likeCount.textContent =
+            Number(likeCount.textContent) + 1;
+
+    } else {
+
+        dislikeCount.textContent =
+            Number(dislikeCount.textContent) + 1;
+
+    }
+
+    button.classList.add("active");
+
+    comment.dataset.reaction =
+        reactionType;
 }
 
 // ==========================================
