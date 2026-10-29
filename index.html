@@ -1388,6 +1388,27 @@ async function loadComments(postId, postElement, reset = true) {
     }
 
 
+    const commentIds = data.map(comment => comment.id);
+
+    const { data: reactionCounts, error: reactionError } = await client
+        .rpc("get_comment_reaction_counts", {
+            p_comment_ids: commentIds
+        });
+
+    if (reactionError) {
+        console.error("Error loading comment reactions:", reactionError);
+    }
+
+    const reactionMap = {};
+
+    (reactionCounts || []).forEach(row => {
+        reactionMap[row.comment_id] = {
+            likes: Number(row.likes || 0),
+            dislikes: Number(row.dislikes || 0)
+        };
+    });
+
+
     const commentsHTML = data.map(comment => `
 
         <div class="comment" data-comment-id="${comment.id}">
@@ -1403,11 +1424,11 @@ async function loadComments(postId, postElement, reset = true) {
             <div class="comment-actions">
 
                 <button onclick="reactToComment('${comment.id}', 'like', this)">
-                    👍 <span>0</span>
+                    👍 <span>${reactionMap[comment.id]?.likes || 0}</span>
                 </button>
 
                 <button onclick="reactToComment('${comment.id}', 'dislike', this)">
-                    👎 <span>0</span>
+                    👎 <span>${reactionMap[comment.id]?.dislikes || 0}</span>
                 </button>
 
             </div>
@@ -1469,6 +1490,22 @@ async function loadComments(postId, postElement, reset = true) {
 
         loadMore.remove();
 
+    }
+
+}
+
+async function reactToComment(commentId, reactionType, button) {
+
+    const { error } = await client
+        .rpc("react_to_comment", {
+            p_comment_id: commentId,
+            p_visitor_id: visitorId,
+            p_reaction_type: reactionType
+        });
+
+    if (error) {
+        console.error(error);
+        return;
     }
 
 }
