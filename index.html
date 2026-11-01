@@ -317,85 +317,104 @@ textarea:focus {
 }
 
 .comment {
-    background: #faf9fd;
-    border-radius: 11px;
-    padding: 10px 12px;
-    margin-bottom: 7px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+    
+.comment:last-child {
+    border-bottom: none;
 }
 
 .comment-meta {
-    font-size: 9px;
-    color: #aaa5b2;
-    margin-bottom: 4px;
+    font-size: 11px;
+    color: #777181;
+    margin-bottom: 5px;
 }
 
 .comment-text {
-    font-size: 11px;
+    font-size: 14px;
     line-height: 1.55;
-    color: #504b5b;
+    color: #29243a;
+    font-weight: 400;
+    word-break: break-word;
 }
 
 .comment-input {
     display: flex;
-    gap: 7px;
-    margin-top: 10px;
+    gap: 8px;
+    margin-top: 12px;
 }
 
 .comment-input input {
     flex: 1;
-    border: 1px solid var(--border);
-    background: white;
+    border: 1px solid #ddd8e8;
     border-radius: 9px;
-    padding: 9px 10px;
+    padding: 10px 12px;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
     outline: none;
+}
+    
+.comment-input input:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px var(--purple-light);
 }
 
 .comment-input button {
     border: none;
-    background: var(--purple);
-    color: white;
     border-radius: 9px;
-    padding: 0 13px;
+    padding: 0 15px;
+    background: var(--purple-dark);
+    color: white;
     font-family: inherit;
-    font-size: 11px;
     cursor: pointer;
 }
 
 .comment-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 5px;
+    margin-top: 7px;
 }
 
 .comment-actions button {
     border: 0;
-    background: none;
-    color: var(--muted);
+    background: transparent;
+    color: #777181;
+    font-family: inherit;
     font-size: 13px;
     cursor: pointer;
-    padding: 3px 5px;
+    padding: 4px 7px;
+    border-radius: 7px;
+    transition: background .15s, color .15s;
 }
 
 .comment-actions button:hover {
+    background: var(--purple-light);
     color: var(--purple-dark);
 }
 
 .load-more-comments {
     display: block;
-    margin: 10px auto 4px;
-    border: 0;
-    background: var(--purple-light);
-    color: var(--purple-dark);
-    padding: 7px 14px;
+    margin: 12px auto 5px;
+    padding: 7px 16px;
+    border: 1px solid var(--purple-soft);
     border-radius: 8px;
-    cursor: pointer;
+    background: var(--white);
+    color: var(--purple-dark);
     font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.load-more-comments:hover {
+    background: var(--purple-light);
 }
 
 .comment-actions button.active {
+    background: var(--purple-light);
     color: var(--purple-dark);
     font-weight: 600;
 }
