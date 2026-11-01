@@ -8,6 +8,7 @@
   "background_color": "#faf9fd",
   "theme_color": "#7655c7",
   "orientation": "portrait",
+  "id": "/",
   "icons": [
     {
       "src": "/Icons/icon-192.png",
@@ -19,5 +20,21 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  
+  "screenshots": [
+  {
+    "src": "/screenshots/desktop.png",
+    "sizes": "1280x720",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Anonymous desktop homepage"
+  },
+  {
+    "src": "/screenshots/mobile.png",
+    "sizes": "390x844",
+    "type": "image/png",
+    "label": "Anonymous mobile homepage"
+  }
+]
 }
