@@ -641,6 +641,154 @@ footer a {
         display: none;
     }
 }
+
+/* ================= VISUAL POLISH ================= */
+
+.post {
+    border-color: #e8e3f1;
+    border-radius: 20px;
+    padding: 21px;
+    box-shadow: 0 3px 14px rgba(60, 40, 100, .035);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+}
+
+.post:hover {
+    border-color: #ded5ef;
+    box-shadow: 0 7px 24px rgba(60, 40, 100, .07);
+    transform: translateY(-1px);
+}
+
+.post-top {
+    margin-bottom: 15px;
+}
+
+.anonymous {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.anon-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+}
+
+.date {
+    font-size: 10px;
+    color: #96909f;
+}
+
+.post-text {
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: #302b3b;
+    margin-bottom: 19px;
+}
+
+/* Reactions */
+.reactions {
+    gap: 6px;
+}
+
+.react-btn {
+    background: #fbfaff;
+    border-color: #e7e2ef;
+    border-radius: 10px;
+    padding: 7px 10px;
+    font-size: 11px;
+}
+
+.react-btn:hover,
+.react-btn.selected {
+    background: var(--purple-light);
+    border-color: #d8c9f5;
+    color: var(--purple-dark);
+}
+
+.like-dislike {
+    gap: 4px;
+}
+
+.vote {
+    padding: 6px 8px;
+    border-radius: 9px;
+    background: #fbfaff;
+    border: 1px solid #eeeaf5;
+}
+
+.vote:hover {
+    background: var(--purple-light);
+}
+
+/* Comments */
+.comment-toggle {
+    margin-top: 17px;
+    padding-top: 14px;
+    border-top-color: #eeeaf5;
+}
+
+.comment-toggle button {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.comments {
+    background: #fcfbff;
+    border: 1px solid #eeeaf5;
+    border-radius: 13px;
+    padding: 4px 14px 12px;
+    margin-top: 12px;
+}
+
+.comment {
+    padding: 14px 0;
+    border-bottom-color: #eeeaf5;
+}
+
+.comment-meta {
+    font-size: 10px;
+    color: #8c8798;
+    margin-bottom: 6px;
+}
+
+.comment-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #302b3b;
+}
+
+.comment-input {
+    margin-top: 14px;
+}
+
+.comment-input input {
+    border-radius: 10px;
+    background: white;
+}
+
+.comment-input button {
+    border-radius: 10px;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .post {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .post-text {
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .comments {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
     
 </style>
 </head>
