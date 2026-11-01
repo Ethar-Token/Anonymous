@@ -1,1 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Anonymous — Say It Here</title>
+<meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --purple: #9b7bea;
+    --purple-dark: #7655c7;
+    --purple-light: #f3efff;
+    --purple-soft: #e9ddff;
+    --text: #29243a;
+    --muted: #8c8798;
+    --border: #eeeaf5;
+    --white: #ffffff;
+    --bg: #faf9fd;
+    --danger: #e96d87;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+
+header {
+    height: 72px;
+    background: rgba(255,255,255,.96);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    width: min(1050px, calc(100% - 32px));
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    letter-spacing: -.7px;
+}
+
+.logo span {
+    font-weight: 400;
+    color: var(--text);
+}
+
+.header-tagline {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ================= MAIN ================= */
+
+.container {
+    width: min(760px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 30px 0 70px;
+}
+
+/* ================= COMPOSER ================= */
+
+.confess-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(80, 55, 130, .05);
+    margin-bottom: 25px;
+}
+
+.confess-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.confess-subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: none;
+    border: 1px solid var(--border);
+    background: #fcfbff;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    outline: none;
+}
+
+textarea:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(155,123,234,.10);
+}
+
+.composer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.counter {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.post-btn {
+    border: none;
+    background: var(--purple);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.post-btn:hover {
+    background: var(--purple-dark);
+    transform: translateY(-1px);
+}
+
+/* ================= FILTERS ================= */
+
+.filters {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    margin-bottom: 18px;
+    scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter {
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    background: white;
+    color: #777181;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.filter.active {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+    font-weight: 600;
+}
+
+/* ================= POSTS ================= */
+
+.post {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 19px;
+    margin-bottom: 15px;
+}
+
+.post-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.anonymous {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.anon-icon {
+    width: 25px;
+    height: 25px;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.date {
+    font-size: 10px;
+    color: #aaa5b2;
+}
+
+.post-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #383243;
+    margin-bottom: 17px;
+}
+
+/* ================= REACTIONS ================= */
+
+.reactions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.react-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 20px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 11px;
+    color: #777181;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.react-btn:hover {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+}
+
+.react-btn.selected {
+    background: var(--purple-light);
+    border-color: var(--purple-soft);
+    color: var(--purple-dark);
+}
+
+.like-dislike {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.vote {
+    border: none;
+    background: transparent;
+    color: #9993a3;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.vote:hover {
+    color: var(--purple-dark);
+}
+
+/* ================= COMMENTS ================= */
+
+.comment-toggle {
+    margin-top: 15px;
+    padding-top: 13px;
+    border-top: 1px solid #f3f0f7;
+}
+
+.comment-toggle button {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    color: var(--purple-dark);
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.comments {
+    display: none;
+    margin-top: 13px;
+}
+
+.comments.open {
+    display: block;
+}
+
+.comment {
+    background: #faf9fd;
+    border-radius: 11px;
+    padding: 10px 12px;
+    margin-bottom: 7px;
+}
+
+.comment-meta {
+    font-size: 9px;
+    color: #aaa5b2;
+    margin-bottom: 4px;
+}
+
+.comment-text {
+    font-size: 11px;
+    line-height: 1.55;
+    color: #504b5b;
+}
+
+.comment-input {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 9px;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 11px;
+    outline: none;
+}
+
+.comment-input button {
+    border: none;
+    background: var(--purple);
+    color: white;
+    border-radius: 9px;
+    padding: 0 13px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.comment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.comment-actions button {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 3px 5px;
+}
+
+.comment-actions button:hover {
+    color: var(--purple-dark);
+}
+
+.load-more-comments {
+    display: block;
+    margin: 10px auto 4px;
+    border: 0;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.comment-actions button.active {
+    color: var(--purple-dark);
+    font-weight: 600;
+}
+
+/* ================= REPORT ================= */
+
+.report {
+    float: right;
+    border: none;
+    background: none;
+    color: #b5afbd;
+    font-family: inherit;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+.report:hover {
+    color: var(--danger);
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    color: #aaa5b2;
+    font-size: 10px;
+    padding: 20px;
+}
+
+footer a {
+    color: var(--purple-dark);
+    text-decoration: none;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+    header {
+        height: 62px;
+    }
+
+    .header-inner {
+        width: calc(100% - 22px);
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .header-tagline {
+        display: none;
+    }
+
+    .container {
+        width: calc(100% - 18px);
+        padding-top: 18px;
+    }
+
+    .confess-box {
+        border-radius: 16px;
+        padding: 17px;
+    }
+
+    .post {
+        border-radius: 15px;
+        padding: 16px;
+    }
+
+    .post-text {
+        font-size: 13px;
+    }
+
+    .reactions {
+        gap: 5px;
+    }
+
+    .react-btn {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+}
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(41, 36, 58, 0.45);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.custom-modal-box {
+    width: 100%;
+    max-width: 360px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 25px 25px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(60, 40, 100, 0.2);
+    animation: modalPop 0.2s ease;
+}
+
+.custom-modal-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: var(--purple-soft);
+    color: var(--purple-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.custom-modal-box h3 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 20px;
+}
+
+.custom-modal-box p {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.custom-modal-box button {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    background: var(--purple);
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.custom-modal-box button:hover {
+    background: var(--purple-dark);
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.posts-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 50px 20px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--purple-soft);
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.post-ad-banner {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .post-ad-banner {
+        width: 728px;
+        height: 90px;
+    }
+}
+
+@media (max-width: 767px) {
+    .post-ad-banner {
+        width: 320px;
+        height: 50px;
+    }
+}
+
+.right-native-ad {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    width: 200px;
+    z-index: 10;
+}
+    
+@media (max-width: 1100px) {
+    .right-native-ad {
+        display: none;
+    }
+}
+    
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo">Anonymous<span>.</span></div>
+        <div class="header-tagline">Say it here.</div>
+    </div>
+</header>
+
+<style>
+.ad-container {
+    width: 728px;
+    height: 90px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .ad-container {
+        width: 320px;
+        height: 50px;
+    }
+
+    .ad-container iframe {
+        transform: scale(0.4395);
+        transform-origin: top left;
+        width: 728px !important;
+        height: 90px !important;
+    }
+}
+</style>
+
+<div class="ad-container">
+
+    <script>
+      atOptions = {
+        'key' : '625294dd484f1cdd77889f996cd84a76',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+
+    <script src="https://www.highrevenueformat.com/625294dd484f1cdd77889f996cd84a76/invoke.js"></script>
+
+</div>
+
+<main class="container">
+
+    <!-- CONFESSION BOX -->
+
+    <section class="confess-box">
+
+        <div class="confess-title">
+            What's on your mind?
+        </div>
+
+        <div class="confess-subtitle">
+            Say it anonymously. Keep it short.
+        </div>
+
+        <textarea
+            id="confession"
+            maxlength="500"
+            placeholder="Your secret is safe here. Say it..."
+            oninput="updateCounter()"
+        ></textarea>
+
+        <div class="composer-bottom">
+            <div class="counter">
+                <span id="charCount">0</span>/500
+            </div>
+
+            <button class="post-btn" onclick="submitConfession()">
+                Post anonymously
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <button class="filter active">
+            New posts
+        </button>
+
+        <button class="filter">
+            Most liked
+        </button>
+
+        <button class="filter">
+            Funny 😂
+        </button>
+
+        <button class="filter">
+            Most shocking 😳
+        </button>
+
+    </div>
+
+
+<!-- POSTS -->
+
+<div id="posts">
+
+    <div class="posts-loading">
+        <div class="loading-spinner"></div>
+        <div>Loading...</div>
+    </div>
+
+</div>
+
+</main>
+
+
+<footer>
+    Anonymous · Say what you can't say anywhere else.
+    <br><br>
+    <a href="#">Community Rules</a>
+    &nbsp; · &nbsp;
+    <a href="#">Privacy</a>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://oumvqmbvphtazktjmuje.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91bXZxbWJ2cGh0YXprdGptdWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNTEyNjYsImV4cCI6MjEwNjYyNzI2Nn0.9mY55BadeNorwFwjJy3MWHiUY6h7ebyALdaE3-Xbn9A";
+
+const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+
+// ==========================================
+// VISITOR ID
+// ==========================================
+
+let visitorId = localStorage.getItem("anonymous_visitor_id");
+
+if (!visitorId) {
+
+    visitorId = crypto.randomUUID();
+
+    localStorage.setItem(
+        "anonymous_visitor_id",
+        visitorId
+    );
+
+}
+
+
+// ==========================================
+// CHARACTER COUNTER
+// ==========================================
+
+function updateCounter() {
+
+    const box = document.getElementById("confession");
+
+    document.getElementById("charCount").textContent =
+        box.value.length;
+
+}
+
+
+// ==========================================
+// CREATE POST
+// ==========================================
+
+async function submitConfession() {
+
+    const box = document.getElementById("confession");
+
+    const text = box.value.trim();
+
+    if (!text) {
+
+        showModal("Write something first.");
+
+        return;
+    }
+
+    if (text.length > 500) {
+
+        showModal("Keep your confession short.");
+
+        return;
+    }
+
+
+    const button = document.querySelector(".post-btn");
+
+    button.disabled = true;
+    button.textContent = "Posting...";
+
+
+    const { data, error } = await client
+        .rpc("create_post", {
+            p_message: text,
+            p_country: await getCountry()
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        showModal("Something went wrong. Please try again.");
+
+        button.disabled = false;
+        button.textContent = "Post anonymously";
+
+        return;
+    }
+
+
+    box.value = "";
+
+    updateCounter();
+
+    button.disabled = false;
+    button.textContent = "Post anonymously";
+
+    loadingPosts = false;
+    await loadPosts("new", true);
+}
+
+
+// ==========================================
+// LOAD POSTS
+// ==========================================
+
+async function loadPosts(sort = "new", reset = false) {
+
+    if (!reset && (loadingPosts || allPostsLoaded)) return;
+
+    loadingPosts = true;
+
+    const postsContainer = document.getElementById("posts");
+
+    if (reset) {
+        localOffset = 0;
+        globalOffset = 0;
+        localFinished = false;
+        allPostsLoaded = false;
+
+        postsContainer.innerHTML = `
+            <div class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading confessions...</div>
+            </div>
+        `;
+    }
+
+    if (!visitorCountry) {
+        visitorCountry = await getCountry();
+    }
+
+    let posts = [];
+
+    /*
+     * FIRST: posts from visitor's country
+     */
+    if (!localFinished && visitorCountry) {
+
+        let localQuery = client
+            .from("posts")
+            .select("*")
+            .eq("country", visitorCountry);
+
+        if (sort === "new") {
+            localQuery = localQuery
+                .order("created_at", { ascending: false });
+        } else if (sort === "liked") {
+            localQuery = localQuery
+                .order("likes", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "funny") {
+            localQuery = localQuery
+                .order("funny", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "shocking") {
+            localQuery = localQuery
+                .order("wtf", { ascending: false })
+                .order("created_at", { ascending: false });
+        }
+
+        const { data, error } = await localQuery
+            .range(localOffset, localOffset + POSTS_PER_PAGE - 1);
+
+        if (error) {
+            console.error(error);
+            loadingPosts = false;
+
+            if (reset) {
+                postsContainer.innerHTML = `
+                    <div style="text-align:center;padding:30px;color:#999;">
+                        Unable to load posts.
+                    </div>
+                `;
+            }
+
+            return;
+        }
+
+        posts = data || [];
+        localOffset += posts.length;
+
+        if (posts.length < POSTS_PER_PAGE) {
+            localFinished = true;
+        }
+    } else {
+        localFinished = true;
+    }
+
+    /*
+     * If there aren't enough local posts,
+     * fill the remaining spots with worldwide posts.
+     */
+    if (posts.length < POSTS_PER_PAGE) {
+
+        const remaining = POSTS_PER_PAGE - posts.length;
+
+        let globalQuery = client
+            .from("posts")
+            .select("*");
+
+        if (visitorCountry) {
+            globalQuery = globalQuery
+                .or(`country.is.null,country.neq.${visitorCountry}`);
+        }
+
+        if (sort === "new") {
+            globalQuery = globalQuery
+                .order("created_at", { ascending: false });
+        } else if (sort === "liked") {
+            globalQuery = globalQuery
+                .order("likes", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "funny") {
+            globalQuery = globalQuery
+                .order("funny", { ascending: false })
+                .order("created_at", { ascending: false });
+        } else if (sort === "shocking") {
+            globalQuery = globalQuery
+                .order("wtf", { ascending: false })
+                .order("created_at", { ascending: false });
+        }
+
+        const { data, error } = await globalQuery
+            .range(globalOffset, globalOffset + remaining - 1);
+
+        if (error) {
+            console.error(error);
+            loadingPosts = false;
+            return;
+        }
+
+        const globalPosts = data || [];
+
+        posts.push(...globalPosts);
+        globalOffset += globalPosts.length;
+
+        if (globalPosts.length < remaining) {
+            allPostsLoaded = true;
+        }
+    }
+
+    /*
+     * No posts at all
+     */
+    if (reset && posts.length === 0) {
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                No confessions yet. Be the first.
+            </div>
+        `;
+
+        loadingPosts = false;
+        return;
+    }
+
+    const initialLoader = postsContainer.querySelector(".posts-loading");
+    if (initialLoader) {
+        initialLoader.remove();
+    }
+    /*
+     * Add posts to the existing feed.
+     */
+     posts.forEach((post, index) => {
+
+         postsContainer.insertAdjacentHTML(
+              "beforeend",
+             createPostHTML(post)
+         );
+         if (index === 4) {
+
+             const adContainer = document.createElement("div");
+             adContainer.className = "post-ad-banner";
+
+             postsContainer.appendChild(adContainer);
+
+             const isMobile = window.innerWidth <= 767;
+
+             window.atOptions = isMobile
+                 ? {
+                     key: "f15a01fd59c1f566cb474f8b5d85ef10",
+                     format: "iframe",
+                     height: 50,
+                     width: 320,
+                     params: {}
+                  }
+                  : {
+                     key: "08b3e0f70a2aa368598746b3c7a998cc",
+                     format: "iframe",
+                     height: 90,
+                     width: 728,
+                     params: {}
+                  };
+             
+
+             const adScript = document.createElement("script");
+
+             adScript.src = isMobile
+                 ? "https://www.highrevenueformat.com/f15a01fd59c1f566cb474f8b5d85ef10/invoke.js"
+                 : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+
+             adScript.async = false
+             adContainer.appendChild(adScript);
+         }
+     });
+    /*
+     * Loading indicator while more posts exist.
+     */
+    
+    const oldLoader = document.getElementById("feedLoader");
+
+    if (oldLoader) {
+        oldLoader.remove();
+    }
+    
+    if (!allPostsLoaded) {
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="feedLoader" class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading more...</div>
+            </div>
+            `
+        );
+    }
+
+    loadingPosts = false;
+}
+
+
+// ==========================================
+// CREATE POST HTML
+// ==========================================
+
+function createPostHTML(post) {
+
+    return `
+
+        <article class="post" data-post-id="${post.id}">
+
+            <div class="post-top">
+
+                <div class="anonymous">
+
+                    <div class="anon-icon">?</div>
+
+                    Anonymous
+
+                </div>
+
+                <div class="date">
+                    ${formatDate(post.created_at)}
+                </div>
+
+            </div>
+
+
+            <button
+                class="report"
+                onclick="reportPost('${post.id}')"
+            >
+                Report
+            </button>
+
+
+            <div class="post-text">
+                ${escapeHTML(post.message)}
+            </div>
+
+
+            <div class="reactions">
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'funny', this)"
+                >
+                    😂 Funny <span>${formatCount(post.funny)}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'wtf', this)"
+                >
+                    😳 WTF <span>${formatCount(post.wtf)}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'wth', this)"
+                >
+                    🤢 WTH <span>${formatCount(post.wth)}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'relatable', this)"
+                >
+                    😭 Relatable <span>${formatCount(post.relatable)}</span>
+                </button>
+
+
+                <button
+                    class="react-btn"
+                    onclick="react('${post.id}', 'sad', this)"
+                >
+                    💔 Sad <span>${formatCount(post.sad)}</span>
+                </button>
+
+
+                <div class="like-dislike">
+
+                    <button
+                        class="vote"
+                        onclick="react('${post.id}', 'like', this)"
+                    >
+                        ❤️ ${formatCount(post.likes)}
+                    </button>
+
+
+                    <button
+                        class="vote"
+                        onclick="react('${post.id}', 'dislike', this)"
+                    >
+                        👎 ${formatCount(post.dislikes)}
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="comment-toggle">
+
+                <button onclick="toggleComments(this, '${post.id}')">
+                    💬 ${post.comments_count} comments
+                </button>
+
+            </div>
+
+
+            <div class="comments">
+
+                <div class="comments-list">
+                    Loading comments...
+                </div>
+
+
+                <div class="comment-input">
+
+                    <input
+                        type="text"
+                        maxlength="300"
+                        placeholder="Write an anonymous comment..."
+                    >
+
+                    <button
+                        onclick="submitComment(this, '${post.id}')"
+                    >
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+}
+
+
+// ==========================================
+// REACTION
+// ==========================================
+
+async function react(postId, reactionType, button) {
+
+    button.disabled = true;
+
+
+    const { data, error } = await client
+        .rpc("react_to_post", {
+            p_post_id: postId,
+            p_visitor_id: visitorId,
+            p_reaction_type: reactionType
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        showModal("Unable to react.");
+
+        button.disabled = false;
+
+        return;
+    }
+
+
+    if (data === false) {
+
+        showModal("You've already used this reaction on this post.");
+
+        button.disabled = false;
+
+        return;
+    }
+
+
+    button.classList.add("selected");
+
+    const countElement = button.querySelector("span");
+
+    if (countElement) {
+
+        const currentCount = Number(
+            countElement.textContent.replace(/[kM]/g, "")
+        );
+
+        countElement.textContent = formatCount(currentCount + 1);
+
+    } else {
+
+        const match = button.textContent.match(/[\d.]+/);
+
+        if (match) {
+
+            const currentCount = Number(match[0]);
+
+            button.textContent =
+                button.textContent.replace(
+                    match[0],
+                    formatCount(currentCount + 1)
+                );
+
+        }
+
+    }
+
+}
+
+// ==========================================
+// COMMENTS
+// ==========================================
+
+async function toggleComments(button, postId) {
+
+    const post = button.closest(".post");
+
+    const comments = post.querySelector(".comments");
+
+
+    comments.classList.toggle("open");
+
+
+    if (comments.classList.contains("open")) {
+
+        await loadComments(postId, post, true);
+
+    }
+
+}
+
+
+// ==========================================
+// LOAD COMMENTS
+// ==========================================
+
+async function loadComments(postId, postElement, reset = true) {
+
+    const list =
+        postElement.querySelector(".comments-list");
+
+
+    if (reset) {
+
+        list.innerHTML = "Loading comments...";
+
+        postElement.dataset.commentOffset = "0";
+
+    }
+
+
+    const offset =
+        parseInt(
+            postElement.dataset.commentOffset || "0",
+            10
+        );
+
+
+    const limit = 5;
+
+
+    const { data, error } = await client
+        .from("comments")
+        .select("*")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+
+    if (error) {
+
+        console.error(error);
+
+        if (reset) {
+
+            list.innerHTML =
+                "Unable to load comments.";
+
+        }
+
+        return;
+    }
+
+
+    if (reset && (!data || data.length === 0)) {
+
+        list.innerHTML = `
+            <div style="font-size:11px;color:#aaa;padding:8px 0;">
+                No comments yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    const commentIds = data.map(comment => comment.id);
+
+    const { data: reactionCounts, error: reactionError } = await client
+        .rpc("get_comment_reaction_counts", {
+            p_comment_ids: commentIds,
+            p_visitor_id: visitorId
+        });
+
+    if (reactionError) {
+        console.error("Error loading comment reactions:", reactionError);
+    }
+
+    const reactionMap = {};
+
+    (reactionCounts || []).forEach(row => {
+        reactionMap[row.comment_id] = {
+            likes: Number(row.likes || 0),
+            dislikes: Number(row.dislikes || 0),
+            my_reaction: row.my_reaction || null
+        };
+    });
+
+
+    const commentsHTML = data.map(comment => {
+
+        const reactions = reactionMap[comment.id] || {
+            likes: 0,
+            dislikes: 0,
+            my_reaction: null
+        };
+
+        return `
+
+        <div class="comment" data-comment-id="${comment.id}">
+
+            <div class="comment-meta">
+                Anonymous · ${formatDate(comment.created_at)}
+            </div>
+
+            <div class="comment-text">
+                ${escapeHTML(comment.message)}
+            </div>
+
+            <div class="comment-actions">
+
+                <button 
+                class="${reactions.my_reaction === 'like' ? 'active' : ''}"
+                onclick="reactToComment('${comment.id}', 'like', this)"
+                >
+                    👍 <span>${reactions.likes}</span>
+                </button>
+
+                <button 
+                class="${reactions.my_reaction === 'dislike' ? 'active' : ''}"
+                onclick="reactToComment('${comment.id}', 'dislike', this)"
+                >
+                    👎 <span>${reactions.dislikes}</span>
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+    }).join("");
+
+
+    if (reset) {
+
+        list.innerHTML = commentsHTML;
+
+    } else {
+
+        list.insertAdjacentHTML(
+            "beforeend",
+            commentsHTML
+        );
+
+    }
+
+
+    postElement.dataset.commentOffset =
+        String(offset + data.length);
+
+
+    let loadMore =
+        postElement.querySelector(".load-more-comments");
+
+
+    if (data.length === limit) {
+
+        if (!loadMore) {
+
+            loadMore =
+                document.createElement("button");
+
+            loadMore.className =
+                "load-more-comments";
+
+            loadMore.textContent =
+                "Load more";
+
+            loadMore.onclick = () =>
+                loadComments(
+                    postId,
+                    postElement,
+                    false
+                );
+
+            list.parentElement.insertBefore(
+                loadMore,
+                list.nextSibling
+            );
+        }
+
+    } else if (loadMore) {
+
+        loadMore.remove();
+
+    }
+
+}
+
+async function reactToComment(commentId, reactionType, button) {
+
+    const comment = button.closest(".comment");
+
+    const buttons =
+        comment.querySelectorAll(".comment-actions button");
+
+    const likeButton = buttons[0];
+    const dislikeButton = buttons[1];
+
+    const likeCount =
+        likeButton.querySelector("span");
+
+    const dislikeCount =
+        dislikeButton.querySelector("span");
+
+    const currentReaction =
+        comment.dataset.reaction || "";
+
+    const { error } = await client
+        .rpc("react_to_comment", {
+            p_comment_id: commentId,
+            p_visitor_id: visitorId,
+            p_reaction_type: reactionType
+        });
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+
+    /* Clicking the same reaction again = remove it */
+
+    if (currentReaction === reactionType) {
+
+        if (reactionType === "like") {
+            likeCount.textContent =
+                Math.max(0, Number(likeCount.textContent) - 1);
+        } else {
+            dislikeCount.textContent =
+                Math.max(0, Number(dislikeCount.textContent) - 1);
+        }
+
+        button.classList.remove("active");
+
+        comment.dataset.reaction = "";
+
+        return;
+    }
+
+
+    /* Switching from the other reaction */
+
+    if (currentReaction === "like") {
+
+        likeCount.textContent =
+            Math.max(0, Number(likeCount.textContent) - 1);
+
+        likeButton.classList.remove("active");
+
+    }
+
+    if (currentReaction === "dislike") {
+
+        dislikeCount.textContent =
+            Math.max(0, Number(dislikeCount.textContent) - 1);
+
+        dislikeButton.classList.remove("active");
+
+    }
+
+
+    /* Add the new reaction */
+
+    if (reactionType === "like") {
+
+        likeCount.textContent =
+            Number(likeCount.textContent) + 1;
+
+    } else {
+
+        dislikeCount.textContent =
+            Number(dislikeCount.textContent) + 1;
+
+    }
+
+    button.classList.add("active");
+
+    comment.dataset.reaction =
+        reactionType;
+}
+
+// ==========================================
+// ADD COMMENT
+// ==========================================
+
+async function submitComment(button, postId) {
+
+    const input =
+        button.parentElement.querySelector("input");
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+    button.textContent = "...";
+
+
+    const { data, error } = await client
+        .rpc("add_comment", {
+            p_post_id: postId,
+            p_message: text,
+            p_country: await getCountry()
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        showModal("Unable to post comment.");
+
+        button.disabled = false;
+        button.textContent = "Send";
+
+        return;
+    }
+
+
+    input.value = "";
+
+    button.disabled = false;
+    button.textContent = "Send";
+
+
+    const post =
+        button.closest(".post");
+
+
+    await loadComments(
+        postId,
+        post
+    );
+
+}
+
+
+// ==========================================
+// SORTING
+// ==========================================
+
+let currentSort = "new";
+let visitorCountry = null;
+const POSTS_PER_PAGE = 10;
+
+let localOffset = 0;
+let globalOffset = 0;
+let localFinished = false;
+let allPostsLoaded = false;
+let loadingPosts = false;
+
+
+document.querySelectorAll(".filter").forEach(function(button) {
+
+    button.addEventListener("click", async function() {
+
+        document
+            .querySelectorAll(".filter")
+            .forEach(function(item) {
+
+                item.classList.remove("active");
+
+            });
+
+
+        this.classList.add("active");
+
+
+        const text =
+            this.textContent.trim();
+
+
+        if (text.includes("Most liked")) {
+
+            currentSort = "liked";
+
+        }
+
+        else if (text.includes("Funny")) {
+
+            currentSort = "funny";
+
+        }
+
+        else if (text.includes("Most shocking")) {
+
+            currentSort = "shocking";
+
+        }
+
+        else {
+
+            currentSort = "new";
+
+        }
+
+
+        await loadPosts(currentSort, true);
+
+    });
+
+});
+
+window.addEventListener("scroll", function() {
+
+    if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 700
+    ) {
+        loadPosts(currentSort);
+    }
+
+});
+
+function formatCount(number) {
+    number = Number(number) || 0;
+
+    if (number < 1000) {
+        return number.toString();
+    }
+
+    if (number < 1000000) {
+        const value = number / 1000;
+        return value % 1 === 0
+            ? value + "k"
+            : value.toFixed(1) + "k";
+    }
+
+    const value = number / 1000000;
+    return value % 1 === 0
+        ? value + "M"
+        : value.toFixed(1) + "M";
+}
+
+
+// ==========================================
+// DATE FORMAT
+// ==========================================
+
+function formatDate(dateString) {
+
+    const date =
+        new Date(dateString);
+
+    const now =
+        new Date();
+
+
+    const diff =
+        now.getTime() - date.getTime();
+
+
+    const minutes =
+        Math.floor(diff / 60000);
+
+    const hours =
+        Math.floor(diff / 3600000);
+
+    const days =
+        Math.floor(diff / 86400000);
+
+
+    if (minutes < 60) {
+
+        return "Today";
+
+    }
+
+
+    if (hours < 24) {
+
+        return "Today";
+
+    }
+
+
+    if (days === 1) {
+
+        return "Yesterday";
+
+    }
+
+
+    if (days < 7) {
+
+        return "This week";
+
+    }
+
+
+    if (days < 14) {
+
+        return "1 week ago";
+
+    }
+
+
+    const currentYear =
+        now.getFullYear();
+
+    const postYear =
+        date.getFullYear();
+
+
+    if (currentYear === postYear) {
+
+        return "This year";
+
+    }
+
+
+    const years =
+        currentYear - postYear;
+
+
+    if (years === 1) {
+
+        return "1 year ago";
+
+    }
+
+
+    return years + " years ago";
+
+}
+
+
+// ==========================================
+// ESCAPE USER CONTENT
+// ==========================================
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+// ==========================================
+// REPORT
+// ==========================================
+
+async function reportPost(postId) {
+    const { data, error } = await client
+        .rpc("report_post", {
+            p_post_id: postId,
+            p_visitor_id: visitorId
+        });
+
+    if (error) {
+        console.error(error);
+        showModal("Unable to submit your report. Please try again.");
+        return;
+    }
+
+    if (data === false) {
+        showModal("You've already reported this post. Thank you for helping keep our community safe.");
+        return;
+    }
+
+    showModal("Thank you for helping keep our community safe.");
+}
+
+// ==========================================
+// INITIAL LOAD
+// ==========================================
+
+loadPosts("new", true);
+
+function showModal(title, message) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalMessage").textContent = message;
+    document.getElementById("customModal").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("customModal").classList.remove("show");
+}
+
+async function getCountry() {
+    try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        return data.country_name || null;
+    } catch (error) {
+        console.error("Country detection failed:", error);
+        return null;
+    }
+}
+
+</script>
+
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-icon">💬</div>
+        <h3 id="modalTitle">Thank you!</h3>
+        <p id="modalMessage"></p>
+        <button onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+<div id="rightNativeAd"></div>
+
+<script>
+if (window.innerWidth > 1100) {
+    const nativeAd = document.getElementById("rightNativeAd");
+
+    nativeAd.className = "right-native-ad";
+
+    const adContainer = document.createElement("div");
+    adContainer.id = "container-b54e1cfcffa3da2de32de9d1c2fec2e1";
+
+    nativeAd.appendChild(adContainer);
+
+    const adScript = document.createElement("script");
+    adScript.async = true;
+    adScript.setAttribute("data-cfasync", "false");
+    adScript.src =
+        "https://pl31749074.profitableratecpmnetwork.com/b54e1cfcffa3da2de32de9d1c2fec2e1/invoke.js";
+
+    nativeAd.appendChild(adScript);
+}
+</script>
+
+</body>
+</html>
