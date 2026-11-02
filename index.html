@@ -507,6 +507,33 @@ footer a {
         font-size: 10px;
         padding: 6px 8px;
     }
+
+    .page-layout {
+        display: block;
+        width: 100%;
+    }
+
+    .side-menu {
+        position: fixed;
+        top: 62px;
+        right: -280px;
+        width: 260px;
+        height: calc(100vh - 62px);
+        background: white;
+        padding: 25px 22px;
+        box-shadow: -8px 0 30px rgba(60,40,100,.12);
+        z-index: 99;
+        overflow-y: auto;
+        transition: right .25s ease;
+    }
+
+    .side-menu.open {
+        right: 0;
+    }
+
+    .menu-btn {
+        display: block;
+    }
 }
 
 .custom-modal {
@@ -651,6 +678,61 @@ footer a {
     .right-native-ad {
         display: none;
     }
+}
+
+/* ================= DESKTOP SIDE MENU ================= */
+
+.page-layout {
+    width: min(1050px, calc(100% - 32px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 200px 760px;
+    gap: 24px;
+    align-items: start;
+}
+
+.side-menu {
+    padding-top: 30px;
+    position: sticky;
+    top: 100px;
+}
+
+.side-section {
+    margin-bottom: 28px;
+}
+
+.side-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    color: var(--purple-dark);
+    margin-bottom: 10px;
+}
+
+.side-menu a {
+    display: block;
+    color: #777181;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 0;
+    transition: .15s;
+}
+
+.side-menu a:hover {
+    color: var(--purple-dark);
+    transform: translateX(2px);
+}
+
+.menu-btn {
+    display: none;
+    border: none;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 /* ================= VISUAL POLISH ================= */
@@ -832,6 +914,10 @@ footer a {
     <div class="header-inner">
         <div class="logo">Anonymous<span>.</span></div>
         <div class="header-tagline">Say it here.</div>
+
+        <button class="menu-btn" onclick="toggleSideMenu()" aria-label="Open menu">
+            ☰
+        </button>
     </div>
 </header>
 
@@ -874,7 +960,41 @@ footer a {
 
 </div>
 
-<main class="container">
+<div class="page-layout">
+
+    <aside class="side-menu" id="sideMenu">
+
+        <div class="side-section">
+            <div class="side-title">TRENDING</div>
+
+            <a href="#">#relationships</a>
+            <a href="#">#confessions</a>
+            <a href="#">#dating</a>
+            <a href="#">#work</a>
+            <a href="#">#life</a>
+        </div>
+
+        <div class="side-section">
+            <div class="side-title">SOCIALS</div>
+
+            <a href="https://youtube.com/@erp_confessions?si=xKtaZeZsI52okBaM" target="_blank">YouTube</a>
+            <a href="https://www.instagram.com/erp_confessions?psln=Y3p3NWV4NDhtdWxt" target="_blank">Instagram</a>
+            <a href="https://www.tiktok.com/@erp_c12?_r=1&_t=ZS-9B3h87PRxWG" target="_blank">TikTok</a>
+            <a href="https://x.com/ERP_Confessions" target="_blank">X</a>
+            <a href="https://www.facebook.com/erp.confessions" target="_blank">Facebook</a>
+        </div>
+
+        <div class="side-section">
+            <div class="side-title">SUPPORT</div>
+
+            <a href="mailto:support@ethartoken.com">✉ Support</a>
+            <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
+            <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
+        </div>
+
+    </aside>
+
+    <main class="container">
 
     <!-- CONFESSION BOX -->
 
@@ -944,13 +1064,14 @@ footer a {
 
 </main>
 
+</div>
 
 <footer>
     Anonymous · Say what you can't say anywhere else.
     <br><br>
-    <a href="#">Community Rules</a>
+    <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
     &nbsp; · &nbsp;
-    <a href="#">Privacy</a>
+    <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
 </footer>
 
 
@@ -2127,6 +2248,10 @@ async function getCountry() {
         console.error("Country detection failed:", error);
         return null;
     }
+}
+
+function toggleSideMenu() {
+    document.getElementById("sideMenu").classList.toggle("open");
 }
 
 </script>
