@@ -1154,11 +1154,11 @@ footer a {
         <div class="side-section">
             <div class="side-title">TRENDING</div>
 
-            <a href="#">#relationships</a>
-            <a href="#">#confessions</a>
+            <a href="#">#love</a>
+            <a href="#">#family</a>
             <a href="#">#dating</a>
             <a href="#">#work</a>
-            <a href="#">#life</a>
+            <a href="#">#college</a>
         </div>
 
         <div class="side-section">
@@ -2255,7 +2255,11 @@ window.addEventListener("scroll", function() {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 700
     ) {
-        loadPosts(currentSort);
+        if (searchActive) {
+            loadMoreSearchPosts();
+        } else {
+            loadPosts(currentSort);
+        }
     }
 
 });
@@ -2450,6 +2454,10 @@ function toggleSideMenu() {
 // ==========================================
 
 let searchActive = false;
+let searchOffset = 0;
+let searchLoading = false;
+let searchAllLoaded = false;
+let searchTerm = "";
 
 function openSearchPanel() {
     document.getElementById("searchPanel").classList.add("open");
@@ -2479,48 +2487,132 @@ async function searchPosts() {
     if (!term) return;
 
     searchActive = true;
+    searchTerm = term;
+    searchOffset = 0;
+    searchLoading = false;
+    searchAllLoaded = false;
+
     closeSearchPanel();
 
-    const postsContainer = document.getElementById("posts");
-
-    postsContainer.innerHTML = `
+    document.getElementById("posts").innerHTML = `
         <div class="posts-loading">
             <div class="loading-spinner"></div>
             <div>Searching confessions...</div>
         </div>
     `;
 
+    await loadMoreSearchPosts();
+}
+
+
+async function loadMoreSearchPosts() {
+    if (searchLoading || searchAllLoaded) return;
+
+    searchLoading = true;
+
+    const postsContainer = document.getElementById("posts");
+
     const { data, error } = await client
         .from("posts")
         .select("*")
-        .ilike("message", `%${term}%`)
+        .ilike("message", `%${searchTerm}%`)
         .order("created_at", { ascending: false })
-        .limit(50);
+        .range(searchOffset, searchOffset + 9);
 
     if (error) {
         console.error(error);
-        postsContainer.innerHTML = `
-            <div style="text-align:center;padding:30px;color:#999;">
+
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `<div style="text-align:center;padding:25px;color:#999;">
                 Search failed. Please try again.
-            </div>
-        `;
+            </div>`
+        );
+
+        searchLoading = false;
         return;
     }
 
-    if (!data || data.length === 0) {
+    const results = data || [];
+
+    const initialLoader = postsContainer.querySelector(".posts-loading");
+    if (initialLoader) initialLoader.remove();
+
+    if (results.length === 0 && searchOffset === 0) {
         postsContainer.innerHTML = `
             <div style="text-align:center;padding:40px;color:#999;">
-                No confessions found for "${escapeHTML(term)}".
+                No confessions found for "${escapeHTML(searchTerm)}".
                 <br><br>
                 Try another search.
             </div>
         `;
+
+        searchAllLoaded = true;
+        searchLoading = false;
         return;
     }
 
-    postsContainer.innerHTML = data
-        .map(post => createPostHTML(post))
-        .join("");
+    results.forEach((post, index) => {
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            createPostHTML(post)
+        );
+
+        // Advertisement after the 5th result
+        if (index === 4) {
+            const adContainer = document.createElement("div");
+            adContainer.className = "post-ad-banner";
+            postsContainer.appendChild(adContainer);
+
+            const isMobile = window.innerWidth <= 767;
+
+            window.atOptions = isMobile
+                ? {
+                    key: "f15a01fd59c1f566cb474f8b5d85ef10",
+                    format: "iframe",
+                    height: 50,
+                    width: 320,
+                    params: {}
+                }
+                : {
+                    key: "08b3e0f70a2aa368598746b3c7a998cc",
+                    format: "iframe",
+                    height: 90,
+                    width: 728,
+                    params: {}
+                };
+
+            const adScript = document.createElement("script");
+
+            adScript.src = isMobile
+                ? "https://www.highrevenueformat.com/f15a01fd59c1f566cb474f8b5d85ef10/invoke.js"
+                : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+
+            adScript.async = false;
+            adContainer.appendChild(adScript);
+        }
+    });
+
+    searchOffset += results.length;
+
+    if (results.length < 10) {
+        searchAllLoaded = true;
+    }
+
+    const oldLoader = document.getElementById("feedLoader");
+    if (oldLoader) oldLoader.remove();
+
+    if (!searchAllLoaded) {
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `<div id="feedLoader" class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading more...</div>
+            </div>`
+        );
+    }
+
+    searchLoading = false;
 }
 
 function clearSearch() {
