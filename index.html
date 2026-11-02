@@ -718,12 +718,6 @@ footer a {
     .page-layout {
         transform: translateX(-30px);
     }
-
-@media (min-width: 768px) and (max-width: 1200px) {
-    .page-layout {
-        transform: translateX(0);
-    }
-}
 }
 
 /* ================= VISUAL POLISH ================= */
@@ -864,6 +858,31 @@ footer a {
     font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+
+    .menu-btn {
+        display: block;
+    }
+
+    .side-menu {
+        display: none;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        width: 280px;
+        height: calc(100vh - 72px);
+        background: white;
+        padding: 30px 26px;
+        box-shadow: 12px 0 35px rgba(60,40,100,.20);
+        z-index: 99;
+        overflow-y: auto;
+    }
+
+    .side-menu.open {
+        display: block;
+    }
 }
 
 @media (max-width: 600px) {
