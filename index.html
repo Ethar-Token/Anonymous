@@ -1037,20 +1037,21 @@ footer a {
 }
 
 .search-tags {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 8px;
-    scrollbar-width: thin;
+    padding-bottom: 0;
 }
 
 .search-tags button {
-    flex-shrink: 0;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    white-space: nowrap;
     border: 1px solid #e9e2f5;
     background: #f8f5ff;
     color: var(--purple-dark);
-    padding: 8px 12px;
+    padding: 9px 5px;
     border-radius: 20px;
     font-family: inherit;
     font-size: 11px;
@@ -1088,6 +1089,10 @@ footer a {
         left: auto;
         right: -45px;
         width: min(380px, calc(100vw - 20px));
+    }
+
+   .search-tags {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
     
@@ -2486,6 +2491,7 @@ async function searchPosts() {
     const term = input.value.trim();
 
     if (!term) return;
+    input.blur();
 
     searchActive = true;
     searchTerm = term;
