@@ -515,9 +515,10 @@ footer a {
     }
 
     .side-menu {
+        display: none;
         position: fixed;
         top: 62px;
-        right: -280px;
+        right: 0;
         width: 260px;
         height: calc(100vh - 62px);
         background: white;
@@ -525,11 +526,10 @@ footer a {
         box-shadow: -8px 0 30px rgba(60,40,100,.12);
         z-index: 99;
         overflow-y: auto;
-        transition: right .25s ease;
     }
 
     .side-menu.open {
-        right: 0;
+        display: block;
     }
 
     .menu-btn {
