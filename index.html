@@ -657,7 +657,7 @@ footer a {
 
 .page-layout {
     width: min(1050px, calc(100% - 32px));
-    margin: 0 auto 0 calc((100% - 1050px) / 2 - 30px);
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 200px 760px;
     gap: 24px;
@@ -708,6 +708,12 @@ footer a {
     border-radius: 10px;
     font-size: 20px;
     cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .page-layout {
+        transform: translateX(-30px);
+    }
 }
 
 /* ================= VISUAL POLISH ================= */
