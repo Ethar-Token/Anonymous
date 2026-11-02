@@ -952,6 +952,144 @@ footer a {
         display: block;
     }
 }
+
+/* ================= SEARCH ================= */
+
+.search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 380px;
+    min-width: 0;
+    margin: 0 25px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 14px;
+    background: #f7f5fc;
+    border: 1px solid #e9e3f4;
+    border-radius: 13px;
+    transition: .2s;
+}
+
+.search-box:focus-within {
+    background: white;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(155,123,234,.10);
+}
+
+.search-icon {
+    font-size: 23px;
+    color: var(--purple-dark);
+    line-height: 1;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.search-box input::placeholder {
+    color: #a39caf;
+}
+
+#searchClear {
+    border: none;
+    background: transparent;
+    color: #999;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.search-panel {
+    display: none;
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: min(420px, calc(100vw - 30px));
+    padding: 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(50,35,90,.13);
+    z-index: 200;
+}
+
+.search-panel.open {
+    display: block;
+}
+
+.search-panel-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 13px;
+}
+
+.search-tags {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+}
+
+.search-tags button {
+    flex-shrink: 0;
+    border: 1px solid #e9e2f5;
+    background: #f8f5ff;
+    color: var(--purple-dark);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.search-tags button:hover {
+    background: var(--purple-light);
+    border-color: var(--purple);
+}
+
+.search-hint {
+    font-size: 10px;
+    color: #aaa4b2;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .search-wrap {
+        margin: 0 9px;
+        max-width: none;
+    }
+
+    .search-box {
+        height: 38px;
+        padding: 0 9px;
+        gap: 6px;
+    }
+
+    .search-box input {
+        font-size: 11px;
+    }
+
+    .search-panel {
+        left: auto;
+        right: -45px;
+        width: min(380px, calc(100vw - 20px));
+    }
+}
     
 </style>
 </head>
@@ -961,6 +1099,46 @@ footer a {
 <header>
     <div class="header-inner">
         <div class="logo">Anonymous<span>.</span></div>
+
+        <div class="search-wrap" id="searchWrap">
+
+            <form class="search-box" onsubmit="event.preventDefault(); searchPosts();">
+                <span class="search-icon">⌕</span>
+
+                <input
+                    type="search"
+                    id="siteSearch"
+                    placeholder="Search confessions..."
+                    autocomplete="off"
+                    onfocus="openSearchPanel()"
+                    oninput="updateSearchClear()"
+                >
+
+                <button type="button" id="searchClear" onclick="clearSearch()" style="display:none;">×</button>
+            </form>
+
+            <div class="search-panel" id="searchPanel">
+
+                <div class="search-panel-title">POPULAR TOPICS</div>
+
+                <div class="search-tags">
+                    <button onclick="searchByTopic('relationships')">#relationships</button>
+                    <button onclick="searchByTopic('confessions')">#confessions</button>
+                    <button onclick="searchByTopic('dating')">#dating</button>
+                    <button onclick="searchByTopic('love')">#love</button>
+                    <button onclick="searchByTopic('friendship')">#friendship</button>
+                    <button onclick="searchByTopic('family')">#family</button>
+                    <button onclick="searchByTopic('secrets')">#secrets</button>
+                    <button onclick="searchByTopic('work')">#work</button>
+                    <button onclick="searchByTopic('life')">#college</button>
+                    <button onclick="searchByTopic('drama')">#drama</button>
+                </div>
+
+                <div class="search-hint">Search for anything on your mind.</div>
+
+            </div>
+        </div>
+
         <div class="header-tagline">Say it here.</div>
 
         <button class="menu-btn" onclick="toggleSideMenu()" aria-label="Open menu">
@@ -1198,6 +1376,7 @@ async function submitConfession() {
 
 async function loadPosts(sort = "new", reset = false) {
 
+    if (searchActive && !reset) return;
     if (!reset && (loadingPosts || allPostsLoaded)) return;
 
     loadingPosts = true;
@@ -2061,6 +2240,9 @@ document.querySelectorAll(".filter").forEach(function(button) {
         }
 
 
+        searchActive = false;
+        document.getElementById("siteSearch").value = "";
+        updateSearchClear();
         await loadPosts(currentSort, true);
 
     });
@@ -2262,6 +2444,101 @@ async function getCountry() {
 function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
 }
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+let searchActive = false;
+
+function openSearchPanel() {
+    document.getElementById("searchPanel").classList.add("open");
+}
+
+function updateSearchClear() {
+    const input = document.getElementById("siteSearch");
+
+    document.getElementById("searchClear").style.display =
+        input.value ? "block" : "none";
+}
+
+function closeSearchPanel() {
+    document.getElementById("searchPanel").classList.remove("open");
+}
+
+function searchByTopic(topic) {
+    document.getElementById("siteSearch").value = topic;
+    updateSearchClear();
+    searchPosts();
+}
+
+async function searchPosts() {
+    const input = document.getElementById("siteSearch");
+    const term = input.value.trim();
+
+    if (!term) return;
+
+    searchActive = true;
+    closeSearchPanel();
+
+    const postsContainer = document.getElementById("posts");
+
+    postsContainer.innerHTML = `
+        <div class="posts-loading">
+            <div class="loading-spinner"></div>
+            <div>Searching confessions...</div>
+        </div>
+    `;
+
+    const { data, error } = await client
+        .from("posts")
+        .select("*")
+        .ilike("message", `%${term}%`)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+    if (error) {
+        console.error(error);
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:30px;color:#999;">
+                Search failed. Please try again.
+            </div>
+        `;
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                No confessions found for "${escapeHTML(term)}".
+                <br><br>
+                Try another search.
+            </div>
+        `;
+        return;
+    }
+
+    postsContainer.innerHTML = data
+        .map(post => createPostHTML(post))
+        .join("");
+}
+
+function clearSearch() {
+    document.getElementById("siteSearch").value = "";
+    updateSearchClear();
+    closeSearchPanel();
+
+    searchActive = false;
+    loadPosts(currentSort, true);
+}
+
+document.addEventListener("click", function(event) {
+    const wrap = document.getElementById("searchWrap");
+
+    if (!wrap.contains(event.target)) {
+        closeSearchPanel();
+    }
+});
 
 </script>
 
