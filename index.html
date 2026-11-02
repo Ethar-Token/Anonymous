@@ -1127,16 +1127,16 @@ footer a {
                 <div class="search-panel-title">POPULAR TOPICS</div>
 
                 <div class="search-tags">
-                    <button onclick="searchByTopic('relationships')">#relationships</button>
-                    <button onclick="searchByTopic('confessions')">#confessions</button>
+                    <button onclick="searchByTopic('relationship')">#relationship</button>
+                    <button onclick="searchByTopic('crush')">#crush</button>
                     <button onclick="searchByTopic('dating')">#dating</button>
                     <button onclick="searchByTopic('love')">#love</button>
-                    <button onclick="searchByTopic('friendship')">#friendship</button>
+                    <button onclick="searchByTopic('friend')">#friend</button>
                     <button onclick="searchByTopic('family')">#family</button>
-                    <button onclick="searchByTopic('secrets')">#secrets</button>
+                    <button onclick="searchByTopic('secret')">#secret</button>
                     <button onclick="searchByTopic('work')">#work</button>
-                    <button onclick="searchByTopic('life')">#college</button>
-                    <button onclick="searchByTopic('drama')">#drama</button>
+                    <button onclick="searchByTopic('college')">#college</button>
+                    <button onclick="searchByTopic('husband')">#husband</button>
                 </div>
 
                 <div class="search-hint">Search for anything on your mind.</div>
@@ -1159,11 +1159,11 @@ footer a {
         <div class="side-section">
             <div class="side-title">TRENDING</div>
 
-            <a href="#">#love</a>
-            <a href="#">#family</a>
-            <a href="#">#dating</a>
-            <a href="#">#work</a>
-            <a href="#">#college</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('love')">#love</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('family')">#family</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('dating')">#dating</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('work')">#work</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('college')">#college</a>
         </div>
 
         <div class="side-section">
