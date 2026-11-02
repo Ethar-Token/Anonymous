@@ -642,7 +642,7 @@ footer a {
 .right-native-ad {
     position: fixed;
     top: 120px;
-    right: 20px;
+    right: 10px;
     width: 200px;
     z-index: 10;
 }
@@ -668,6 +668,10 @@ footer a {
     padding-top: 30px;
     position: sticky;
     top: 100px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    align-self: start;
+    scrollbar-width: thin;
 }
 
 .side-section {
