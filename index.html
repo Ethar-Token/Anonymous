@@ -2194,7 +2194,7 @@ let visitorCountry = null;
 const POSTS_PER_PAGE = 10;
 
 let searchActive = false;
-let searchOffset = 0;
+let searchSeenIds = [];
 let searchLoading = false;
 let searchAllLoaded = false;
 let searchTerm = "";
@@ -2495,7 +2495,7 @@ async function searchPosts() {
 
     searchActive = true;
     searchTerm = term;
-    searchOffset = 0;
+    searchSeenIds = [];
     searchLoading = false;
     searchAllLoaded = false;
 
@@ -2519,12 +2519,11 @@ async function loadMoreSearchPosts() {
 
     const postsContainer = document.getElementById("posts");
 
-    const { data, error } = await client
-        .from("posts")
-        .select("*")
-        .ilike("message", `%${searchTerm}%`)
-        .order("created_at", { ascending: false })
-        .range(searchOffset, searchOffset + 9);
+    const { data, error } = await client.rpc("search_posts_random", {
+        p_term: searchTerm,
+        p_exclude_ids: searchSeenIds,
+        p_limit: 10
+    });
 
     if (error) {
         console.error(error);
@@ -2545,7 +2544,7 @@ async function loadMoreSearchPosts() {
     const initialLoader = postsContainer.querySelector(".posts-loading");
     if (initialLoader) initialLoader.remove();
 
-    if (results.length === 0 && searchOffset === 0) {
+   if (results.length === 0 && searchSeenIds.length === 0) {
         postsContainer.innerHTML = `
             <div style="text-align:center;padding:40px;color:#999;">
                 No confessions found for "${escapeHTML(searchTerm)}".
@@ -2560,6 +2559,7 @@ async function loadMoreSearchPosts() {
     }
 
     results.forEach((post, index) => {
+        searchSeenIds.push(post.id);
         postsContainer.insertAdjacentHTML(
             "beforeend",
             createPostHTML(post)
@@ -2599,8 +2599,6 @@ async function loadMoreSearchPosts() {
             adContainer.appendChild(adScript);
         }
     });
-
-    searchOffset += results.length;
 
     if (results.length < 10) {
         searchAllLoaded = true;
