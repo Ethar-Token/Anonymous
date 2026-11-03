@@ -1747,23 +1747,29 @@ function createPostHTML(post) {
             </div>
 
 
-            <div class="comment-toggle">
+            <div class="post-actions">
 
-                <button onclick="toggleComments(this, '${post.id}')">
-                    💬 ${post.comments_count} comments
-                </button>
-                <button
-                    class="share-btn"
-                    onclick="sharePost('${post.post_code}', this)"
-                    aria-label="Share post"
-                    title="Share post"
-                >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .2.02.4.06.59l-6.2 3.1A3 3 0 1 0 9 12c0-.2-.02-.4-.06-.59l6.2-3.1c.52.43 1.17.69 1.86.69ZM6 13a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm12-8a1 1 0 1 1-1 1 1 1 0 0 1 1-1Zm0 14a3 3 0 0 0-2.34 4.87l-6.2-3.1A3 3 0 1 0 9 19c0-.2-.02-.4-.06-.59l6.2-3.1A3 3 0 0 0 18 19Zm0 2a1 1 0 1 1 1-1 1 1 0 0 1-1 1Z"/>
-                    </svg>
-                </button>
+    <button onclick="toggleComments(this, '${post.id}')">
+        💬 ${post.comments_count} comments
+    </button>
 
-            </div>
+    <button
+        onclick="sharePost('${post.post_code}', this)"
+        aria-label="Share post"
+        title="Share"
+        style="margin-left:auto; background:none; border:none; cursor:pointer; color:#7655c7; padding:5px;"
+    >
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>
+        </svg>
+    </button>
+
+</div>
 
 
             <div class="comments">
