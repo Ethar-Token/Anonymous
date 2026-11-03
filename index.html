@@ -448,15 +448,23 @@ textarea:focus {
 
 .post {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .post button,
-.post input {
+.post input,
+.post textarea {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
-.post-text {
-    cursor: pointer;
+.post button:focus,
+.post button:active,
+.post input:focus,
+.post textarea:focus {
+    outline: none;
+    box-shadow: none;
 }
     
 /* ================= REPORT ================= */
