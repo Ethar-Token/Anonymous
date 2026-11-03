@@ -433,11 +433,10 @@ textarea:focus {
 .post-actions {
     display: flex;
     align-items: center;
-    gap: 18px;
     margin-top: 10px;
 }
 
-.post-actions button {
+.post-actions > button:first-child {
     border: none;
     background: none;
     padding: 0;
@@ -447,10 +446,30 @@ textarea:focus {
     cursor: pointer;
 }
 
-.post-actions button:hover {
-    text-decoration: underline;
+.share-btn {
+    margin-left: auto;
+    width: 34px;
+    height: 34px;
+    padding: 7px;
+    border: none;
+    background: transparent;
+    color: #7655c7;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.share-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.share-btn:hover {
+    background: #f3efff;
+    border-radius: 50%;
+}
 /* ================= REPORT ================= */
 
 .report {
@@ -1733,8 +1752,15 @@ function createPostHTML(post) {
                 <button onclick="toggleComments(this, '${post.id}')">
                     💬 ${post.comments_count} comments
                 </button>
-                <button onclick="sharePost('${post.post_code}', this)">
-                    ↗ Share
+                <button
+                    class="share-btn"
+                    onclick="sharePost('${post.post_code}', this)"
+                    aria-label="Share post"
+                    title="Share post"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .2.02.4.06.59l-6.2 3.1A3 3 0 1 0 9 12c0-.2-.02-.4-.06-.59l6.2-3.1c.52.43 1.17.69 1.86.69ZM6 13a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm12-8a1 1 0 1 1-1 1 1 1 0 0 1 1-1Zm0 14a3 3 0 0 0-2.34 4.87l-6.2-3.1A3 3 0 1 0 9 19c0-.2-.02-.4-.06-.59l6.2-3.1A3 3 0 0 0 18 19Zm0 2a1 1 0 1 1 1-1 1 1 0 0 1-1 1Z"/>
+                    </svg>
                 </button>
 
             </div>
