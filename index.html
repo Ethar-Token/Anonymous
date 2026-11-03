@@ -1206,7 +1206,7 @@ footer a {
 
     <!-- CONFESSION BOX -->
 
-    <section class="confess-box">
+    <section class="confess-box" id="confessBox">
 
         <div class="confess-title">
             What's on your mind?
@@ -1238,7 +1238,7 @@ footer a {
 
     <!-- FILTERS -->
 
-    <div class="filters">
+    <div class="filters" id="feedFilters">
 
         <button class="filter active">
             New posts
@@ -1396,6 +1396,8 @@ async function submitConfession() {
 // ==========================================
 
 async function loadPosts(sort = "new", reset = false) {
+
+    if (sharedPostMode) return;
 
     if (searchActive && !reset) return;
     if (!reset && (loadingPosts || allPostsLoaded)) return;
@@ -2458,10 +2460,66 @@ async function reportPost(postId) {
 }
 
 // ==========================================
+// LOAD SHARED POST
+// ==========================================
+
+let sharedPostMode = false;
+
+async function loadSharedPost(postCode) {
+
+    const postsContainer = document.getElementById("posts");
+
+    document.getElementById("confessBox").style.display = "none";
+    document.getElementById("feedFilters").style.display = "none";
+
+    postsContainer.innerHTML = `
+        <div class="posts-loading">
+            <div class="loading-spinner"></div>
+            <div>Loading confession...</div>
+        </div>
+    `;
+
+    const { data, error } = await client
+        .from("posts")
+        .select("*")
+        .eq("post_code", postCode)
+        .maybeSingle();
+
+    if (error || !data) {
+
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                This confession could not be found. It may have been removed.
+            </div>
+        `;
+
+        return;
+    }
+
+    postsContainer.innerHTML = createPostHTML(data);
+
+    const postElement = postsContainer.querySelector(".post");
+
+    const comments = postElement.querySelector(".comments");
+
+    comments.classList.add("open");
+
+    await loadComments(data.id, postElement, true);
+}
+    
+
+// ==========================================
 // INITIAL LOAD
 // ==========================================
 
-loadPosts("new", true);
+const sharedPostCode = new URLSearchParams(window.location.search).get("post");
+
+if (sharedPostCode) {
+    sharedPostMode = true;
+    loadSharedPost(sharedPostCode);
+} else {
+    loadPosts("new", true);
+}
 
 function showModal(title, message) {
     document.getElementById("modalTitle").textContent = title;
