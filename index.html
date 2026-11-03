@@ -1747,29 +1747,30 @@ function createPostHTML(post) {
             </div>
 
 
-            <div class="post-actions">
+            <div class="comment-toggle">
 
-    <button onclick="toggleComments(this, '${post.id}')">
-        💬 ${post.comments_count} comments
-    </button>
+            <button onclick="toggleComments(this, '${post.id}')">
+                💬 ${post.comments_count} comments
+            </button>
 
-    <button
-        onclick="sharePost('${post.post_code}', this)"
-        aria-label="Share post"
-        title="Share"
-        style="margin-left:auto; background:none; border:none; cursor:pointer; color:#7655c7; padding:5px;"
-    >
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="18" cy="5" r="3"/>
-            <circle cx="6" cy="12" r="3"/>
-            <circle cx="18" cy="19" r="3"/>
-            <path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>
-        </svg>
-    </button>
+            <button
+                class="post-actions"
+                onclick="sharePost('${post.post_code}', this)"
+                aria-label="Share post"
+                title="Share"
+                style="margin-left:auto; background:none; border:none; cursor:pointer; color:#7655c7; padding:5px;"
+            >
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>
+                </svg>
+            </button>
 
-</div>
+        </div>
 
 
             <div class="comments">
