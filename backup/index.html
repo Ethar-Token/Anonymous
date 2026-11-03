@@ -6,7 +6,8 @@
 
 <title>Anonymous — Say It Here</title>
 <meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
-
+<link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
+    
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,6 +19,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Anonymous">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 
 <style>
@@ -430,6 +432,53 @@ textarea:focus {
     font-weight: 600;
 }
 
+.post-actions {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.post-actions .share-btn {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.post-permalink {
+    font-size: 12px;
+    color: #7655c7;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.post-permalink:hover {
+    text-decoration: underline;
+}
+
+.post {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.post button,
+.post input,
+.post textarea {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.post button:focus,
+.post button:active,
+.post input:focus,
+.post textarea:focus {
+    outline: none;
+    box-shadow: none;
+}
+    
 /* ================= REPORT ================= */
 
 .report {
@@ -642,14 +691,81 @@ footer a {
 .right-native-ad {
     position: fixed;
     top: 120px;
-    right: 20px;
-    width: 200px;
+    right: 5px;
+    width: 170px;
     z-index: 10;
 }
     
 @media (max-width: 1100px) {
     .right-native-ad {
         display: none;
+    }
+}
+
+/* ================= DESKTOP SIDE MENU ================= */
+
+.page-layout {
+    width: min(1050px, calc(100% - 32px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 200px 760px;
+    gap: 24px;
+    align-items: start;
+}
+
+.side-menu {
+    padding-top: 30px;
+    position: sticky;
+    top: 100px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    align-self: start;
+    scrollbar-width: thin;
+}
+
+.side-section {
+    margin-bottom: 30px;
+}
+
+.side-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--purple-dark);
+    margin-bottom: 10px;
+}
+
+
+.side-menu a {
+    display: block;
+    color: #777181;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 6px 0;
+    transition: .15s;
+}
+
+.side-menu a:hover {
+    color: var(--purple-dark);
+    transform: translateX(2px);
+}
+
+.menu-btn {
+    display: none;
+    border: none;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .page-layout {
+        transform: translateX(-30px);
     }
 }
 
@@ -793,6 +909,37 @@ footer a {
     white-space: nowrap;
 }
 
+@media (min-width: 768px) and (max-width: 1200px) {
+
+    .page-layout {
+        display: block;
+        width: 100%;
+        position: relative;
+    }
+    
+    .menu-btn {
+        display: block;
+    }
+
+    .side-menu {
+        display: none;
+        position: fixed;
+        top: 62px;
+        right: 0;
+        width: 290px;
+        height: calc(100vh - 62px);
+        background: white;
+        padding: 30px 26px;
+        box-shadow: -12px 0 35px rgba(60,40,100,.20);
+        z-index: 99;
+        overflow-y: auto;
+    }
+
+    .side-menu.open {
+        display: block;
+    }
+}
+
 @media (max-width: 600px) {
     .post {
         padding: 18px;
@@ -821,6 +968,181 @@ footer a {
         width: 320px;
         height: 50px;
     }
+
+    .page-layout {
+        display: block;
+        width: 100%;
+        position: relative;
+    }
+
+    .side-menu {
+        display: none;
+        position: fixed;
+        top: 62px;
+        right: 0;
+        width: 290px;
+        height: calc(100vh - 62px);
+        background: white;
+        padding: 30px 26px;
+        box-shadow: -12px 0 35px rgba(60,40,100,.20);
+        z-index: 99;
+        overflow-y: auto;
+    }
+
+    .side-menu.open {
+        display: block;
+    }
+
+    .side-menu a {
+        font-size: 15px;
+    }
+
+    .menu-btn {
+        display: block;
+    }
+}
+
+/* ================= SEARCH ================= */
+
+.search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 380px;
+    min-width: 0;
+    margin: 0 25px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 14px;
+    background: #f7f5fc;
+    border: 1px solid #e9e3f4;
+    border-radius: 13px;
+    transition: .2s;
+}
+
+.search-box:focus-within {
+    background: white;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(155,123,234,.10);
+}
+
+.search-icon {
+    font-size: 23px;
+    color: var(--purple-dark);
+    line-height: 1;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.search-box input::placeholder {
+    color: #a39caf;
+}
+
+#searchClear {
+    border: none;
+    background: transparent;
+    color: #999;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.search-panel {
+    display: none;
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: min(420px, calc(100vw - 30px));
+    padding: 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(50,35,90,.13);
+    z-index: 200;
+}
+
+.search-panel.open {
+    display: block;
+}
+
+.search-panel-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 13px;
+}
+
+.search-tags {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding-bottom: 0;
+}
+
+.search-tags button {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #e9e2f5;
+    background: #f8f5ff;
+    color: var(--purple-dark);
+    padding: 9px 5px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.search-tags button:hover {
+    background: var(--purple-light);
+    border-color: var(--purple);
+}
+
+.search-hint {
+    font-size: 10px;
+    color: #aaa4b2;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .search-wrap {
+        margin: 0 9px;
+        max-width: none;
+    }
+
+    .search-box {
+        height: 38px;
+        padding: 0 9px;
+        gap: 6px;
+    }
+
+    .search-box input {
+        font-size: 11px;
+    }
+
+    .search-panel {
+        left: auto;
+        right: -45px;
+        width: min(380px, calc(100vw - 20px));
+    }
+
+   .search-tags {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
     
 </style>
@@ -830,10 +1152,166 @@ footer a {
 
 <header>
     <div class="header-inner">
-        <div class="logo">Anonymous<span>.</span></div>
+        <div class="logo" onclick="goHome()" style="cursor:pointer;">Anonymous<span>.</span></div>
+
+        <div class="search-wrap" id="searchWrap">
+
+            <form class="search-box" onsubmit="event.preventDefault(); searchPosts();">
+                <span class="search-icon">⌕</span>
+
+                <input
+                    type="search"
+                    id="siteSearch"
+                    placeholder="Search confessions..."
+                    autocomplete="off"
+                    onfocus="openSearchPanel()"
+                    oninput="updateSearchClear()"
+                >
+
+                <button type="button" id="searchClear" onclick="clearSearch()" style="display:none;">×</button>
+            </form>
+
+            <div class="search-panel" id="searchPanel">
+
+                <div class="search-panel-title">POPULAR TOPICS</div>
+
+                <div class="search-tags">
+                    <button onclick="searchByTopic('relationship')">#relationship</button>
+                    <button onclick="searchByTopic('crush')">#crush</button>
+                    <button onclick="searchByTopic('dating')">#dating</button>
+                    <button onclick="searchByTopic('love')">#love</button>
+                    <button onclick="searchByTopic('friend')">#friend</button>
+                    <button onclick="searchByTopic('family')">#family</button>
+                    <button onclick="searchByTopic('secret')">#secret</button>
+                    <button onclick="searchByTopic('work')">#work</button>
+                    <button onclick="searchByTopic('college')">#college</button>
+                    <button onclick="searchByTopic('husband')">#husband</button>
+                </div>
+
+                <div class="search-hint">Search for anything on your mind.</div>
+
+            </div>
+        </div>
+
         <div class="header-tagline">Say it here.</div>
+
+        <button class="menu-btn" onclick="toggleSideMenu()" aria-label="Open menu">
+            ☰
+        </button>
     </div>
 </header>
+
+<div class="page-layout">
+
+        <aside class="side-menu" id="sideMenu">
+
+        <div class="side-section">
+            <a href="/" onclick="event.preventDefault(); goHome(); toggleSideMenu();">
+            <i class="fa-solid fa-house"></i> Home
+            </a>
+        </div>
+
+        <div class="side-section">
+            <div class="side-title">TRENDING</div>
+
+            <a href="#" onclick="event.preventDefault(); searchByTopic('love'); toggleSideMenu();">#love</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('family'); toggleSideMenu();">#family</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('dating'); toggleSideMenu();">#dating</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('work'); toggleSideMenu();">#work</a>
+            <a href="#" onclick="event.preventDefault(); searchByTopic('college'); toggleSideMenu();">#college</a>
+        </div>
+
+        <div class="side-section">
+            <div class="side-title">SOCIALS</div>
+
+            <a href="https://youtube.com/@erp_confessions?si=xKtaZeZsI52okBaM" target="_blank">YouTube</a>
+            <a href="https://www.instagram.com/erp_confessions?psln=Y3p3NWV4NDhtdWxt" target="_blank">Instagram</a>
+            <a href="https://www.tiktok.com/@erp_c12?_r=1&_t=ZS-9B3h87PRxWG" target="_blank">TikTok</a>
+            <a href="https://x.com/ERP_Confessions" target="_blank">X</a>
+            <a href="https://www.facebook.com/erp.confessions" target="_blank">Facebook</a>
+        </div>
+
+        <div class="side-section">
+            <div class="side-title">SUPPORT</div>
+
+            <a href="mailto:support@ethartoken.com">✉ Support</a>
+            <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
+            <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
+        </div>
+
+    </aside>
+
+    <main class="container">
+
+    <!-- CONFESSION BOX -->
+
+    <section class="confess-box" id="confessBox">
+
+        <div class="confess-title">
+            What's on your mind?
+        </div>
+
+        <div class="confess-subtitle">
+            Say it anonymously. Keep it short.
+        </div>
+
+        <textarea
+            id="confession"
+            maxlength="1000"
+            placeholder="Your secret is safe here. Say it..."
+            oninput="updateCounter()"
+        ></textarea>
+
+        <div class="composer-bottom">
+            <div class="counter">
+                <span id="charCount">0</span>/1000
+            </div>
+
+            <button class="post-btn" onclick="submitConfession()">
+                Post anonymously
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters" id="feedFilters">
+
+        <button class="filter active">
+            New posts
+        </button>
+
+        <button class="filter">
+            Most liked
+        </button>
+
+        <button class="filter">
+            Funny 😂
+        </button>
+
+        <button class="filter">
+            Most shocking 😳
+        </button>
+
+    </div>
+
+
+<!-- POSTS -->
+
+<div id="posts">
+
+    <div class="posts-loading">
+        <div class="loading-spinner"></div>
+        <div>Loading...</div>
+    </div>
+
+</div>
+
+</main>
+
+</div>
 
 <style>
 .ad-container {
@@ -874,83 +1352,12 @@ footer a {
 
 </div>
 
-<main class="container">
-
-    <!-- CONFESSION BOX -->
-
-    <section class="confess-box">
-
-        <div class="confess-title">
-            What's on your mind?
-        </div>
-
-        <div class="confess-subtitle">
-            Say it anonymously. Keep it short.
-        </div>
-
-        <textarea
-            id="confession"
-            maxlength="500"
-            placeholder="Your secret is safe here. Say it..."
-            oninput="updateCounter()"
-        ></textarea>
-
-        <div class="composer-bottom">
-            <div class="counter">
-                <span id="charCount">0</span>/500
-            </div>
-
-            <button class="post-btn" onclick="submitConfession()">
-                Post anonymously
-            </button>
-        </div>
-
-    </section>
-
-
-    <!-- FILTERS -->
-
-    <div class="filters">
-
-        <button class="filter active">
-            New posts
-        </button>
-
-        <button class="filter">
-            Most liked
-        </button>
-
-        <button class="filter">
-            Funny 😂
-        </button>
-
-        <button class="filter">
-            Most shocking 😳
-        </button>
-
-    </div>
-
-
-<!-- POSTS -->
-
-<div id="posts">
-
-    <div class="posts-loading">
-        <div class="loading-spinner"></div>
-        <div>Loading...</div>
-    </div>
-
-</div>
-
-</main>
-
-
 <footer>
     Anonymous · Say what you can't say anywhere else.
     <br><br>
-    <a href="#">Community Rules</a>
+    <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
     &nbsp; · &nbsp;
-    <a href="#">Privacy</a>
+    <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
 </footer>
 
 
@@ -1016,7 +1423,7 @@ async function submitConfession() {
         return;
     }
 
-    if (text.length > 500) {
+    if (text.length > 1000) {
 
         showModal("Keep your confession short.");
 
@@ -1068,6 +1475,9 @@ async function submitConfession() {
 
 async function loadPosts(sort = "new", reset = false) {
 
+    if (sharedPostMode) return;
+
+    if (searchActive && !reset) return;
     if (!reset && (loadingPosts || allPostsLoaded)) return;
 
     loadingPosts = true;
@@ -1299,7 +1709,7 @@ function createPostHTML(post) {
 
     return `
 
-        <article class="post" data-post-id="${post.id}">
+        <article class="post" data-post-id="${post.id}" data-post-code="${post.post_code}">
 
             <div class="post-top">
 
@@ -1307,13 +1717,25 @@ function createPostHTML(post) {
 
                     <div class="anon-icon">?</div>
 
-                    Anonymous
+                    Anonymous · ${post.post_code}
 
                 </div>
+
+            <div style="display:flex; align-items:center; gap:12px;">
 
                 <div class="date">
                     ${formatDate(post.created_at)}
                 </div>
+
+                <a
+                    href="/?post=${encodeURIComponent(post.post_code)}"
+                    class="post-permalink"
+                    onclick="event.stopPropagation()"
+                >
+                    ↗ View confession
+                </a>
+
+            </div>
 
             </div>
 
@@ -1395,12 +1817,24 @@ function createPostHTML(post) {
 
             <div class="comment-toggle">
 
-                <button onclick="toggleComments(this, '${post.id}')">
-                    💬 ${post.comments_count} comments
-                </button>
+    <div class="post-actions">
 
-            </div>
+        <button onclick="toggleComments(this, '${post.id}')">
+            💬 ${post.comments_count} comments
+        </button>
 
+        <button
+            class="share-btn"
+            onclick="sharePost('${post.post_code}', this)"
+            aria-label="Share post"
+            title="Share"
+        >
+            <i class="fa-solid fa-share"></i>
+        </button>
+
+    </div>
+
+</div>
 
             <div class="comments">
 
@@ -1413,7 +1847,7 @@ function createPostHTML(post) {
 
                     <input
                         type="text"
-                        maxlength="300"
+                        maxlength="1000"
                         placeholder="Write an anonymous comment..."
                     >
 
@@ -1879,6 +2313,12 @@ let currentSort = "new";
 let visitorCountry = null;
 const POSTS_PER_PAGE = 10;
 
+let searchActive = false;
+let searchSeenIds = [];
+let searchLoading = false;
+let searchAllLoaded = false;
+let searchTerm = "";
+
 let localOffset = 0;
 let globalOffset = 0;
 let localFinished = false;
@@ -1931,6 +2371,9 @@ document.querySelectorAll(".filter").forEach(function(button) {
         }
 
 
+        searchActive = false;
+        document.getElementById("siteSearch").value = "";
+        updateSearchClear();
         await loadPosts(currentSort, true);
 
     });
@@ -1943,7 +2386,11 @@ window.addEventListener("scroll", function() {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 700
     ) {
-        loadPosts(currentSort);
+        if (searchActive) {
+            loadMoreSearchPosts();
+        } else {
+            loadPosts(currentSort);
+        }
     }
 
 });
@@ -2103,10 +2550,267 @@ async function reportPost(postId) {
 }
 
 // ==========================================
+// POST NAVIGATION
+// ==========================================
+
+async function openPost(postCode) {
+
+    if (!postCode || sharedPostMode) return;
+
+    sharedPostMode = true;
+
+    history.pushState(
+        { page: "post", postCode },
+        "",
+        `${window.location.pathname}?post=${encodeURIComponent(postCode)}`
+    );
+
+    await loadSharedPost(postCode);
+}
+
+
+function goHome() {
+
+    if (sharedPostMode) {
+        history.back();
+        return;
+    }
+
+    searchActive = false;
+    document.getElementById("siteSearch").value = "";
+    updateSearchClear();
+    closeSearchPanel();
+
+    currentSort = "new";
+
+    document.querySelectorAll(".filter").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.textContent.trim().includes("New posts")
+        );
+    });
+
+    loadPosts("new", true);
+}
+
+
+// Clicking a post opens its individual page.
+// Buttons, reactions, comments and inputs keep their normal actions.
+
+document.getElementById("posts").addEventListener("click", function(event) {
+
+    if (event.target.closest("button, input, textarea, a, .comments")) {
+        return;
+    }
+
+    const post = event.target.closest(".post");
+
+    if (!post) return;
+
+    openPost(post.dataset.postCode);
+});
+
+
+// Handle browser Back and Forward.
+
+window.addEventListener("popstate", function() {
+
+    const postCode = new URLSearchParams(window.location.search).get("post");
+
+    if (postCode) {
+
+        sharedPostMode = true;
+        loadSharedPost(postCode);
+
+    } else {
+
+        sharedPostMode = false;
+
+        resetHomeSEO();
+
+        document.getElementById("confessBox").style.display = "";
+        document.getElementById("feedFilters").style.display = "";
+
+        searchActive = false;
+        document.getElementById("siteSearch").value = "";
+        updateSearchClear();
+        closeSearchPanel();
+
+        currentSort = "new";
+
+        document.querySelectorAll(".filter").forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.textContent.trim().includes("New posts")
+            );
+        });
+
+        loadPosts("new", true);
+    }
+
+});
+
+
+// ==========================================
+// POST SEO
+// ==========================================
+
+function updatePostSEO(post) {
+
+    const text = post.message.trim();
+
+    const titleText = text
+        .replace(/\s+/g, " ")
+        .slice(0, 60)
+        .trim();
+
+    const descriptionText = text
+        .replace(/\s+/g, " ")
+        .slice(0, 155)
+        .trim();
+
+    document.title =
+        `${titleText}${text.length > 60 ? "..." : ""} — Anonymous Confession`;
+
+    document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+            "content",
+            descriptionText
+        );
+
+    document
+        .getElementById("canonicalUrl")
+        .setAttribute(
+            "href",
+            `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`
+        );
+
+    // Structured data for the individual confession
+    let schema = document.getElementById("postSchema");
+
+    if (!schema) {
+        schema = document.createElement("script");
+        schema.id = "postSchema";
+        schema.type = "application/ld+json";
+        document.head.appendChild(schema);
+    }
+
+    schema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "DiscussionForumPosting",
+        "headline": titleText,
+        "text": text,
+        "datePublished": post.created_at,
+        "url": `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`,
+        "author": {
+            "@type": "Person",
+            "name": "Anonymous"
+        }
+    });
+}
+
+function resetHomeSEO() {
+
+    document.title = "Anonymous — Say It Here";
+
+    document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+            "content",
+            "Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else."
+        );
+
+    document
+        .getElementById("canonicalUrl")
+        .setAttribute(
+            "href",
+            "https://anonymous.ethartoken.com/"
+        );
+
+    const schema = document.getElementById("postSchema");
+
+    if (schema) {
+        schema.remove();
+    }
+}
+
+// ==========================================
+// LOAD SHARED POST
+// ==========================================
+
+let sharedPostMode = false;
+
+async function loadSharedPost(postCode) {
+
+    const postsContainer = document.getElementById("posts");
+
+    document.getElementById("confessBox").style.display = "none";
+    document.getElementById("feedFilters").style.display = "none";
+
+    postsContainer.innerHTML = `
+        <div class="posts-loading">
+            <div class="loading-spinner"></div>
+            <div>Loading confession...</div>
+        </div>
+    `;
+
+    const { data, error } = await client
+        .from("posts")
+        .select("*")
+        .eq("post_code", postCode)
+        .maybeSingle();
+
+    if (error || !data) {
+
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                This confession could not be found. It may have been removed.
+            </div>
+        `;
+
+        return;
+    }
+
+    updatePostSEO(data);
+
+    postsContainer.innerHTML = createPostHTML(data);
+
+    const postElement = postsContainer.querySelector(".post");
+
+    const comments = postElement.querySelector(".comments");
+
+    comments.classList.add("open");
+
+    await loadComments(data.id, postElement, true);
+}
+    
+
+// ==========================================
 // INITIAL LOAD
 // ==========================================
 
-loadPosts("new", true);
+const sharedPostCode = new URLSearchParams(window.location.search).get("post");
+
+if (sharedPostCode) {
+
+    // Create a Home history entry behind directly opened shared links.
+    history.replaceState({ page: "home" }, "", window.location.pathname);
+
+    history.pushState(
+        { page: "post", postCode: sharedPostCode },
+        "",
+        `${window.location.pathname}?post=${encodeURIComponent(sharedPostCode)}`
+    );
+
+    sharedPostMode = true;
+    loadSharedPost(sharedPostCode);
+
+} else {
+
+    loadPosts("new", true);
+
+}
 
 function showModal(title, message) {
     document.getElementById("modalTitle").textContent = title;
@@ -2128,6 +2832,187 @@ async function getCountry() {
         return null;
     }
 }
+
+function toggleSideMenu() {
+    document.getElementById("sideMenu").classList.toggle("open");
+}
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+
+function openSearchPanel() {
+    document.getElementById("searchPanel").classList.add("open");
+}
+
+function updateSearchClear() {
+    const input = document.getElementById("siteSearch");
+
+    document.getElementById("searchClear").style.display =
+        input.value ? "block" : "none";
+}
+
+function closeSearchPanel() {
+    document.getElementById("searchPanel").classList.remove("open");
+}
+
+function searchByTopic(topic) {
+    document.getElementById("siteSearch").value = topic;
+    updateSearchClear();
+    searchPosts();
+}
+
+async function searchPosts() {
+    const input = document.getElementById("siteSearch");
+    const term = input.value.trim();
+
+    if (!term) return;
+    input.blur();
+
+    searchActive = true;
+    searchTerm = term;
+    searchSeenIds = [];
+    searchLoading = false;
+    searchAllLoaded = false;
+
+    closeSearchPanel();
+
+    document.getElementById("posts").innerHTML = `
+        <div class="posts-loading">
+            <div class="loading-spinner"></div>
+            <div>Searching confessions...</div>
+        </div>
+    `;
+
+    await loadMoreSearchPosts();
+}
+
+
+async function loadMoreSearchPosts() {
+    if (searchLoading || searchAllLoaded) return;
+
+    searchLoading = true;
+
+    const postsContainer = document.getElementById("posts");
+
+    const { data, error } = await client.rpc("search_posts_random", {
+        p_term: searchTerm,
+        p_exclude_ids: searchSeenIds,
+        p_limit: 10
+    });
+
+    if (error) {
+        console.error(error);
+
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `<div style="text-align:center;padding:25px;color:#999;">
+                Search failed. Please try again.
+            </div>`
+        );
+
+        searchLoading = false;
+        return;
+    }
+
+    const results = data || [];
+
+    const initialLoader = postsContainer.querySelector(".posts-loading");
+    if (initialLoader) initialLoader.remove();
+
+   if (results.length === 0 && searchSeenIds.length === 0) {
+        postsContainer.innerHTML = `
+            <div style="text-align:center;padding:40px;color:#999;">
+                No confessions found for "${escapeHTML(searchTerm)}".
+                <br><br>
+                Try another search.
+            </div>
+        `;
+
+        searchAllLoaded = true;
+        searchLoading = false;
+        return;
+    }
+
+    results.forEach((post, index) => {
+        searchSeenIds.push(post.id);
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            createPostHTML(post)
+        );
+
+        // Advertisement after the 5th result
+        if (index === 4) {
+            const adContainer = document.createElement("div");
+            adContainer.className = "post-ad-banner";
+            postsContainer.appendChild(adContainer);
+
+            const isMobile = window.innerWidth <= 767;
+
+            window.atOptions = isMobile
+                ? {
+                    key: "f15a01fd59c1f566cb474f8b5d85ef10",
+                    format: "iframe",
+                    height: 50,
+                    width: 320,
+                    params: {}
+                }
+                : {
+                    key: "08b3e0f70a2aa368598746b3c7a998cc",
+                    format: "iframe",
+                    height: 90,
+                    width: 728,
+                    params: {}
+                };
+
+            const adScript = document.createElement("script");
+
+            adScript.src = isMobile
+                ? "https://www.highrevenueformat.com/f15a01fd59c1f566cb474f8b5d85ef10/invoke.js"
+                : "https://www.highrevenueformat.com/08b3e0f70a2aa368598746b3c7a998cc/invoke.js";
+
+            adScript.async = false;
+            adContainer.appendChild(adScript);
+        }
+    });
+
+    if (results.length < 10) {
+        searchAllLoaded = true;
+    }
+
+    const oldLoader = document.getElementById("feedLoader");
+    if (oldLoader) oldLoader.remove();
+
+    if (!searchAllLoaded) {
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `<div id="feedLoader" class="posts-loading">
+                <div class="loading-spinner"></div>
+                <div>Loading more...</div>
+            </div>`
+        );
+    }
+
+    searchLoading = false;
+}
+
+function clearSearch() {
+    document.getElementById("siteSearch").value = "";
+    updateSearchClear();
+    closeSearchPanel();
+
+    searchActive = false;
+    loadPosts(currentSort, true);
+}
+
+document.addEventListener("click", function(event) {
+    const wrap = document.getElementById("searchWrap");
+
+    if (!wrap.contains(event.target)) {
+        closeSearchPanel();
+    }
+});
 
 </script>
 
@@ -2161,6 +3046,49 @@ if (window.innerWidth > 1100) {
 
     nativeAd.appendChild(adScript);
 }
+
+    
+
+async function sharePost(postCode, button) {
+
+    const url = `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postCode)}`;
+
+    const post = button.closest('.post');
+    const message = post.querySelector('.post-text').textContent.trim();
+
+    const excerpt = message.length > 250
+        ? message.substring(0, 250).trimEnd() + "..."
+        : message;
+
+    const shareData = {
+        title: "Anonymous — Say It Here",
+        text: `"${excerpt}"\n\nRead the full confession on Anonymous:`,
+        url: url
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+            return;
+        }
+
+        await navigator.clipboard.writeText(
+            `${shareData.text}\n${url}`
+        );
+
+        button.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+        setTimeout(() => {
+            button.innerHTML = '<i class="fa-solid fa-share"></i>';
+        }, 2000);
+
+    } catch (error) {
+        if (error.name === "AbortError") return;
+        alert("Unable to share this post.");
+    }
+}
+
+
 </script>
 
 <script>
