@@ -6,7 +6,8 @@
 
 <title>Anonymous — Say It Here</title>
 <meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
-
+<link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
+    
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -2602,6 +2603,8 @@ window.addEventListener("popstate", function() {
 
         sharedPostMode = false;
 
+        resetHomeSEO();
+
         document.getElementById("confessBox").style.display = "";
         document.getElementById("feedFilters").style.display = "";
 
@@ -2623,6 +2626,91 @@ window.addEventListener("popstate", function() {
     }
 
 });
+
+
+// ==========================================
+// POST SEO
+// ==========================================
+
+function updatePostSEO(post) {
+
+    const text = post.message.trim();
+
+    const titleText = text
+        .replace(/\s+/g, " ")
+        .slice(0, 60)
+        .trim();
+
+    const descriptionText = text
+        .replace(/\s+/g, " ")
+        .slice(0, 155)
+        .trim();
+
+    document.title =
+        `${titleText}${text.length > 60 ? "..." : ""} — Anonymous Confession`;
+
+    document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+            "content",
+            descriptionText
+        );
+
+    document
+        .getElementById("canonicalUrl")
+        .setAttribute(
+            "href",
+            `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`
+        );
+
+    // Structured data for the individual confession
+    let schema = document.getElementById("postSchema");
+
+    if (!schema) {
+        schema = document.createElement("script");
+        schema.id = "postSchema";
+        schema.type = "application/ld+json";
+        document.head.appendChild(schema);
+    }
+
+    schema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "DiscussionForumPosting",
+        "headline": titleText,
+        "text": text,
+        "datePublished": post.created_at,
+        "url": `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`,
+        "author": {
+            "@type": "Person",
+            "name": "Anonymous"
+        }
+    });
+}
+
+function resetHomeSEO() {
+
+    document.title = "Anonymous — Say It Here";
+
+    document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+            "content",
+            "Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else."
+        );
+
+    document
+        .getElementById("canonicalUrl")
+        .setAttribute(
+            "href",
+            "https://anonymous.ethartoken.com/"
+        );
+
+    const schema = document.getElementById("postSchema");
+
+    if (schema) {
+        schema.remove();
+    }
+}
 
 // ==========================================
 // LOAD SHARED POST
@@ -2660,6 +2748,8 @@ async function loadSharedPost(postCode) {
 
         return;
     }
+
+    updatePostSEO(data);
 
     postsContainer.innerHTML = createPostHTML(data);
 
