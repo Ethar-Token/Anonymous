@@ -467,6 +467,17 @@ textarea:focus {
     outline: none;
     box-shadow: none;
 }
+
+.post-id-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.post-id-link:hover {
+    color: #7655c7;
+    text-decoration: underline;
+}
     
 /* ================= REPORT ================= */
 
@@ -1706,7 +1717,12 @@ function createPostHTML(post) {
 
                     <div class="anon-icon">?</div>
 
-                    Anonymous · ${post.post_code}
+                    Anonymous ·
+                    <a
+                        href="/?post=${encodeURIComponent(post.post_code)}"
+                        class="post-id-link"
+                        onclick="event.stopPropagation()"
+                    >${escapeHTML(post.post_code)}</a>
 
                 </div>
 
