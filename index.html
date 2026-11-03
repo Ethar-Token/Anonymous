@@ -18,6 +18,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Anonymous">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 
 <style>
@@ -1736,7 +1737,7 @@ function createPostHTML(post) {
             aria-label="Share post"
             title="Share"
         >
-            📤
+            <i class="fa-solid fa-share"></i>
         </button>
 
     </div>
@@ -2717,7 +2718,7 @@ async function sharePost(postCode, button) {
 
         await navigator.clipboard.writeText(url);
 
-        button.textContent = "✓ Link copied";
+        button.innerHTML = '<i class="fa-solid fa-check"></i>';
 
         setTimeout(() => {
             button.textContent = "↗ Share";
@@ -2730,10 +2731,10 @@ async function sharePost(postCode, button) {
         try {
             await navigator.clipboard.writeText(url);
 
-            button.textContent = "✓ Link copied";
+            button.innerHTML = '<i class="fa-solid fa-check"></i>';
 
             setTimeout(() => {
-                button.textContent = "↗ Share";
+                button.innerHTML = '<i class="fa-solid fa-share"></i>';
             }, 2000);
 
         } catch (e) {
