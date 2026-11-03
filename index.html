@@ -433,39 +433,16 @@ textarea:focus {
 .post-actions {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
+    width: 100%;
 }
 
-.post-actions > button:first-child {
+.post-actions .share-btn {
+    margin-left: auto;
     border: none;
-    background: none;
-    padding: 0;
-    font-family: inherit;
-    font-size: 13px;
-    color: #7655c7;
+    background: transparent;
+    font-size: 17px;
     cursor: pointer;
-}
-
-.share-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #e9e2f5;
-    border-radius: 50%;
-    background: #f8f5ff;
-    color: #7655c7;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: .2s;
-}
-
-.share-btn:hover {
-    background: #eee7ff;
-    transform: translateY(-1px);
+    padding: 4px;
 }
     
 /* ================= REPORT ================= */
@@ -1747,29 +1724,24 @@ function createPostHTML(post) {
 
             <div class="comment-toggle">
 
-            <button onclick="toggleComments(this, '${post.id}')">
-                💬 ${post.comments_count} comments
-            </button>
+    <div class="post-actions">
 
-            <button
-                class="post-actions"
-                onclick="sharePost('${post.post_code}', this)"
-                aria-label="Share post"
-                title="Share"
-                style="margin-left:auto; background:none; border:none; cursor:pointer; color:#7655c7; padding:5px;"
-            >
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="18" cy="5" r="3"/>
-                    <circle cx="6" cy="12" r="3"/>
-                    <circle cx="18" cy="19" r="3"/>
-                    <path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>
-                </svg>
-            </button>
+        <button onclick="toggleComments(this, '${post.id}')">
+            💬 ${post.comments_count} comments
+        </button>
 
-        </div>
+        <button
+            class="share-btn"
+            onclick="sharePost('${post.post_code}', this)"
+            aria-label="Share post"
+            title="Share"
+        >
+            📤
+        </button>
 
+    </div>
+
+</div>
 
             <div class="comments">
 
