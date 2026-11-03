@@ -1202,14 +1202,14 @@ footer a {
 
         <textarea
             id="confession"
-            maxlength="500"
+            maxlength="1000"
             placeholder="Your secret is safe here. Say it..."
             oninput="updateCounter()"
         ></textarea>
 
         <div class="composer-bottom">
             <div class="counter">
-                <span id="charCount">0</span>/500
+                <span id="charCount">0</span>/1000
             </div>
 
             <button class="post-btn" onclick="submitConfession()">
@@ -1329,7 +1329,7 @@ async function submitConfession() {
         return;
     }
 
-    if (text.length > 500) {
+    if (text.length > 1000) {
 
         showModal("Keep your confession short.");
 
