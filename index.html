@@ -445,6 +445,19 @@ textarea:focus {
     cursor: pointer;
     padding: 4px;
 }
+
+.post {
+    cursor: pointer;
+}
+
+.post button,
+.post input {
+    cursor: pointer;
+}
+
+.post-text {
+    cursor: pointer;
+}
     
 /* ================= REPORT ================= */
 
@@ -1119,7 +1132,7 @@ footer a {
 
 <header>
     <div class="header-inner">
-        <div class="logo">Anonymous<span>.</span></div>
+        <div class="logo" onclick="goHome()" style="cursor:pointer;">Anonymous<span>.</span></div>
 
         <div class="search-wrap" id="searchWrap">
 
@@ -1170,7 +1183,13 @@ footer a {
 
 <div class="page-layout">
 
-    <aside class="side-menu" id="sideMenu">
+        <aside class="side-menu" id="sideMenu">
+
+        <div class="side-section">
+            <a href="/" onclick="event.preventDefault(); goHome(); toggleSideMenu();">
+            <i class="fa-solid fa-house"></i> Home
+            </a>
+        </div>
 
         <div class="side-section">
             <div class="side-title">TRENDING</div>
@@ -1670,7 +1689,7 @@ function createPostHTML(post) {
 
     return `
 
-        <article class="post" data-post-id="${post.id}">
+        <article class="post" data-post-id="${post.id}" data-post-code="${post.post_code}">
 
             <div class="post-top">
 
@@ -2499,6 +2518,105 @@ async function reportPost(postId) {
 }
 
 // ==========================================
+// POST NAVIGATION
+// ==========================================
+
+async function openPost(postCode) {
+
+    if (!postCode || sharedPostMode) return;
+
+    sharedPostMode = true;
+
+    history.pushState(
+        { page: "post", postCode },
+        "",
+        `${window.location.pathname}?post=${encodeURIComponent(postCode)}`
+    );
+
+    await loadSharedPost(postCode);
+}
+
+
+function goHome() {
+
+    if (sharedPostMode) {
+        history.back();
+        return;
+    }
+
+    searchActive = false;
+    document.getElementById("siteSearch").value = "";
+    updateSearchClear();
+    closeSearchPanel();
+
+    currentSort = "new";
+
+    document.querySelectorAll(".filter").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.textContent.trim().includes("New posts")
+        );
+    });
+
+    loadPosts("new", true);
+}
+
+
+// Clicking a post opens its individual page.
+// Buttons, reactions, comments and inputs keep their normal actions.
+
+document.getElementById("posts").addEventListener("click", function(event) {
+
+    if (event.target.closest("button, input, textarea, a, .comments")) {
+        return;
+    }
+
+    const post = event.target.closest(".post");
+
+    if (!post) return;
+
+    openPost(post.dataset.postCode);
+});
+
+
+// Handle browser Back and Forward.
+
+window.addEventListener("popstate", function() {
+
+    const postCode = new URLSearchParams(window.location.search).get("post");
+
+    if (postCode) {
+
+        sharedPostMode = true;
+        loadSharedPost(postCode);
+
+    } else {
+
+        sharedPostMode = false;
+
+        document.getElementById("confessBox").style.display = "";
+        document.getElementById("feedFilters").style.display = "";
+
+        searchActive = false;
+        document.getElementById("siteSearch").value = "";
+        updateSearchClear();
+        closeSearchPanel();
+
+        currentSort = "new";
+
+        document.querySelectorAll(".filter").forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.textContent.trim().includes("New posts")
+            );
+        });
+
+        loadPosts("new", true);
+    }
+
+});
+
+// ==========================================
 // LOAD SHARED POST
 // ==========================================
 
@@ -2554,10 +2672,23 @@ async function loadSharedPost(postCode) {
 const sharedPostCode = new URLSearchParams(window.location.search).get("post");
 
 if (sharedPostCode) {
+
+    // Create a Home history entry behind directly opened shared links.
+    history.replaceState({ page: "home" }, "", window.location.pathname);
+
+    history.pushState(
+        { page: "post", postCode: sharedPostCode },
+        "",
+        `${window.location.pathname}?post=${encodeURIComponent(sharedPostCode)}`
+    );
+
     sharedPostMode = true;
     loadSharedPost(sharedPostCode);
+
 } else {
+
     loadPosts("new", true);
+
 }
 
 function showModal(title, message) {
