@@ -2767,6 +2767,20 @@ async function loadSharedPost(postCode) {
 
     updatePostSEO(data);
 
+    // Set the individual confession's canonical URL
+    const canonicalURL =
+        `${window.location.origin}/?post=${encodeURIComponent(data.post_code)}`;
+
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
+
+    if (!canonicalTag) {
+        canonicalTag = document.createElement('link');
+        canonicalTag.rel = 'canonical';
+        document.head.appendChild(canonicalTag);
+    }
+
+    canonicalTag.href = canonicalURL;
+
     postsContainer.innerHTML = createPostHTML(data);
 
     const postElement = postsContainer.querySelector(".post");
