@@ -1144,6 +1144,34 @@ footer a {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* ================= INTRO BANNER ================= */
+
+.intro-banner {
+    background: var(--purple-light);
+    border: 1px solid var(--purple-soft);
+    border-radius: 15px;
+    padding: 17px 20px;
+    margin-bottom: 22px;
+    color: #51476a;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.intro-banner strong {
+    color: var(--purple-dark);
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .intro-banner {
+        padding: 14px 16px;
+        font-size: 12px;
+        line-height: 1.75;
+        border-radius: 13px;
+        margin-bottom: 18px;
+    }
+}
     
 </style>
 </head>
@@ -1242,6 +1270,11 @@ footer a {
     </aside>
 
     <main class="container">
+
+        <section class="intro-banner">
+            <strong>Looking for a place to post anonymously?</strong>
+            Share your confessions, secrets and thoughts, read real stories and express yourself without revealing your identity.
+        </section>
 
     <!-- CONFESSION BOX -->
 
@@ -1997,12 +2030,11 @@ async function loadComments(postId, postElement, reset = true) {
 
         if (reset) {
 
-            list.innerHTML =
-                "Unable to load comments.";
+            list.innerHTML = "Unable to load comments.";
 
         }
 
-        return;
+        return [];
     }
 
 
@@ -2014,7 +2046,7 @@ async function loadComments(postId, postElement, reset = true) {
             </div>
         `;
 
-        return;
+        return [];
     }
 
 
@@ -2136,10 +2168,11 @@ async function loadComments(postId, postElement, reset = true) {
     } else if (loadMore) {
 
         loadMore.remove();
-
     }
 
+    return data || [];
 }
+    
 
 async function reactToComment(commentId, reactionType, button) {
 
@@ -2648,7 +2681,7 @@ window.addEventListener("popstate", function() {
 // POST SEO
 // ==========================================
 
-function updatePostSEO(post) {
+function updatePostSEO(post, comments = []) {
 
     const text = post.message.trim();
 
@@ -2696,6 +2729,21 @@ function updatePostSEO(post) {
         "text": text,
         "datePublished": post.created_at,
         "url": `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`,
+
+        "commentCount": Number(post.comments_count || comments.length),
+
+        ...(comments.length > 0 ? {
+            "comment": comments.map(comment => ({
+                "@type": "Comment",
+                "text": comment.message,
+                "datePublished": comment.created_at,
+                "author": {
+                    "@type": "Person",
+                    "name": "Anonymous"
+                }
+            }))
+        } : {}),
+
         "author": {
             "@type": "Person",
             "name": "Anonymous"
@@ -2765,8 +2813,6 @@ async function loadSharedPost(postCode) {
         return;
     }
 
-    updatePostSEO(data);
-
     // Set the individual confession's canonical URL
     const canonicalURL =
         `${window.location.origin}/?post=${encodeURIComponent(data.post_code)}`;
@@ -2789,7 +2835,9 @@ async function loadSharedPost(postCode) {
 
     comments.classList.add("open");
 
-    await loadComments(data.id, postElement, true);
+    const loadedComments = await loadComments(data.id, postElement, true);
+
+    updatePostSEO(data, loadedComments);
 }
     
 
