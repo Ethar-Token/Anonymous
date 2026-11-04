@@ -1,8 +1,38 @@
-
+# General access
 User-agent: *
 Allow: /
 
+# OpenAI
 User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Apple
+User-agent: Applebot
+Allow: /
+
+# Microsoft / Copilot
+User-agent: Bingbot
+Allow: /
+
+# Google Gemini grounding
+User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://anonymous.ethartoken.com/sitemap.xml
