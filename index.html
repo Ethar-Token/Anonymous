@@ -2030,12 +2030,11 @@ async function loadComments(postId, postElement, reset = true) {
 
         if (reset) {
 
-            list.innerHTML =
-                "Unable to load comments.";
+            list.innerHTML = "Unable to load comments.";
 
         }
 
-        return;
+        return [];
     }
 
 
@@ -2047,7 +2046,7 @@ async function loadComments(postId, postElement, reset = true) {
             </div>
         `;
 
-        return;
+        return [];
     }
 
 
@@ -2169,10 +2168,11 @@ async function loadComments(postId, postElement, reset = true) {
     } else if (loadMore) {
 
         loadMore.remove();
-
     }
 
+    return data || [];
 }
+    
 
 async function reactToComment(commentId, reactionType, button) {
 
@@ -2681,7 +2681,7 @@ window.addEventListener("popstate", function() {
 // POST SEO
 // ==========================================
 
-function updatePostSEO(post) {
+function updatePostSEO(post, comments = []) {
 
     const text = post.message.trim();
 
@@ -2729,6 +2729,21 @@ function updatePostSEO(post) {
         "text": text,
         "datePublished": post.created_at,
         "url": `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(post.post_code)}`,
+
+        "commentCount": Number(post.comments_count || comments.length),
+
+        ...(comments.length > 0 ? {
+            "comment": comments.map(comment => ({
+                "@type": "Comment",
+                "text": comment.message,
+                "datePublished": comment.created_at,
+                "author": {
+                    "@type": "Person",
+                    "name": "Anonymous"
+                }
+            }))
+        } : {}),
+
         "author": {
             "@type": "Person",
             "name": "Anonymous"
@@ -2798,8 +2813,6 @@ async function loadSharedPost(postCode) {
         return;
     }
 
-    updatePostSEO(data);
-
     // Set the individual confession's canonical URL
     const canonicalURL =
         `${window.location.origin}/?post=${encodeURIComponent(data.post_code)}`;
@@ -2822,7 +2835,9 @@ async function loadSharedPost(postCode) {
 
     comments.classList.add("open");
 
-    await loadComments(data.id, postElement, true);
+    const loadedComments = await loadComments(data.id, postElement, true);
+
+    updatePostSEO(data, loadedComments);
 }
     
 
