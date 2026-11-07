@@ -2,10 +2,11 @@ const CACHE_NAME = "anonymous-v1";
 
 const APP_FILES = [
     "/",
+    "/landing.html",
     "/index.html",
     "/manifest.json",
     "/Icons/icon-192.png",
-    "/Icons/icon-512.png"
+    "/Icons/icon-512.png"    
 ];
 
 self.addEventListener("install", event => {
@@ -41,7 +42,19 @@ self.addEventListener("fetch", event => {
 
     if (event.request.mode === "navigate") {
         event.respondWith(
-            fetch(event.request).catch(() => caches.match("/index.html"))
+            fetch(event.request).catch(async () => {
+                const path = url.pathname;
+
+                if (path === "/" || path === "/landing.html") {
+                    return await caches.match("/landing.html");
+                }
+
+                if (path === "/index.html") {
+                    return await caches.match("/index.html");
+                }
+
+                return await caches.match("/landing.html");
+            })
         );
     }
 });
