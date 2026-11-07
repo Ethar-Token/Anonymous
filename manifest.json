@@ -2,7 +2,7 @@
   "name": "Anonymous — Say It Here",
   "short_name": "Anonymous",
   "description": "A space to share confessions, secrets and thoughts anonymously. Read real stories, express yourself and say what you can't say anywhere else.",
-  "start_url": "/landing.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#faf9fd",
