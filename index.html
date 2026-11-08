@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script>
+(function () {
+    try {
+        const savedTheme = localStorage.getItem("site-theme");
+        const validTheme = ["system", "light", "dark"].includes(savedTheme)
+            ? savedTheme
+            : "system";
+
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const effectiveTheme = validTheme === "system"
+            ? (prefersDark ? "dark" : "light")
+            : validTheme;
+
+        document.documentElement.dataset.theme = effectiveTheme;
+    } catch (error) {
+        document.documentElement.dataset.theme = "light";
+    }
+})();
+</script>
+
 <title>Anonymous — Say It Here</title>
 <meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
 <link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
@@ -40,6 +60,57 @@
     --white: #ffffff;
     --bg: #faf9fd;
     --danger: #e96d87;
+}
+
+/* ================= DARK THEME ================= */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    --purple: #b69aff;
+    --purple-dark: #c2aaff;
+    --purple-light: #30283f;
+    --purple-soft: #403452;
+
+    --text: #f1edf8;
+    --muted: #aaa2b8;
+    --border: #393344;
+    --white: #211d2b;
+    --bg: #17141f;
+}
+
+/* ================= THEME BUTTON ================= */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 6px 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: color .15s;
+}
+
+.theme-toggle i {
+    width: 17px;
+    color: var(--purple-dark);
+}
+
+.theme-toggle:hover {
+    color: var(--purple-dark);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 4px;
+    border-radius: 4px;
 }
 
 body {
@@ -1237,6 +1308,18 @@ footer a {
             <a href="/" onclick="event.preventDefault(); goHome(); toggleSideMenu();">
             <i class="fa-solid fa-house"></i> Home
             </a>
+        </div>
+
+        <div class="side-section">
+            <button
+                type="button"
+                class="theme-toggle"
+                id="themeToggle"
+                onclick="cycleTheme()"
+            >
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                <span id="themeToggleLabel">Appearance: System</span>
+            </button>
         </div>
 
         <div class="side-section">
@@ -2891,6 +2974,84 @@ async function getCountry() {
 function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
 }
+
+// ==========================================
+// LIGHT / DARK THEME
+// ==========================================
+
+const THEME_KEY = "site-theme";
+
+const themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
+let themeMode = "system";
+
+try {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (["system", "light", "dark"].includes(savedTheme)) {
+        themeMode = savedTheme;
+    }
+} catch (error) {
+    console.warn("Theme preference could not be loaded.");
+}
+
+function applyTheme() {
+    const effectiveTheme = themeMode === "system"
+        ? (themeMedia.matches ? "dark" : "light")
+        : themeMode;
+
+    document.documentElement.dataset.theme = effectiveTheme;
+
+    const label = document.getElementById("themeToggleLabel");
+    const icon = document.querySelector("#themeToggle i");
+
+    if (label) {
+        label.textContent = "Appearance: " +
+            themeMode.charAt(0).toUpperCase() + themeMode.slice(1);
+    }
+
+    if (icon) {
+        icon.className = themeMode === "system"
+            ? "fa-solid fa-circle-half-stroke"
+            : themeMode === "dark"
+                ? "fa-solid fa-moon"
+                : "fa-solid fa-sun";
+    }
+
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+
+    if (themeColor) {
+        themeColor.content = effectiveTheme === "dark"
+            ? "#17141f"
+            : "#7655c7";
+    }
+}
+
+function cycleTheme() {
+    themeMode = themeMode === "system"
+        ? "light"
+        : themeMode === "light"
+            ? "dark"
+            : "system";
+
+    try {
+        localStorage.setItem(THEME_KEY, themeMode);
+    } catch (error) {
+        console.warn("Theme preference could not be saved.");
+    }
+
+    applyTheme();
+}
+
+// Follow device appearance changes when System is selected.
+themeMedia.addEventListener("change", function () {
+    if (themeMode === "system") {
+        applyTheme();
+    }
+});
+
+applyTheme();
+    
 
 // ==========================================
 // SEARCH
