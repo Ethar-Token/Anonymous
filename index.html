@@ -1818,29 +1818,22 @@ function updateCounter() {
 async function submitConfession() {
 
     const box = document.getElementById("confession");
-
     const text = box.value.trim();
 
     if (!text) {
-
         showModal("Write something first.");
-
         return;
     }
 
     if (text.length > 1000) {
-
         showModal("Keep your confession short.");
-
         return;
     }
-
 
     const button = document.querySelector(".post-btn");
 
     button.disabled = true;
     button.textContent = "Posting...";
-
 
     const { data, error } = await client
         .rpc("create_post", {
@@ -1848,31 +1841,38 @@ async function submitConfession() {
             p_country: await getCountry()
         });
 
-
     if (error) {
-
         console.error(error);
-
         showModal("Something went wrong. Please try again.");
 
         button.disabled = false;
         button.textContent = "Post anonymously";
-
         return;
     }
 
+    const newPost = Array.isArray(data) ? data[0] : data;
 
+    if (!newPost) {
+        showModal("Your post could not be displayed. Please try again.");
+
+        button.disabled = false;
+        button.textContent = "Post anonymously";
+        return;
+    }
+
+    // Clear the input only after successful saving.
     box.value = "";
-
     updateCounter();
+
+    // Insert the saved post at the top without reloading the feed.
+    postsContainer.insertAdjacentHTML(
+        "afterbegin",
+        createPostHTML(newPost)
+    );
 
     button.disabled = false;
     button.textContent = "Post anonymously";
-
-    loadingPosts = false;
-    await loadPosts("random", true);
 }
-
 
 // ==========================================
 // LOAD POSTS
@@ -2685,24 +2685,13 @@ async function reactToComment(commentId, reactionType, button) {
 
 async function submitComment(button, postId) {
 
-    const input =
-        button.parentElement.querySelector("input");
+    const input = button.parentElement.querySelector("input");
+    const text = input.value.trim();
 
-
-    const text =
-        input.value.trim();
-
-
-    if (!text) {
-
-        return;
-
-    }
-
+    if (!text) return;
 
     button.disabled = true;
     button.textContent = "...";
-
 
     const { data, error } = await client
         .rpc("add_comment", {
@@ -2711,35 +2700,83 @@ async function submitComment(button, postId) {
             p_country: await getCountry()
         });
 
-
     if (error) {
-
         console.error(error);
-
         showModal("Unable to post comment.");
 
         button.disabled = false;
         button.textContent = "Send";
-
         return;
     }
 
+    const newComment = Array.isArray(data) ? data[0] : data;
 
+    if (!newComment) {
+        showModal("Your comment could not be displayed. Please try again.");
+
+        button.disabled = false;
+        button.textContent = "Send";
+        return;
+    }
+
+    const post = button.closest(".post");
+    const commentsList = post.querySelector(".comments-list");
+
+    // Remove empty/loading messages before inserting the new comment.
+    if (
+        commentsList.textContent.trim() === "No comments yet." ||
+        commentsList.textContent.trim() === "Loading comments..."
+    ) {
+        commentsList.innerHTML = "";
+    }
+
+    // Build the new comment using the actual saved database record.
+    const commentHTML = `
+        <div class="comment" data-comment-id="${newComment.id}">
+            <div class="comment-meta">
+                Anonymous · ${formatDate(newComment.created_at)}
+            </div>
+
+            <div class="comment-text">
+                ${escapeHTML(newComment.message)}
+            </div>
+
+            <div class="comment-actions">
+                <button
+                    onclick="reactToComment('${newComment.id}', 'like', this)"
+                >
+                    👍 <span>0</span>
+                </button>
+
+                <button
+                    onclick="reactToComment('${newComment.id}', 'dislike', this)"
+                >
+                    👎 <span>0</span>
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Put the newly submitted comment at the top.
+    commentsList.insertAdjacentHTML("afterbegin", commentHTML);
+
+    // Update the visible comment count without reloading the post.
+    const countButton = post.querySelector(
+        '.post-actions button[onclick^="toggleComments"]'
+    );
+
+    if (countButton) {
+        const match = countButton.textContent.match(/\d+/);
+        const currentCount = match ? parseInt(match[0], 10) : 0;
+
+        countButton.textContent = `💬 ${currentCount + 1} comments`;
+    }
+
+    // Clear the input only after successful saving.
     input.value = "";
 
     button.disabled = false;
     button.textContent = "Send";
-
-
-    const post =
-        button.closest(".post");
-
-
-    await loadComments(
-        postId,
-        post
-    );
-
 }
 
 
