@@ -1681,6 +1681,10 @@ html[data-theme="dark"] .theme-toggle:hover {
     <div class="filters" id="feedFilters">
 
         <button class="filter active">
+            For you
+        </button>
+
+        <button class="filter">
             New posts
         </button>
 
@@ -1874,7 +1878,7 @@ async function submitConfession() {
 // LOAD POSTS
 // ==========================================
 
-async function loadPosts(sort = "new", reset = false) {
+async function loadPosts(sort = "random", reset = false) {
 
     if (sharedPostMode) return;
 
@@ -1886,6 +1890,8 @@ async function loadPosts(sort = "new", reset = false) {
     const postsContainer = document.getElementById("posts");
 
     if (reset) {
+        randomPostsSeed = crypto.randomUUID();
+        
         localOffset = 0;
         globalOffset = 0;
         localFinished = false;
@@ -1910,30 +1916,45 @@ async function loadPosts(sort = "new", reset = false) {
      */
     if (!localFinished && visitorCountry) {
 
-        let localQuery = client
-            .from("posts")
-            .select("*")
-            .eq("country", visitorCountry);
+        let data, error;
 
-        if (sort === "new") {
-            localQuery = localQuery
-                .order("created_at", { ascending: false });
-        } else if (sort === "liked") {
-            localQuery = localQuery
-                .order("likes", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "funny") {
-            localQuery = localQuery
-                .order("funny", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "shocking") {
-            localQuery = localQuery
-                .order("wtf", { ascending: false })
-                .order("created_at", { ascending: false });
+        if (sort === "random") {
+
+            ({ data, error } = await client.rpc("get_posts_random", {
+                p_country: visitorCountry,
+                p_scope: "local",
+                p_seed: randomPostsSeed,
+                p_offset: localOffset,
+                p_limit: POSTS_PER_PAGE
+            }));
+
+        } else {
+
+            let localQuery = client
+                .from("posts")
+                .select("*")
+                .eq("country", visitorCountry);
+
+            if (sort === "new") {
+                localQuery = localQuery
+                    .order("created_at", { ascending: false });
+            } else if (sort === "liked") {
+                localQuery = localQuery
+                    .order("likes", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "funny") {
+                localQuery = localQuery
+                    .order("funny", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "shocking") {
+                localQuery = localQuery
+                    .order("wtf", { ascending: false })
+                    .order("created_at", { ascending: false });
+            }
+
+            ({ data, error } = await localQuery
+                .range(localOffset, localOffset + POSTS_PER_PAGE - 1));
         }
-
-        const { data, error } = await localQuery
-            .range(localOffset, localOffset + POSTS_PER_PAGE - 1);
 
         if (error) {
             console.error(error);
@@ -1968,42 +1989,61 @@ async function loadPosts(sort = "new", reset = false) {
 
         const remaining = POSTS_PER_PAGE - posts.length;
 
-        let globalQuery = client
-            .from("posts")
-            .select("*");
+        let globalData, globalError;
 
-        if (visitorCountry) {
-            globalQuery = globalQuery
-                .or(`country.is.null,country.neq.${visitorCountry}`);
+        if (sort === "random") {
+
+            ({ data: globalData, error: globalError } =
+                await client.rpc("get_posts_random", {
+                    p_country: visitorCountry,
+                    p_scope: "global",
+                    p_seed: randomPostsSeed,
+                    p_offset: globalOffset,
+                    p_limit: remaining
+                }));
+
+        } else {
+
+            let globalQuery = client
+                .from("posts")
+                .select("*");
+
+            if (visitorCountry) {
+                globalQuery = globalQuery
+                    .or(`country.is.null,country.neq.${visitorCountry}`);
+            }
+
+            if (sort === "new") {
+                globalQuery = globalQuery
+                    .order("created_at", { ascending: false });
+            } else if (sort === "liked") {
+                globalQuery = globalQuery
+                    .order("likes", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "funny") {
+                globalQuery = globalQuery
+                    .order("funny", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "shocking") {
+                globalQuery = globalQuery
+                    .order("wtf", { ascending: false })
+                    .order("created_at", { ascending: false });
+            }
+
+            ({ data: globalData, error: globalError } =
+                await globalQuery.range(
+                    globalOffset,
+                    globalOffset + remaining - 1
+                ));
         }
 
-        if (sort === "new") {
-            globalQuery = globalQuery
-                .order("created_at", { ascending: false });
-        } else if (sort === "liked") {
-            globalQuery = globalQuery
-                .order("likes", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "funny") {
-            globalQuery = globalQuery
-                .order("funny", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "shocking") {
-            globalQuery = globalQuery
-                .order("wtf", { ascending: false })
-                .order("created_at", { ascending: false });
-        }
-
-        const { data, error } = await globalQuery
-            .range(globalOffset, globalOffset + remaining - 1);
-
-        if (error) {
-            console.error(error);
+        if (globalError) {
+            console.error(globalError);
             loadingPosts = false;
             return;
         }
 
-        const globalPosts = data || [];
+        const globalPosts = globalData || [];
 
         posts.push(...globalPosts);
         globalOffset += globalPosts.length;
@@ -2707,7 +2747,8 @@ async function submitComment(button, postId) {
 // SORTING
 // ==========================================
 
-let currentSort = "new";
+let currentSort = "random";
+let randomPostsSeed = crypto.randomUUID();
 let visitorCountry = null;
 const POSTS_PER_PAGE = 10;
 
@@ -2744,7 +2785,12 @@ document.querySelectorAll(".filter").forEach(function(button) {
             this.textContent.trim();
 
 
-        if (text.includes("Most liked")) {
+        if (text.includes("Random")) {
+
+            currentSort = "random";
+        }
+            
+        else if (text.includes("Most liked")) {
 
             currentSort = "liked";
 
@@ -2979,16 +3025,16 @@ function goHome() {
     updateSearchClear();
     closeSearchPanel();
 
-    currentSort = "new";
+    currentSort = "random";
 
     document.querySelectorAll(".filter").forEach(button => {
         button.classList.toggle(
             "active",
-            button.textContent.trim().includes("New posts")
+            button.textContent.trim().includes("For you")
         );
     });
 
-    loadPosts("new", true);
+    loadPosts("random", true);
 }
 
 
