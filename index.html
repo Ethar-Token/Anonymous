@@ -3604,6 +3604,27 @@ if ("serviceWorker" in navigator) {
             });
     });
 }
+
+
+window.addEventListener("scroll", function () {
+
+    const reachedBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10;
+
+    if (reachedBottom) {
+
+        window.parent.postMessage(
+            {
+                type: "MICROTASK_BOTTOM_REACHED"
+            },
+            "*"
+        );
+
+    }
+
+});
+    
 </script>
 
 </body>
