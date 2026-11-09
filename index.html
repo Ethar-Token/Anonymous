@@ -2380,16 +2380,20 @@ async function loadComments(postId, postElement, reset = true) {
             10
         );
 
-
     const limit = 5;
 
+    // Generate a new random order when comments are first loaded
+    if (reset || !postElement.dataset.commentSeed) {
+        postElement.dataset.commentSeed = crypto.randomUUID();
+    }
 
     const { data, error } = await client
-        .from("comments")
-        .select("*")
-        .eq("post_id", postId)
-        .order("created_at", { ascending: false })
-        .range(offset, offset + limit - 1);
+        .rpc("get_comments_random", {
+            p_post_id: String(postId),
+            p_seed: postElement.dataset.commentSeed,
+            p_offset: offset,
+            p_limit: limit
+        });
 
 
     if (error) {
