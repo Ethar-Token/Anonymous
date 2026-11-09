@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script>
+(function () {
+    try {
+        const savedTheme = localStorage.getItem("site-theme");
+        const validTheme = ["system", "light", "dark"].includes(savedTheme)
+            ? savedTheme
+            : "system";
+
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const effectiveTheme = validTheme === "system"
+            ? (prefersDark ? "dark" : "light")
+            : validTheme;
+
+        document.documentElement.dataset.theme = effectiveTheme;
+    } catch (error) {
+        document.documentElement.dataset.theme = "light";
+    }
+})();
+</script>
+
 <title>Anonymous — Say It Here</title>
 <meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
 <link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
@@ -40,6 +60,57 @@
     --white: #ffffff;
     --bg: #faf9fd;
     --danger: #e96d87;
+}
+
+/* ================= DARK THEME ================= */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    --purple: #b69aff;
+    --purple-dark: #c2aaff;
+    --purple-light: #30283f;
+    --purple-soft: #403452;
+
+    --text: #f1edf8;
+    --muted: #aaa2b8;
+    --border: #393344;
+    --white: #211d2b;
+    --bg: #17141f;
+}
+
+/* ================= THEME BUTTON ================= */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 6px 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: color .15s;
+}
+
+.theme-toggle i {
+    width: 17px;
+    color: var(--purple-dark);
+}
+
+.theme-toggle:hover {
+    color: var(--purple-dark);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 4px;
+    border-radius: 4px;
 }
 
 body {
@@ -1172,6 +1243,291 @@ footer a {
         margin-bottom: 18px;
     }
 }
+
+
+/* ==========================================
+   ANONYMOUS — SOFT PLUM DARK THEME
+========================================== */
+
+html[data-theme="dark"] body {
+    background: #17141f;
+    color: #f1edf8;
+}
+
+/* Header and footer */
+
+html[data-theme="dark"] header {
+    background: rgba(23, 20, 31, .97);
+    border-color: #393344;
+}
+
+html[data-theme="dark"] footer {
+    background: #17141f;
+    color: #aaa2b8;
+}
+
+html[data-theme="dark"] footer a {
+    color: #b69aff;
+}
+
+/* Main content and sidebar */
+
+html[data-theme="dark"] .side-menu a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .side-menu a:hover {
+    color: #c2aaff;
+}
+
+html[data-theme="dark"] .side-title {
+    color: #b69aff;
+}
+
+/* Intro banner */
+
+html[data-theme="dark"] .intro-banner {
+    background: #30283f;
+    border-color: #403452;
+    color: #d2c8e0;
+}
+
+html[data-theme="dark"] .intro-banner strong {
+    color: #c2aaff;
+}
+
+/* Confession composer */
+
+html[data-theme="dark"] .confess-box {
+    background: #211d2b;
+    border-color: #393344;
+    border-top-color: #b69aff;
+}
+
+html[data-theme="dark"] .confess-title {
+    color: #f1edf8;
+}
+
+html[data-theme="dark"] textarea {
+    background: #30283f;
+    border-color: #494057;
+    color: #f1edf8;
+}
+
+html[data-theme="dark"] textarea::placeholder {
+    color: #aaa2b8;
+}
+
+/* Filters */
+
+html[data-theme="dark"] .filter {
+    background: #211d2b;
+    border-color: #393344;
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .filter.active {
+    background: #403452;
+    border-color: #65518a;
+    color: #d0baff;
+}
+
+/* Confession cards */
+
+html[data-theme="dark"] .post {
+    background: #211d2b;
+    border-color: #393344;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, .12);
+}
+
+html[data-theme="dark"] .post:hover {
+    border-color: #65518a;
+    box-shadow: 0 7px 24px rgba(0, 0, 0, .2);
+}
+
+html[data-theme="dark"] .post-text {
+    color: #e5deed;
+}
+
+html[data-theme="dark"] .date {
+    color: #9990a8;
+}
+
+/* Reactions */
+
+html[data-theme="dark"] .react-btn {
+    background: #30283f;
+    border-color: #494057;
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .react-btn:hover,
+html[data-theme="dark"] .react-btn.selected {
+    background: #403452;
+    border-color: #8065b5;
+    color: #d0baff;
+}
+
+html[data-theme="dark"] .vote {
+    color: #aaa2b8;
+}
+
+/* Comments */
+
+html[data-theme="dark"] .comment-toggle {
+    border-top-color: #393344;
+}
+
+html[data-theme="dark"] .comment-meta {
+    color: #aaa2b8;
+}
+
+html[data-theme="dark"] .comment-text {
+    color: #e5deed;
+}
+
+html[data-theme="dark"] .comment {
+    border-bottom-color: #393344;
+}
+
+html[data-theme="dark"] .comment-input input {
+    background: #30283f;
+    border-color: #494057;
+    color: #f1edf8;
+}
+
+html[data-theme="dark"] .comment-input input::placeholder {
+    color: #aaa2b8;
+}
+
+html[data-theme="dark"] .comment-actions button {
+    color: #b8aec7;
+}
+
+html[data-theme="dark"] .comment-actions button:hover {
+    background: #403452;
+    color: #d0baff;
+}
+
+/* Search */
+
+html[data-theme="dark"] .search-box {
+    background: #30283f;
+    border-color: #494057;
+}
+
+html[data-theme="dark"] .search-box:focus-within {
+    background: #211d2b;
+}
+
+html[data-theme="dark"] .search-box input {
+    color: #f1edf8;
+}
+
+html[data-theme="dark"] .search-panel {
+    background: #211d2b;
+    border-color: #393344;
+}
+
+html[data-theme="dark"] .search-tags button {
+    background: #30283f;
+    border-color: #494057;
+    color: #c2aaff;
+}
+
+/* Pop-up modal */
+
+html[data-theme="dark"] .custom-modal {
+    background: rgba(10, 8, 16, .75);
+}
+
+html[data-theme="dark"] .custom-modal-box {
+    background: #211d2b;
+    border: 1px solid #393344;
+}
+
+html[data-theme="dark"] .custom-modal-box h3 {
+    color: #f1edf8;
+}
+
+html[data-theme="dark"] .custom-modal-box p {
+    color: #b8aec7;
+}
+
+/* Loading area */
+
+html[data-theme="dark"] .posts-loading {
+    color: #aaa2b8;
+}
+
+/* Mobile menu button */
+
+html[data-theme="dark"] .menu-btn {
+    background: #30283f;
+    color: #c2aaff;
+}
+
+/* ================= DARK THEME: COMMENTS ================= */
+
+html[data-theme="dark"] .comments {
+    background: #211d2b;
+    border-color: #393344;
+}
+
+html[data-theme="dark"] .comment-toggle button {
+    color: #c2aaff;
+}
+
+html[data-theme="dark"] .comment-input button {
+    background: #8065b5;
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .load-more-comments {
+    background: #30283f;
+    border-color: #494057;
+    color: #d0baff;
+}
+
+html[data-theme="dark"] .load-more-comments:hover {
+    background: #403452;
+}
+
+/* ================= DARK THEME: SIDE MENU ================= */
+
+html[data-theme="dark"] .side-menu {
+    background: #211d2b;
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    html[data-theme="dark"] .side-menu {
+        background: #211d2b;
+        border-left: 1px solid #393344;
+    }
+}
+
+@media (max-width: 767px) {
+    html[data-theme="dark"] .side-menu {
+        background: #211d2b;
+        border-left: 1px solid #393344;
+    }
+}
+
+html[data-theme="dark"] .side-menu a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .side-menu a:hover {
+    color: #c2aaff;
+}
+
+html[data-theme="dark"] .theme-toggle {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .theme-toggle:hover {
+    color: #c2aaff;
+}
     
 </style>
 </head>
@@ -1237,6 +1593,18 @@ footer a {
             <a href="/" onclick="event.preventDefault(); goHome(); toggleSideMenu();">
             <i class="fa-solid fa-house"></i> Home
             </a>
+        </div>
+
+        <div class="side-section">
+            <button
+                type="button"
+                class="theme-toggle"
+                id="themeToggle"
+                onclick="cycleTheme()"
+            >
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                <span id="themeToggleLabel">Appearance: System</span>
+            </button>
         </div>
 
         <div class="side-section">
@@ -1313,6 +1681,10 @@ footer a {
     <div class="filters" id="feedFilters">
 
         <button class="filter active">
+            For you
+        </button>
+
+        <button class="filter">
             New posts
         </button>
 
@@ -1498,7 +1870,7 @@ async function submitConfession() {
     button.textContent = "Post anonymously";
 
     loadingPosts = false;
-    await loadPosts("new", true);
+    await loadPosts("random", true);
 }
 
 
@@ -1506,7 +1878,7 @@ async function submitConfession() {
 // LOAD POSTS
 // ==========================================
 
-async function loadPosts(sort = "new", reset = false) {
+async function loadPosts(sort = "random", reset = false) {
 
     if (sharedPostMode) return;
 
@@ -1518,6 +1890,8 @@ async function loadPosts(sort = "new", reset = false) {
     const postsContainer = document.getElementById("posts");
 
     if (reset) {
+        randomPostsSeed = crypto.randomUUID();
+        
         localOffset = 0;
         globalOffset = 0;
         localFinished = false;
@@ -1542,30 +1916,45 @@ async function loadPosts(sort = "new", reset = false) {
      */
     if (!localFinished && visitorCountry) {
 
-        let localQuery = client
-            .from("posts")
-            .select("*")
-            .eq("country", visitorCountry);
+        let data, error;
 
-        if (sort === "new") {
-            localQuery = localQuery
-                .order("created_at", { ascending: false });
-        } else if (sort === "liked") {
-            localQuery = localQuery
-                .order("likes", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "funny") {
-            localQuery = localQuery
-                .order("funny", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "shocking") {
-            localQuery = localQuery
-                .order("wtf", { ascending: false })
-                .order("created_at", { ascending: false });
+        if (sort === "random") {
+
+            ({ data, error } = await client.rpc("get_posts_random", {
+                p_country: visitorCountry,
+                p_scope: "local",
+                p_seed: randomPostsSeed,
+                p_offset: localOffset,
+                p_limit: POSTS_PER_PAGE
+            }));
+
+        } else {
+
+            let localQuery = client
+                .from("posts")
+                .select("*")
+                .eq("country", visitorCountry);
+
+            if (sort === "new") {
+                localQuery = localQuery
+                    .order("created_at", { ascending: false });
+            } else if (sort === "liked") {
+                localQuery = localQuery
+                    .order("likes", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "funny") {
+                localQuery = localQuery
+                    .order("funny", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "shocking") {
+                localQuery = localQuery
+                    .order("wtf", { ascending: false })
+                    .order("created_at", { ascending: false });
+            }
+
+            ({ data, error } = await localQuery
+                .range(localOffset, localOffset + POSTS_PER_PAGE - 1));
         }
-
-        const { data, error } = await localQuery
-            .range(localOffset, localOffset + POSTS_PER_PAGE - 1);
 
         if (error) {
             console.error(error);
@@ -1600,42 +1989,61 @@ async function loadPosts(sort = "new", reset = false) {
 
         const remaining = POSTS_PER_PAGE - posts.length;
 
-        let globalQuery = client
-            .from("posts")
-            .select("*");
+        let globalData, globalError;
 
-        if (visitorCountry) {
-            globalQuery = globalQuery
-                .or(`country.is.null,country.neq.${visitorCountry}`);
+        if (sort === "random") {
+
+            ({ data: globalData, error: globalError } =
+                await client.rpc("get_posts_random", {
+                    p_country: visitorCountry,
+                    p_scope: "global",
+                    p_seed: randomPostsSeed,
+                    p_offset: globalOffset,
+                    p_limit: remaining
+                }));
+
+        } else {
+
+            let globalQuery = client
+                .from("posts")
+                .select("*");
+
+            if (visitorCountry) {
+                globalQuery = globalQuery
+                    .or(`country.is.null,country.neq.${visitorCountry}`);
+            }
+
+            if (sort === "new") {
+                globalQuery = globalQuery
+                    .order("created_at", { ascending: false });
+            } else if (sort === "liked") {
+                globalQuery = globalQuery
+                    .order("likes", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "funny") {
+                globalQuery = globalQuery
+                    .order("funny", { ascending: false })
+                    .order("created_at", { ascending: false });
+            } else if (sort === "shocking") {
+                globalQuery = globalQuery
+                    .order("wtf", { ascending: false })
+                    .order("created_at", { ascending: false });
+            }
+
+            ({ data: globalData, error: globalError } =
+                await globalQuery.range(
+                    globalOffset,
+                    globalOffset + remaining - 1
+                ));
         }
 
-        if (sort === "new") {
-            globalQuery = globalQuery
-                .order("created_at", { ascending: false });
-        } else if (sort === "liked") {
-            globalQuery = globalQuery
-                .order("likes", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "funny") {
-            globalQuery = globalQuery
-                .order("funny", { ascending: false })
-                .order("created_at", { ascending: false });
-        } else if (sort === "shocking") {
-            globalQuery = globalQuery
-                .order("wtf", { ascending: false })
-                .order("created_at", { ascending: false });
-        }
-
-        const { data, error } = await globalQuery
-            .range(globalOffset, globalOffset + remaining - 1);
-
-        if (error) {
-            console.error(error);
+        if (globalError) {
+            console.error(globalError);
             loadingPosts = false;
             return;
         }
 
-        const globalPosts = data || [];
+        const globalPosts = globalData || [];
 
         posts.push(...globalPosts);
         globalOffset += globalPosts.length;
@@ -2012,16 +2420,20 @@ async function loadComments(postId, postElement, reset = true) {
             10
         );
 
-
     const limit = 5;
 
+    // Generate a new random order when comments are first loaded
+    if (reset || !postElement.dataset.commentSeed) {
+        postElement.dataset.commentSeed = crypto.randomUUID();
+    }
 
     const { data, error } = await client
-        .from("comments")
-        .select("*")
-        .eq("post_id", postId)
-        .order("created_at", { ascending: false })
-        .range(offset, offset + limit - 1);
+        .rpc("get_comments_random", {
+            p_post_id: String(postId),
+            p_seed: postElement.dataset.commentSeed,
+            p_offset: offset,
+            p_limit: limit
+        });
 
 
     if (error) {
@@ -2335,7 +2747,8 @@ async function submitComment(button, postId) {
 // SORTING
 // ==========================================
 
-let currentSort = "new";
+let currentSort = "random";
+let randomPostsSeed = crypto.randomUUID();
 let visitorCountry = null;
 const POSTS_PER_PAGE = 10;
 
@@ -2372,7 +2785,12 @@ document.querySelectorAll(".filter").forEach(function(button) {
             this.textContent.trim();
 
 
-        if (text.includes("Most liked")) {
+        if (text.includes("For you")) {
+
+            currentSort = "random";
+        }
+            
+        else if (text.includes("Most liked")) {
 
             currentSort = "liked";
 
@@ -2607,16 +3025,16 @@ function goHome() {
     updateSearchClear();
     closeSearchPanel();
 
-    currentSort = "new";
+    currentSort = "random";
 
     document.querySelectorAll(".filter").forEach(button => {
         button.classList.toggle(
             "active",
-            button.textContent.trim().includes("New posts")
+            button.textContent.trim().includes("For you")
         );
     });
 
-    loadPosts("new", true);
+    loadPosts("random", true);
 }
 
 
@@ -2662,16 +3080,16 @@ window.addEventListener("popstate", function() {
         updateSearchClear();
         closeSearchPanel();
 
-        currentSort = "new";
+        currentSort = "random";
 
         document.querySelectorAll(".filter").forEach(button => {
             button.classList.toggle(
                 "active",
-                button.textContent.trim().includes("New posts")
+                button.textContent.trim().includes("For you")
             );
         });
 
-        loadPosts("new", true);
+        loadPosts("random", true);
     }
 
 });
@@ -2863,7 +3281,7 @@ if (sharedPostCode) {
 
 } else {
 
-    loadPosts("new", true);
+    loadPosts("random", true);
 
 }
 
@@ -2891,6 +3309,84 @@ async function getCountry() {
 function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
 }
+
+// ==========================================
+// LIGHT / DARK THEME
+// ==========================================
+
+const THEME_KEY = "site-theme";
+
+const themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
+let themeMode = "system";
+
+try {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (["system", "light", "dark"].includes(savedTheme)) {
+        themeMode = savedTheme;
+    }
+} catch (error) {
+    console.warn("Theme preference could not be loaded.");
+}
+
+function applyTheme() {
+    const effectiveTheme = themeMode === "system"
+        ? (themeMedia.matches ? "dark" : "light")
+        : themeMode;
+
+    document.documentElement.dataset.theme = effectiveTheme;
+
+    const label = document.getElementById("themeToggleLabel");
+    const icon = document.querySelector("#themeToggle i");
+
+    if (label) {
+        label.textContent = "Appearance: " +
+            themeMode.charAt(0).toUpperCase() + themeMode.slice(1);
+    }
+
+    if (icon) {
+        icon.className = themeMode === "system"
+            ? "fa-solid fa-circle-half-stroke"
+            : themeMode === "dark"
+                ? "fa-solid fa-moon"
+                : "fa-solid fa-sun";
+    }
+
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+
+    if (themeColor) {
+        themeColor.content = effectiveTheme === "dark"
+            ? "#17141f"
+            : "#7655c7";
+    }
+}
+
+function cycleTheme() {
+    themeMode = themeMode === "system"
+        ? "light"
+        : themeMode === "light"
+            ? "dark"
+            : "system";
+
+    try {
+        localStorage.setItem(THEME_KEY, themeMode);
+    } catch (error) {
+        console.warn("Theme preference could not be saved.");
+    }
+
+    applyTheme();
+}
+
+// Follow device appearance changes when System is selected.
+themeMedia.addEventListener("change", function () {
+    if (themeMode === "system") {
+        applyTheme();
+    }
+});
+
+applyTheme();
+    
 
 // ==========================================
 // SEARCH
@@ -3158,6 +3654,27 @@ if ("serviceWorker" in navigator) {
             });
     });
 }
+
+
+window.addEventListener("scroll", function () {
+
+    const reachedBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10;
+
+    if (reachedBottom) {
+
+        window.parent.postMessage(
+            {
+                type: "MICROTASK_BOTTOM_REACHED"
+            },
+            "*"
+        );
+
+    }
+
+});
+    
 </script>
 
 </body>
