@@ -1870,7 +1870,7 @@ async function submitConfession() {
     button.textContent = "Post anonymously";
 
     loadingPosts = false;
-    await loadPosts("new", true);
+    await loadPosts("random", true);
 }
 
 
@@ -2785,7 +2785,7 @@ document.querySelectorAll(".filter").forEach(function(button) {
             this.textContent.trim();
 
 
-        if (text.includes("Random")) {
+        if (text.includes("For you")) {
 
             currentSort = "random";
         }
@@ -3080,16 +3080,16 @@ window.addEventListener("popstate", function() {
         updateSearchClear();
         closeSearchPanel();
 
-        currentSort = "new";
+        currentSort = "random";
 
         document.querySelectorAll(".filter").forEach(button => {
             button.classList.toggle(
                 "active",
-                button.textContent.trim().includes("New posts")
+                button.textContent.trim().includes("For you")
             );
         });
 
-        loadPosts("new", true);
+        loadPosts("random", true);
     }
 
 });
@@ -3281,7 +3281,7 @@ if (sharedPostCode) {
 
 } else {
 
-    loadPosts("new", true);
+    loadPosts("random", true);
 
 }
 
