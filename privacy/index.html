@@ -22,6 +22,26 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script>
+(function () {
+    try {
+        const savedTheme = localStorage.getItem("site-theme");
+        const mode = ["system", "light", "dark"].includes(savedTheme)
+            ? savedTheme
+            : "system";
+
+        const isDark = mode === "dark" ||
+            (mode === "system" &&
+             window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+        document.documentElement.dataset.theme =
+            isDark ? "dark" : "light";
+    } catch (error) {
+        document.documentElement.dataset.theme = "light";
+    }
+})();
+</script>
+
     <style>
         :root {
             --purple: #9b7bea;
@@ -551,6 +571,160 @@
                 flex-direction: column;
             }
         }
+
+
+/* ================= DARK MODE ================= */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    --background: #100e17;
+    --surface: #1b1825;
+
+    --text: #eeeaf6;
+    --muted: #aaa2b8;
+
+    --border: #393344;
+
+    --purple-light: #302541;
+    --purple-soft: #3b2d52;
+
+    --danger-bg: #38202a;
+    --success-bg: #1c332b;
+}
+
+/* Page and header */
+html[data-theme="dark"] body {
+    background: var(--background);
+    color: var(--text);
+}
+
+html[data-theme="dark"] .site-header {
+    background: rgba(27, 24, 37, 0.96);
+    border-bottom-color: var(--border);
+}
+
+html[data-theme="dark"] .brand {
+    color: #b69aff;
+}
+
+html[data-theme="dark"] .header-link {
+    color: var(--muted);
+}
+
+/* Sidebar */
+html[data-theme="dark"] .sidebar {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] .sidebar-title {
+    color: #aaa2b8;
+}
+
+html[data-theme="dark"] .sidebar a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .sidebar a:hover,
+html[data-theme="dark"] .sidebar a.active {
+    background: #302541;
+    color: #c2aaff;
+}
+
+/* Hero section */
+html[data-theme="dark"] .hero {
+    background: linear-gradient(
+        135deg,
+        #292039,
+        #211b30 65%,
+        #30233e
+    );
+    border-color: #443657;
+}
+
+html[data-theme="dark"] .hero p {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .eyebrow {
+    background: #302541;
+    border-color: #49395f;
+    color: #c2aaff;
+}
+
+/* Introduction and policy cards */
+html[data-theme="dark"] .intro-card,
+html[data-theme="dark"] .policy-section {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] .intro-card p,
+html[data-theme="dark"] .policy-section p,
+html[data-theme="dark"] .policy-section li,
+html[data-theme="dark"] .section-intro {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .section-heading h2,
+html[data-theme="dark"] .policy-section h3 {
+    color: #eeeaf6;
+}
+
+html[data-theme="dark"] .policy-section strong {
+    color: #f1eaff;
+}
+
+html[data-theme="dark"] .section-number {
+    background: #302541;
+    color: #c2aaff;
+}
+
+/* Callouts */
+html[data-theme="dark"] .callout.warning {
+    background: #38202a;
+    color: #f0b8c4;
+}
+
+html[data-theme="dark"] .callout.info {
+    background: #302541;
+    color: #d0c0f0;
+}
+
+html[data-theme="dark"] .callout.success {
+    background: #1c332b;
+    color: #a9d9bd;
+}
+
+/* Links */
+html[data-theme="dark"] a {
+    color: #b69aff;
+}
+
+/* Footer */
+html[data-theme="dark"] .site-footer {
+    background: #17141f;
+    border-top-color: var(--border);
+}
+
+html[data-theme="dark"] .footer-brand {
+    color: #b69aff;
+}
+
+html[data-theme="dark"] .footer-copy {
+    color: #aaa2b8;
+}
+
+html[data-theme="dark"] .footer-links a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .footer-links a:hover {
+    color: #c2aaff;
+}
+
+        
     </style>
 </head>
 
