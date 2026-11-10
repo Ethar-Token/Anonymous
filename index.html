@@ -568,16 +568,70 @@ textarea:focus {
 
 /* ================= FOOTER ================= */
 
-footer {
-    text-align: center;
-    color: #aaa5b2;
-    font-size: 10px;
-    padding: 20px;
+.site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    padding: 29px 24px;
+    margin-top: 50px;
 }
 
-footer a {
+.footer-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    font-size: 13px;
+    font-weight: 800;
     color: var(--purple-dark);
+}
+
+.footer-copy {
+    font-size: 10px;
+    color: #96909f;
+    margin-top: 4px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #777184;
     text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    transition: color .2s;
+}
+
+.footer-links a:hover {
+    color: var(--purple-dark);
+}
+
+@media (max-width: 600px) {
+    .site-footer {
+        padding: 25px 20px;
+        margin-top: 35px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 17px;
+    }
+
+    .footer-links {
+        gap: 16px;
+        row-gap: 12px;
+    }
 }
 
 /* ================= MOBILE ================= */
@@ -1261,13 +1315,25 @@ html[data-theme="dark"] header {
     border-color: #393344;
 }
 
-html[data-theme="dark"] footer {
+html[data-theme="dark"] .site-footer {
     background: #17141f;
+    border-top-color: #393344;
+}
+
+html[data-theme="dark"] .footer-brand {
+    color: #b69aff;
+}
+
+html[data-theme="dark"] .footer-copy {
     color: #aaa2b8;
 }
 
-html[data-theme="dark"] footer a {
-    color: #b69aff;
+html[data-theme="dark"] .footer-links a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .footer-links a:hover {
+    color: #c2aaff;
 }
 
 /* Main content and sidebar */
@@ -1757,14 +1823,33 @@ html[data-theme="dark"] .theme-toggle:hover {
 
 </div>
 
-<footer>
-    Anonymous · Say what you can't say anywhere else.
-    <br><br>
-    <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
-    &nbsp; · &nbsp;
-    <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
-</footer>
+<footer class="site-footer">
 
+    <div class="footer-inner">
+
+        <div>
+            <div class="footer-brand">
+                Anonymous — Say It Here.
+            </div>
+
+            <div class="footer-copy">
+                © <span id="current-year">2026</span> Anonymous. All rights reserved.
+            </div>
+        </div>
+
+        <nav class="footer-links" aria-label="Footer navigation">
+
+            <a href="/">Home</a>
+
+            <a href="/rules/">Community Rules</a>
+
+            <a href="/privacy/">Privacy Policy</a>
+
+        </nav>
+
+    </div>
+
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -3730,6 +3815,11 @@ window.addEventListener("scroll", function () {
 
 });
     
+</script>
+
+<script>
+    document.getElementById("current-year").textContent =
+        new Date().getFullYear();
 </script>
 
 </body>
