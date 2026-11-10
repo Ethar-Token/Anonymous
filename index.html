@@ -24,8 +24,8 @@
 })();
 </script>
 
-<title>Anonymous — Say It Here</title>
-<meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
+<title>Anonymous Confessions — Say It Here</title>
+<meta name="description" content="Anonymous confessions, thoughts and secrets. Share your deep confessions, secret crushes, relationship thoughts, family secrets, and real stories completely anonymous.">
 <link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
     
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1831,47 +1831,65 @@ async function submitConfession() {
     }
 
     const button = document.querySelector(".post-btn");
+    const postsContainer = document.getElementById("posts");
 
     button.disabled = true;
     button.textContent = "Posting...";
 
-    const { data, error } = await client
-        .rpc("create_post", {
-            p_message: text,
-            p_country: await getCountry()
-        });
+    try {
 
-    if (error) {
+        const { data, error } = await client
+            .rpc("create_post", {
+                p_message: text,
+                p_country: await getCountry()
+            });
+
+        if (error) {
+            console.error(error);
+            showModal("Something went wrong. Please try again.");
+            return;
+        }
+
+        const newPost = Array.isArray(data) ? data[0] : data;
+
+        if (!newPost) {
+            showModal("Your post could not be displayed. Please try again.");
+            return;
+        }
+
+        // Remove the empty-feed message if present.
+        const emptyMessage = postsContainer.querySelector(
+            ".posts-loading"
+        );
+
+        if (
+            emptyMessage ||
+            postsContainer.textContent.includes("No confessions yet.")
+        ) {
+            postsContainer.innerHTML = "";
+        }
+
+        // Insert the saved post at the top without reloading the feed.
+        postsContainer.insertAdjacentHTML(
+            "afterbegin",
+            createPostHTML(newPost)
+        );
+
+        // Clear the input only after successful saving.
+        box.value = "";
+        updateCounter();
+
+    } catch (error) {
+
         console.error(error);
         showModal("Something went wrong. Please try again.");
 
-        button.disabled = false;
-        button.textContent = "Post anonymously";
-        return;
-    }
-
-    const newPost = Array.isArray(data) ? data[0] : data;
-
-    if (!newPost) {
-        showModal("Your post could not be displayed. Please try again.");
+    } finally {
 
         button.disabled = false;
         button.textContent = "Post anonymously";
-        return;
+
     }
-
-    // Clear the input only after successful saving.
-    box.value = "";
-    updateCounter();
-
-    // Insert the saved post at the top without reloading the feed.
-    postsContainer.insertAdjacentHTML(
-        "afterbegin",
-        createPostHTML(newPost)
-    );
-
-    button.disabled = false;
-    button.textContent = "Post anonymously";
 }
 
 // ==========================================
@@ -3208,13 +3226,13 @@ function updatePostSEO(post, comments = []) {
 
 function resetHomeSEO() {
 
-    document.title = "Anonymous — Say It Here";
+    document.title = "Anonymous Confessions — Say It Here";
 
     document
         .querySelector('meta[name="description"]')
         .setAttribute(
             "content",
-            "Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else."
+            "Anonymous confessions, thoughts and secrets. Share your deep confessions, secret crushes, relationship thoughts, family secrets, and real stories completely anonymous."
         );
 
     document
