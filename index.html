@@ -3742,7 +3742,7 @@ if (window.innerWidth > 1100) {
 
 async function sharePost(postCode, button) {
 
-    const url = `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postCode)}`;
+    const url = `https://anonymous.ethartoken.com/?post=${encodeURIComponent(postCode)}`;
 
     const post = button.closest('.post');
     const message = post.querySelector('.post-text').textContent.trim();
