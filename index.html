@@ -1597,6 +1597,97 @@ html[data-theme="dark"] .theme-toggle:hover {
 }
     
 </style>
+
+
+<style>
+/* ================= DISCOVERY SECTIONS ================= */
+
+.discovery-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, .9fr);
+    gap: 16px;
+    margin: 28px 0 35px;
+    align-items: start;
+}
+
+.discovery-column {
+    min-width: 0;
+}
+
+.discovery-heading {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 13px;
+}
+
+.discovery-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 14px;
+    margin-bottom: 11px;
+    transition: border-color .2s, transform .2s;
+}
+
+.discovery-card:hover {
+    border-color: var(--purple);
+    transform: translateY(-2px);
+}
+
+.discovery-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.discovery-snippet {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+}
+
+.discovery-link {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    text-decoration: none;
+}
+
+.discovery-link:hover {
+    text-decoration: underline;
+}
+
+.discovery-empty {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding: 14px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+}
+
+@media (max-width: 767px) {
+    .discovery-layout {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 23px;
+    }
+
+    .discovery-heading {
+        font-size: 16px;
+    }
+}
+</style>
+
+    
 </head>
 
 <body>
@@ -3335,6 +3426,340 @@ function resetHomeSEO() {
     }
 }
 
+
+// ==========================================
+// RELATED POSTS & TRENDING TOPICS
+// ==========================================
+
+const discoveryTopics = [
+    {
+        name: "Relationships",
+        icon: "❤️",
+        keywords: [
+            "relationship", "relationships",
+            "boyfriend", "girlfriend",
+            "husband", "wife", "marriage",
+            "married", "dating", "cheating",
+            "affair", "lover", "crush",
+            "breakup", "divorce", "ex",
+            "romance", "love", "partner"
+        ]
+    },
+    {
+        name: "Work Life",
+        icon: "💼",
+        keywords: [
+            "work", "workplace", "office",
+            "boss", "job", "career",
+            "salary", "employee", "employer",
+            "colleague", "coworker", "manager",
+            "interview", "business", "workmate"
+        ]
+    },
+    {
+        name: "Family Secrets",
+        icon: "🏡",
+        keywords: [
+            "family", "mother", "mum", "mom",
+            "father", "dad", "parent", "parents",
+            "sister", "brother", "sibling",
+            "cousin", "aunt", "uncle",
+            "daughter", "son", "child",
+            "children", "inlaws", "stepmother",
+            "stepfather"
+        ]
+    }
+];
+
+
+function getDiscoveryWords(message) {
+
+    const ignored = new Set([
+        "this", "that", "with", "have", "from",
+        "they", "them", "their", "there", "then",
+        "when", "what", "where", "which", "while",
+        "would", "could", "should", "about", "after",
+        "before", "because", "been", "being", "were",
+        "your", "yours", "you", "she", "her", "him",
+        "his", "our", "ours", "and", "the", "for",
+        "but", "not", "are", "was", "has", "had",
+        "who", "all", "any", "just", "like", "very",
+        "into", "out", "one", "two", "now", "got",
+        "get", "can", "did", "does", "its", "it's",
+        "also", "some", "much", "more", "most"
+    ]);
+
+    return new Set(
+        (message || "")
+            .toLowerCase()
+            .match(/[a-z]{3,}/g)
+            ?.filter(word => !ignored.has(word)) || []
+    );
+}
+
+
+function getPostTopics(post) {
+
+    const words = getDiscoveryWords(post.message);
+
+    return discoveryTopics.filter(topic =>
+        topic.keywords.some(keyword => words.has(keyword))
+    );
+}
+
+
+function getPostExcerpt(message, limit = 145) {
+
+    const text = (message || "").trim();
+
+    if (text.length <= limit) {
+        return text;
+    }
+
+    return text.slice(0, limit).trimEnd() + "...";
+}
+
+
+function makeDiscoveryCard(post, label) {
+
+    const url = "/?post=" +
+        encodeURIComponent(post.post_code);
+
+    return `
+        <div class="discovery-card">
+
+            <div class="discovery-label">
+                ${escapeHTML(label)}
+            </div>
+
+            <div class="discovery-snippet">
+                ${escapeHTML(getPostExcerpt(post.message))}
+            </div>
+
+            <a
+                class="discovery-link"
+                href="${escapeHTML(url)}"
+            >
+                Read more →
+            </a>
+
+        </div>
+    `;
+}
+
+
+async function renderDiscoverySections(currentPost) {
+
+    try {
+
+        // Get recent confessions, excluding the one being viewed.
+        const { data, error } = await client
+            .from("posts")
+            .select("id, post_code, message, created_at, likes")
+            .neq("id", currentPost.id)
+            .order("created_at", { ascending: false })
+            .limit(150);
+
+        if (error) {
+            console.error("Discovery posts error:", error);
+            return;
+        }
+
+        const posts = (data || []).filter(post =>
+            post.message && post.post_code
+        );
+
+        if (!posts.length) return;
+
+        // ======================================
+        // FIND RELATED CONFESSIONS
+        // ======================================
+
+        const currentWords =
+            getDiscoveryWords(currentPost.message);
+
+        const currentTopics =
+            getPostTopics(currentPost);
+
+        const scoredPosts = posts.map(post => {
+
+            const words = getDiscoveryWords(post.message);
+
+            let score = 0;
+
+            // Reward shared meaningful keywords.
+            words.forEach(word => {
+                if (currentWords.has(word)) {
+                    score += 1;
+                }
+            });
+
+            // Strongly reward posts in the same topics.
+            const topics = getPostTopics(post);
+
+            topics.forEach(topic => {
+
+                if (
+                    currentTopics.some(
+                        current => current.name === topic.name
+                    )
+                ) {
+                    score += 4;
+                }
+
+            });
+
+            return {
+                post,
+                score
+            };
+
+        });
+
+        scoredPosts.sort((a, b) =>
+            b.score - a.score ||
+            Number(b.post.likes || 0) -
+            Number(a.post.likes || 0)
+        );
+
+        let relatedPosts = scoredPosts
+            .filter(item => item.score > 0)
+            .slice(0, 3)
+            .map(item => item.post);
+
+        // Fill any remaining spaces if there are not
+        // enough keyword matches.
+        if (relatedPosts.length < 3) {
+
+            const remaining = posts.filter(post =>
+                !relatedPosts.some(
+                    selected => selected.id === post.id
+                )
+            );
+
+            remaining.sort(() => Math.random() - 0.5);
+
+            relatedPosts.push(
+                ...remaining.slice(0, 3 - relatedPosts.length)
+            );
+        }
+
+
+        // ======================================
+        // BUILD RELATED POSTS COLUMN
+        // ======================================
+
+        const relatedHTML = relatedPosts.length
+            ? relatedPosts.map((post, index) =>
+                makeDiscoveryCard(
+                    post,
+                    "Related confession " + (index + 1)
+                )
+            ).join("")
+            : `<div class="discovery-empty">
+                No related confessions yet.
+               </div>`;
+
+
+        // ======================================
+        // BUILD TRENDING TOPICS COLUMN
+        // ======================================
+
+        const trendingHTML = discoveryTopics.map(topic => {
+
+            const matchingPosts = posts.filter(post =>
+                getPostTopics(post).some(
+                    match => match.name === topic.name
+                )
+            );
+
+            if (!matchingPosts.length) {
+                return "";
+            }
+
+            // Use engagement to identify stronger examples.
+            matchingPosts.sort((a, b) =>
+                Number(b.likes || 0) -
+                Number(a.likes || 0)
+            );
+
+            // Pick randomly from the five most-liked
+            // matching confessions.
+            const topPosts = matchingPosts.slice(0, 5);
+
+            const selectedPost = topPosts[
+                Math.floor(Math.random() * topPosts.length)
+            ];
+
+            return makeDiscoveryCard(
+                selectedPost,
+                topic.icon + " " + topic.name
+            );
+
+        }).join("");
+
+
+        // ======================================
+        // INSERT BEFORE THE FOOTER
+        // ======================================
+
+        const postsContainer =
+            document.getElementById("posts");
+
+        const existing =
+            document.getElementById("discoverySections");
+
+        if (existing) existing.remove();
+
+        postsContainer.insertAdjacentHTML(
+            "beforeend",
+            `
+            <section
+                class="discovery-layout"
+                id="discoverySections"
+            >
+
+                <div class="discovery-column">
+
+                    <h2 class="discovery-heading">
+                        Related confessions
+                    </h2>
+
+                    ${relatedHTML}
+
+                </div>
+
+
+                <div class="discovery-column">
+
+                    <h2 class="discovery-heading">
+                        Trending topics
+                    </h2>
+
+                    ${trendingHTML || `
+                        <div class="discovery-empty">
+                            More topic stories will appear here
+                            as people share confessions.
+                        </div>
+                    `}
+
+                </div>
+
+            </section>
+            `
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not load discovery sections:",
+            error
+        );
+
+    }
+}
+
+
 // ==========================================
 // LOAD SHARED POST
 // ==========================================
@@ -3397,6 +3822,9 @@ async function loadSharedPost(postCode) {
     const loadedComments = await loadComments(data.id, postElement, true);
 
     updatePostSEO(data, loadedComments);
+
+    // Load related confessions and trending topics.
+    await renderDiscoverySections(data);
 }
     
 
