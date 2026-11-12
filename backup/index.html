@@ -24,9 +24,10 @@
 })();
 </script>
 
-<title>Anonymous — Say It Here</title>
-<meta name="description" content="Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else.">
+<title>Anonymous Confessions, Secrets & Stories — Say It Here</title>
+<meta name="description" content="Read anonymous confessions, thoughts and secrets. Share your deep confessions, secret crushes, relationship thoughts, family secrets, regrets, and real stories anonymously.">
 <link rel="canonical" id="canonicalUrl" href="https://anonymous.ethartoken.com/">
+<link rel="icon" type="image/png" sizes="192x192" href="/Icons/icon-192.png">
     
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -568,16 +569,70 @@ textarea:focus {
 
 /* ================= FOOTER ================= */
 
-footer {
-    text-align: center;
-    color: #aaa5b2;
-    font-size: 10px;
-    padding: 20px;
+.site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    padding: 29px 24px;
+    margin-top: 50px;
 }
 
-footer a {
+.footer-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    font-size: 13px;
+    font-weight: 800;
     color: var(--purple-dark);
+}
+
+.footer-copy {
+    font-size: 10px;
+    color: #96909f;
+    margin-top: 4px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #777184;
     text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    transition: color .2s;
+}
+
+.footer-links a:hover {
+    color: var(--purple-dark);
+}
+
+@media (max-width: 600px) {
+    .site-footer {
+        padding: 25px 20px;
+        margin-top: 35px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 17px;
+    }
+
+    .footer-links {
+        gap: 16px;
+        row-gap: 12px;
+    }
 }
 
 /* ================= MOBILE ================= */
@@ -1261,13 +1316,25 @@ html[data-theme="dark"] header {
     border-color: #393344;
 }
 
-html[data-theme="dark"] footer {
+html[data-theme="dark"] .site-footer {
     background: #17141f;
+    border-top-color: #393344;
+}
+
+html[data-theme="dark"] .footer-brand {
+    color: #b69aff;
+}
+
+html[data-theme="dark"] .footer-copy {
     color: #aaa2b8;
 }
 
-html[data-theme="dark"] footer a {
-    color: #b69aff;
+html[data-theme="dark"] .footer-links a {
+    color: #c1b9cc;
+}
+
+html[data-theme="dark"] .footer-links a:hover {
+    color: #c2aaff;
 }
 
 /* Main content and sidebar */
@@ -1632,7 +1699,7 @@ html[data-theme="dark"] .theme-toggle:hover {
 
             <a href="mailto:support@ethartoken.com">✉ Support</a>
             <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
-            <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
+            <a href="https://anonymous.ethartoken.com/privacy">Privacy Policy</a>
         </div>
 
     </aside>
@@ -1757,14 +1824,33 @@ html[data-theme="dark"] .theme-toggle:hover {
 
 </div>
 
-<footer>
-    Anonymous · Say what you can't say anywhere else.
-    <br><br>
-    <a href="https://anonymous.ethartoken.com/rules">Community Rules</a>
-    &nbsp; · &nbsp;
-    <a href="https://anonymous.ethartoken.com/privacy">Privacy</a>
-</footer>
+<footer class="site-footer">
 
+    <div class="footer-inner">
+
+        <div>
+            <div class="footer-brand">
+                Anonymous Confessions — Say It Here.
+            </div>
+
+            <div class="footer-copy">
+                © <span id="current-year">2026</span> Anonymous. All rights reserved.
+            </div>
+        </div>
+
+        <nav class="footer-links" aria-label="Footer navigation">
+
+            <a href="/">Home</a>
+
+            <a href="/rules/">Community Rules</a>
+
+            <a href="/privacy/">Privacy Policy</a>
+
+        </nav>
+
+    </div>
+
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1818,61 +1904,79 @@ function updateCounter() {
 async function submitConfession() {
 
     const box = document.getElementById("confession");
-
     const text = box.value.trim();
 
     if (!text) {
-
         showModal("Write something first.");
-
         return;
     }
 
     if (text.length > 1000) {
-
         showModal("Keep your confession short.");
-
         return;
     }
 
-
     const button = document.querySelector(".post-btn");
+    const postsContainer = document.getElementById("posts");
 
     button.disabled = true;
     button.textContent = "Posting...";
 
+    try {
 
-    const { data, error } = await client
-        .rpc("create_post", {
-            p_message: text,
-            p_country: await getCountry()
-        });
+        const { data, error } = await client
+            .rpc("create_post", {
+                p_message: text,
+                p_country: await getCountry()
+            });
 
+        if (error) {
+            console.error(error);
+            showModal("Something went wrong. Please try again.");
+            return;
+        }
 
-    if (error) {
+        const newPost = Array.isArray(data) ? data[0] : data;
+
+        if (!newPost) {
+            showModal("Your post could not be displayed. Please try again.");
+            return;
+        }
+
+        // Remove the empty-feed message if present.
+        const emptyMessage = postsContainer.querySelector(
+            ".posts-loading"
+        );
+
+        if (
+            emptyMessage ||
+            postsContainer.textContent.includes("No confessions yet.")
+        ) {
+            postsContainer.innerHTML = "";
+        }
+
+        // Insert the saved post at the top without reloading the feed.
+        postsContainer.insertAdjacentHTML(
+            "afterbegin",
+            createPostHTML(newPost)
+        );
+
+        // Clear the input only after successful saving.
+        box.value = "";
+        updateCounter();
+
+    } catch (error) {
 
         console.error(error);
-
         showModal("Something went wrong. Please try again.");
+
+    } finally {
 
         button.disabled = false;
         button.textContent = "Post anonymously";
 
-        return;
     }
-
-
-    box.value = "";
-
-    updateCounter();
-
-    button.disabled = false;
-    button.textContent = "Post anonymously";
-
-    loadingPosts = false;
-    await loadPosts("random", true);
 }
-
 
 // ==========================================
 // LOAD POSTS
@@ -2685,24 +2789,13 @@ async function reactToComment(commentId, reactionType, button) {
 
 async function submitComment(button, postId) {
 
-    const input =
-        button.parentElement.querySelector("input");
+    const input = button.parentElement.querySelector("input");
+    const text = input.value.trim();
 
-
-    const text =
-        input.value.trim();
-
-
-    if (!text) {
-
-        return;
-
-    }
-
+    if (!text) return;
 
     button.disabled = true;
     button.textContent = "...";
-
 
     const { data, error } = await client
         .rpc("add_comment", {
@@ -2711,35 +2804,83 @@ async function submitComment(button, postId) {
             p_country: await getCountry()
         });
 
-
     if (error) {
-
         console.error(error);
-
         showModal("Unable to post comment.");
 
         button.disabled = false;
         button.textContent = "Send";
-
         return;
     }
 
+    const newComment = Array.isArray(data) ? data[0] : data;
 
+    if (!newComment) {
+        showModal("Your comment could not be displayed. Please try again.");
+
+        button.disabled = false;
+        button.textContent = "Send";
+        return;
+    }
+
+    const post = button.closest(".post");
+    const commentsList = post.querySelector(".comments-list");
+
+    // Remove empty/loading messages before inserting the new comment.
+    if (
+        commentsList.textContent.trim() === "No comments yet." ||
+        commentsList.textContent.trim() === "Loading comments..."
+    ) {
+        commentsList.innerHTML = "";
+    }
+
+    // Build the new comment using the actual saved database record.
+    const commentHTML = `
+        <div class="comment" data-comment-id="${newComment.id}">
+            <div class="comment-meta">
+                Anonymous · ${formatDate(newComment.created_at)}
+            </div>
+
+            <div class="comment-text">
+                ${escapeHTML(newComment.message)}
+            </div>
+
+            <div class="comment-actions">
+                <button
+                    onclick="reactToComment('${newComment.id}', 'like', this)"
+                >
+                    👍 <span>0</span>
+                </button>
+
+                <button
+                    onclick="reactToComment('${newComment.id}', 'dislike', this)"
+                >
+                    👎 <span>0</span>
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Put the newly submitted comment at the top.
+    commentsList.insertAdjacentHTML("afterbegin", commentHTML);
+
+    // Update the visible comment count without reloading the post.
+    const countButton = post.querySelector(
+        '.post-actions button[onclick^="toggleComments"]'
+    );
+
+    if (countButton) {
+        const match = countButton.textContent.match(/\d+/);
+        const currentCount = match ? parseInt(match[0], 10) : 0;
+
+        countButton.textContent = `💬 ${currentCount + 1} comments`;
+    }
+
+    // Clear the input only after successful saving.
     input.value = "";
 
     button.disabled = false;
     button.textContent = "Send";
-
-
-    const post =
-        button.closest(".post");
-
-
-    await loadComments(
-        postId,
-        post
-    );
-
 }
 
 
@@ -3171,13 +3312,13 @@ function updatePostSEO(post, comments = []) {
 
 function resetHomeSEO() {
 
-    document.title = "Anonymous — Say It Here";
+    document.title = "Anonymous Confessions, Secrets & Stories — Say It Here";
 
     document
         .querySelector('meta[name="description"]')
         .setAttribute(
             "content",
-            "Anonymous confessions, thoughts and secrets. Say what you can't say anywhere else."
+            "Read anonymous confessions, thoughts and secrets. Share your deep confessions, secret crushes, relationship thoughts, family secrets, regrets, and real stories anonymously."
         );
 
     document
@@ -3602,7 +3743,7 @@ if (window.innerWidth > 1100) {
 
 async function sharePost(postCode, button) {
 
-    const url = `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postCode)}`;
+    const url = `https://anonymous.ethartoken.com/?post=${encodeURIComponent(postCode)}`;
 
     const post = button.closest('.post');
     const message = post.querySelector('.post-text').textContent.trim();
@@ -3675,6 +3816,11 @@ window.addEventListener("scroll", function () {
 
 });
     
+</script>
+
+<script>
+    document.getElementById("current-year").textContent =
+        new Date().getFullYear();
 </script>
 
 </body>
