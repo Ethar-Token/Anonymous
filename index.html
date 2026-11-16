@@ -4240,61 +4240,22 @@ if ("serviceWorker" in navigator) {
 }
 
 
-/* WEBSITE BOTTOM REACHED - SHOW AD AND START TIMER */
+/* WEBSITE BOTTOM REACHED */
 
-window.addEventListener("message", function (event) {
+window.addEventListener("scroll", function () {
 
-    // Accept messages only from the website currently displayed.
-    if (event.source !== taskWebsite.contentWindow) {
-        return;
-    }
+    const reachedBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10;
 
-    if (
-        event.data &&
-        event.data.type === "MICROTASK_BOTTOM_REACHED"
-    ) {
+    if (reachedBottom) {
 
-        // Prevent multiple countdowns.
-        if (websiteUnlockTimer !== null || taskCompleted) {
-            return;
-        }
-
-        // Show the native ad.
-        const adBox = document.getElementById("websiteNativeAd");
-
-        adBox.classList.add("visible");
-
-        // Load the ad script only once.
-        if (!websiteAdLoaded) {
-
-            websiteAdLoaded = true;
-
-            const adScript = document.createElement("script");
-
-            adScript.async = true;
-            adScript.setAttribute("data-cfasync", "false");
-
-            adScript.src =
-                "https://bauval.org/21/f719afe2dcacea80de174953ae5c62da";
-
-            document.getElementById("websiteNativeAdContainer")
-                .appendChild(adScript);
-
-        }
-
-        // Random waiting period between 5 and 7 seconds.
-        const waitingTime =
-            Math.floor(Math.random() * 3000) + 5000;
-
-        websiteUnlockTimer = setTimeout(function () {
-
-            taskCompleted = true;
-
-            doneButton.disabled = false;
-
-            websiteUnlockTimer = null;
-
-        }, waitingTime);
+        window.parent.postMessage(
+            {
+                type: "MICROTASK_BOTTOM_REACHED"
+            },
+            "*"
+        );
 
     }
 
