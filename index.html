@@ -1603,6 +1603,42 @@ html[data-theme="dark"] .theme-toggle {
 html[data-theme="dark"] .theme-toggle:hover {
     color: #c2aaff;
 }
+
+.instantlaunch-badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 18px auto;
+}
+
+.instantlaunch-badge img {
+    width: 200px;
+    height: 54px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.instantlaunch-badge .badge-light {
+    display: none;
+}
+
+/* Light theme */
+body.light-theme .instantlaunch-badge .badge-dark {
+    display: none;
+}
+
+body.light-theme .instantlaunch-badge .badge-light {
+    display: block;
+}
+
+/* Dark theme */
+body.dark-theme .instantlaunch-badge .badge-dark {
+    display: block;
+}
+
+body.dark-theme .instantlaunch-badge .badge-light {
+    display: none;
+}
     
 </style>
 
@@ -1955,6 +1991,20 @@ html[data-theme="dark"] .theme-toggle:hover {
         </nav>
 
     </div>
+
+<div class="instantlaunch-badge">
+    <a href="https://www.instantlaunch.xyz/anonymous" target="_blank" rel="noopener noreferrer">
+        <img class="badge-dark"
+             src="https://www.instantlaunch.xyz/badge-dark.svg"
+             alt="Verified on InstantLaunch"
+             width="200" height="54">
+
+        <img class="badge-light"
+             src="https://www.instantlaunch.xyz/badge-light.svg"
+             alt="Verified on InstantLaunch"
+             width="200" height="54">
+    </a>
+</div>
 
 </footer>
 
