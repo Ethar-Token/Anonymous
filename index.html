@@ -3786,46 +3786,13 @@ async function renderDiscoverySections(currentPost) {
                     Number(a.likes || 0)
                 );
 
-                const selectedPost = matchingPosts[0];
-
                 return makeDiscoveryCard(
-                    selectedPost,
+                    matchingPosts[0],
                     topic.icon + " " + topic.name
                 );
 
-            }).join("");
-
-            const matchingPosts = posts.filter(post =>
-                getPostTopics(post).some(
-                    match => match.name === topic.name
-                )
-            );
-
-            if (!matchingPosts.length) {
-                return "";
-            }
-
-            // Use engagement to identify stronger examples.
-            matchingPosts.sort((a, b) =>
-                Number(b.likes || 0) -
-                Number(a.likes || 0)
-            );
-
-            // Pick randomly from the five most-liked
-            // matching confessions.
-            const topPosts = matchingPosts.slice(0, 5);
-
-            const selectedPost = topPosts[
-                Math.floor(Math.random() * topPosts.length)
-            ];
-
-            return makeDiscoveryCard(
-                selectedPost,
-                topic.icon + " " + topic.name
-            );
-
-        }).join("");
-
+            })
+            .join("");
 
         // ======================================
         // INSERT BEFORE THE FOOTER
