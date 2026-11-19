@@ -3575,18 +3575,51 @@ const discoveryTopics = [
 function getDiscoveryWords(message) {
 
     const ignored = new Set([
-        "this", "that", "with", "have", "from",
-        "they", "them", "their", "there", "then",
-        "when", "what", "where", "which", "while",
-        "would", "could", "should", "about", "after",
-        "before", "because", "been", "being", "were",
-        "your", "yours", "you", "she", "her", "him",
-        "his", "our", "ours", "and", "the", "for",
-        "but", "not", "are", "was", "has", "had",
-        "who", "all", "any", "just", "like", "very",
-        "into", "out", "one", "two", "now", "got",
-        "get", "can", "did", "does", "its", "it's",
-        "also", "some", "much", "more", "most"
+    "the", "and", "but", "for", "with", "from",
+    "that", "this", "there", "their", "they",
+    "them", "then", "than", "when", "where",
+    "what", "which", "while", "because", "about",
+    "have", "has", "had", "been", "being",
+    "were", "was", "are", "am", "is", "be",
+    "you", "your", "yours", "she", "her",
+    "his", "him", "he", "they", "our", "ours",
+    "its", "it's", "who", "whom", "how",
+    "not", "too", "very", "just", "also",
+    "some", "any", "all", "more", "most",
+    "much", "many", "such", "only", "even",
+    "into", "onto", "out", "off", "over",
+    "under", "after", "before", "again",
+    "once", "here", "now", "today", "then",
+    "can", "could", "would", "should",
+    "will", "shall", "may", "might", "must",
+    "did", "does", "doing", "done",
+    "get", "got", "getting", "make", "made",
+    "one", "two", "three", "first", "last",
+    "like", "know", "think", "feel", "really",
+    "thing", "things", "something", "anything",
+    "someone", "everyone", "people", "person",
+    "still", "well", "back", "way", "much",
+    "my", "to", "in", "me", "it", "on", "so", "of",
+    "we", "no", "as", "at", "by", "up", "if", "or",
+    "do", "an", "is", "be", "us", "am", "oh",
+    "im", "ive", "dont", "didnt", "doesnt",
+    "wasnt", "werent", "cant", "couldnt",
+    "wouldnt", "shouldnt", "youre", "theyre",
+    "weve", "theyve", "thats", "theres",
+    "ever", "man", "men", "woman", "women",
+    "talk", "talking", "said", "say", "says",
+    "go", "goes", "going", "went", "gone",
+    "give", "gave", "take", "took", "come", "came",
+    "want", "wanted", "wants", "need", "needed",
+    "day", "days", "time", "times", "year", "years",
+    "life", "lives", "thing", "things", "way", "ways", "lot", "lots",
+    "maybe", "probably", "actually", "literally",
+    "always", "never", "sometimes", "often",
+    "every", "everyone", "everything",
+    "anyone", "anything", "nothing",
+    "okay", "ok", "yeah", "yes", "hey",
+    "lol", "lmao", "haha", "hahaha",
+    "isnt", "arent", "wont", "each", "found"
     ]);
 
     return new Set(
@@ -4557,13 +4590,31 @@ function calculateDynamicTopics(posts) {
 
     });
 
-    // Most distinct confessions first.
-    // Engagement breaks ties.
-    results.sort((a, b) =>
-        b.count - a.count ||
-        b.engagement - a.engagement ||
-        a.name.localeCompare(b.name)
-    );
+    // Rank meaningful phrases slightly higher than single words.
+    // Distinct confession count still matters, followed by engagement.
+
+    results.sort((a, b) => {
+
+        const aWords = a.name.split(" ").length;
+        const bWords = b.name.split(" ").length;
+
+        const aPhraseBonus = aWords === 3 ? 1.5 :
+                             aWords === 2 ? 1.35 : 1;
+
+        const bPhraseBonus = bWords === 3 ? 1.5 :
+                             bWords === 2 ? 1.35 : 1;
+
+        const aScore = a.count * aPhraseBonus;
+        const bScore = b.count * bPhraseBonus;
+
+        return (
+            bScore - aScore ||
+            b.count - a.count ||
+            b.engagement - a.engagement ||
+            a.name.localeCompare(b.name)
+        );
+
+    });
 
     return results;
 }
