@@ -4420,7 +4420,7 @@ const topicStopWords = new Set([
     "somebody", "anybody", "everybody",
     "everyone", "anyone", "nobody",
     "really", "actually", "literally",
-    "maybe", "probably", "somehow"
+    "maybe", "probably", "somehow", "why"
 ]);
 
 function tokenizeTopicText(message) {
@@ -4619,20 +4619,22 @@ function calculateDynamicTopics(posts) {
 
     // Rank meaningful phrases slightly higher than single words.
     // Distinct confession count still matters, followed by engagement.
-
+    // Prioritize meaningful multi-word topics.
     results.sort((a, b) => {
 
         const aWords = a.name.split(" ").length;
         const bWords = b.name.split(" ").length;
 
-        const aPhraseBonus = aWords === 3 ? 1.5 :
-                             aWords === 2 ? 1.35 : 1;
+        const aMultiplier =
+            aWords === 3 ? 4 :
+            aWords === 2 ? 3 : 1;
 
-        const bPhraseBonus = bWords === 3 ? 1.5 :
-                             bWords === 2 ? 1.35 : 1;
+        const bMultiplier =
+            bWords === 3 ? 4 :
+            bWords === 2 ? 3 : 1;
 
-        const aScore = a.count * aPhraseBonus;
-        const bScore = b.count * bPhraseBonus;
+        const aScore = a.count * aMultiplier;
+        const bScore = b.count * bMultiplier;
 
         return (
             bScore - aScore ||
@@ -4640,12 +4642,7 @@ function calculateDynamicTopics(posts) {
             b.engagement - a.engagement ||
             a.name.localeCompare(b.name)
         );
-
     });
-
-    return results;
-}
-
 
 // ==========================================
 // LOAD AND CACHE DYNAMIC TOPICS
