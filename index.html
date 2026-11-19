@@ -3619,7 +3619,20 @@ function getDiscoveryWords(message) {
     "anyone", "anything", "nothing",
     "okay", "ok", "yeah", "yes", "hey",
     "lol", "lmao", "haha", "hahaha",
-    "isnt", "arent", "wont", "each", "found"
+    "isnt", "arent", "wont",
+    "found", "find", "finding", "gets", "getting",
+    "girl", "girls", "boy", "boys", "guy", "guys",
+    "man", "men", "woman", "women",
+    "said", "saying", "tell", "told", "telling",
+    "asked", "asking", "ask", "talk", "talking",
+    "went", "going", "come", "coming",
+    "happened", "happens", "happen",
+    "happening", "trying", "tried",
+    "thing", "things", "stuff", "someone",
+    "somebody", "anybody", "everybody",
+    "everyone", "anyone", "nobody",
+    "really", "actually", "literally",
+    "maybe", "probably", "somehow"
     ]);
 
     return new Set(
@@ -4394,13 +4407,27 @@ const topicStopWords = new Set([
     "anyone", "anything", "nothing",
     "okay", "ok", "yeah", "yes", "hey",
     "lol", "lmao", "haha", "hahaha",
-    "isnt", "arent", "wont"
+    "isnt", "arent", "wont",
+    "found", "find", "finding", "gets", "getting",
+    "girl", "girls", "boy", "boys", "guy", "guys",
+    "man", "men", "woman", "women",
+    "said", "saying", "tell", "told", "telling",
+    "asked", "asking", "ask", "talk", "talking",
+    "went", "going", "come", "coming",
+    "happened", "happens", "happen",
+    "happening", "trying", "tried",
+    "thing", "things", "stuff", "someone",
+    "somebody", "anybody", "everybody",
+    "everyone", "anyone", "nobody",
+    "really", "actually", "literally",
+    "maybe", "probably", "somehow"
 ]);
 
 function tokenizeTopicText(message) {
     return (message || "")
         .toLowerCase()
-        .match(/[a-z]+/g) || [];
+        .replace(/[’']/g, "")
+        .match(/[a-z]{3,}/g) || [];
 }
 
 function getTopicCandidates(message) {
